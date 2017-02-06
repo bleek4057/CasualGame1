@@ -196,7 +196,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4038464678651786, guid: 319ca83c8f18d514790ecdd84c41986b, type: 2}
       propertyPath: m_RootOrder
-      value: 7
+      value: 8
       objectReference: {fileID: 0}
     - target: {fileID: 1140625486670804, guid: 319ca83c8f18d514790ecdd84c41986b, type: 2}
       propertyPath: m_IsActive
@@ -500,6 +500,7 @@ MonoBehaviour:
   towerPrefab: {fileID: 1613381759470172, guid: cc0801669a7d5df4f85d704e11420fc4,
     type: 2}
   fakeTower: {fileID: 102658775}
+  TileManager: {fileID: 1799064218}
   gridIntervalSize: 10
 --- !u!4 &615264527
 Transform:
@@ -686,6 +687,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b30f2874e4633684db9361d89388305a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  enemyPath: []
 --- !u!4 &1799064220
 Transform:
   m_ObjectHideFlags: 0
@@ -697,7 +699,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 9
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &2087534278
 Prefab:
@@ -736,7 +738,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4964128301208952, guid: a34a2a09ad5c0a343af9c46a1c6593c9, type: 2}
       propertyPath: m_RootOrder
-      value: 8
+      value: 9
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: a34a2a09ad5c0a343af9c46a1c6593c9, type: 2}

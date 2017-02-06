@@ -14,13 +14,12 @@ public class GameManager : MonoBehaviour
     //starting time until next enemy spawns
     private float spawnInterval = 0;
 
-    //the path each enemy will follow
-    private List<Vector2> enemyPath;
-
     //the prefab allowing new towers to be placed
     public GameObject towerPrefab;
     //the transparent tower object which is moved around with the mouse
     public GameObject fakeTower;
+    
+    public GameObject TileManager;
 
     //the size of each interval on the grid
     public int gridIntervalSize = 10;
@@ -28,27 +27,13 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        //creates the path each enemy will use
-        enemyPath = new List<Vector2>();
-        enemyPath.Add(new Vector2(-5, 45));
-        enemyPath.Add(new Vector2(-5, 35));
-        enemyPath.Add(new Vector2(-5, 25));
-        enemyPath.Add(new Vector2(-5, 15));
-        enemyPath.Add(new Vector2(-5, 5));
-        enemyPath.Add(new Vector2(-5, -5));
-        enemyPath.Add(new Vector2(-5, -15));
-        enemyPath.Add(new Vector2(-5, -25));
-        enemyPath.Add(new Vector2(-5, -35));
-        enemyPath.Add(new Vector2(5, -35));
-        enemyPath.Add(new Vector2(15, -35));
-        enemyPath.Add(new Vector2(25, -35));
     }
 
     //spawns a new enemy and initializes its path
     void SpawnEnemy()
     {
         GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
-        newEnemy.GetComponent<EnemyScript>().CopyList(enemyPath);
+        newEnemy.GetComponent<EnemyScript>().CopyList(TileManager.GetComponent<TileManager>().enemyPath);
     }
 
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
@@ -59,10 +44,7 @@ public class GameManager : MonoBehaviour
         bool rayCast = Physics.Raycast(mouseRay, out hit);
         if (rayCast && hit.transform.tag == "Ground")
         {
-            Debug.Log("Hello2");
             Vector2 target = new Vector2(gridIntervalSize * Mathf.Floor(hit.point.x / gridIntervalSize) + (gridIntervalSize / 2), gridIntervalSize * Mathf.Floor(hit.point.z / gridIntervalSize) + (gridIntervalSize / 2));
-
-            Debug.Log(target);
             fakeTower.transform.position = new Vector3(target.x, 5, target.y);
             fakeTower.SetActive(true);
         }
