@@ -59,7 +59,10 @@ public class GameManager : MonoBehaviour
         bool rayCast = Physics.Raycast(mouseRay, out hit);
         if (rayCast && hit.transform.tag == "Ground")
         {
+            Debug.Log("Hello2");
             Vector2 target = new Vector2(gridIntervalSize * Mathf.Floor(hit.point.x / gridIntervalSize) + (gridIntervalSize / 2), gridIntervalSize * Mathf.Floor(hit.point.z / gridIntervalSize) + (gridIntervalSize / 2));
+
+            Debug.Log(target);
             fakeTower.transform.position = new Vector3(target.x, 5, target.y);
             fakeTower.SetActive(true);
         }
