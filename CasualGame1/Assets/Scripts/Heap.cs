@@ -2,12 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using UnityEngine;
 
 namespace PathHeap
 {
     class Heap
     {
         List<int> key = new List<int>();
+        List<Vector2> values = new List<Vector2>();
 
         static int GetParent(int i)
         {
@@ -27,13 +29,22 @@ namespace PathHeap
         private void HeapifyUp(int i)
         {
             if (i <= 0) return;
+
+            //get the index of the parent in the list
             int j = GetParent(i);
+
+            //check the values at the indexes
             if (key[i] < key[j])
             {
                 int temp = key[i];
                 key[i] = key[j];
                 key[j] = temp;
+
+                Vector2 tempV = values[i];
+                values[i] = values[j];
+                values[j] = tempV;
             }
+
             HeapifyUp(j);
         }
 
@@ -60,82 +71,35 @@ namespace PathHeap
                 int temp = key[i];
                 key[i] = key[j];
                 key[j] = temp;
+
+                Vector2 tempV = values[i];
+                values[i] = values[j];
+                values[j] = tempV;
             }
 
             HeapifyDn(j);
         }
 
-        public void Insert(int newKey)
+        public void Insert(int newKey, Vector2 newValue)
         {
             key.Add(newKey);
+            values.Add(newValue);
             HeapifyUp(key.Count - 1);
         }
 
-        public int Pop()
+        public KeyValuePair<int, Vector2> Pop()
         {
-            int temp = key[0];
+            KeyValuePair<int, Vector2> temp = new KeyValuePair<int, Vector2>(key[0], values[0]);
 
             key[0] = key[key.Count - 1];
             key.RemoveAt(key.Count - 1);
+
+            values[0] = values[values.Count - 1];
+            values.RemoveAt(values.Count - 1);
+
             HeapifyDn(0);
 
             return temp;
-        }
-    }
-
-    class Program
-    {
-        static void Main(string[] args)
-        {
-            Heap b = new Heap();
-
-            Console.WriteLine("Testing Heap:");
-            Console.WriteLine();
-
-            string userInput = "";
-            while (userInput != "quit")
-            {
-                Console.WriteLine();
-                Console.WriteLine("-- Commands: quit, print, insert... --");
-                userInput = Console.ReadLine();
-
-                if (userInput == "insert")
-                {
-                    bool parsed = false;
-                    while (parsed == false)
-                    {
-                        Console.WriteLine("Enter a value to add to the heap.");
-                        int key;
-                        parsed = int.TryParse(Console.ReadLine(), out key);
-                        Console.WriteLine();
-                        if (parsed != true)
-                            Console.WriteLine("Please enter an integer.");
-                        else
-                        {
-                            b.Insert(key);
-                            Console.WriteLine("Inserted key : " + key);
-                        }
-                    }
-                }
-                if (userInput == "print")
-                {
-                    Heap newHeap = new Heap();
-                    try
-                    {
-                        while (true)
-                        {
-                            int t = b.Pop();
-                            newHeap.Insert(t);
-                            Console.WriteLine(t);
-                        }
-                    }
-                    catch
-                    {
-
-                    }
-                    b = newHeap;
-                }
-            }
         }
     }
 }
