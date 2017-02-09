@@ -4,13 +4,19 @@ using UnityEngine;
 
 public class EnemyScript : MonoBehaviour
 {
-    public int health;
+    public int maxHealth;
+    private int health;
     public int speed;
     public Queue<Vector2> path = new Queue<Vector2>();
+    public GameObject playerBase;
+
+    public EnemyManager manager;
 
 	// Use this for initialization
 	void Start ()
     {
+        health = maxHealth;
+        manager = GameObject.FindGameObjectWithTag("Enemy Manager").GetComponent<EnemyManager>();
 	}
 
     // Update is called once per frame
@@ -38,8 +44,15 @@ public class EnemyScript : MonoBehaviour
             path.Dequeue();
         }
         //destroy the object if it reached the end of its path (the base)
-        if(path.Count == 0)
+        if (path.Count == 0)
         {
+            playerBase.GetComponent<BaseScript>().LoseHealth();
+            manager.allEnemies.Remove(gameObject);
+            Destroy(gameObject);
+        }
+        if(health <= 0)
+        {
+            manager.allEnemies.Remove(gameObject);
             Destroy(gameObject);
         }
     }
@@ -51,5 +64,12 @@ public class EnemyScript : MonoBehaviour
         {
             path.Enqueue(incoming[i]);
         }
+    }
+
+    public void Damage(int damage)
+    {
+        health -= damage;
+
+        transform.GetChild(0).GetChild(0).localScale = new Vector3(1f * health / maxHealth, 1, 1);
     }
 }

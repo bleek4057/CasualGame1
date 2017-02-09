@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class GameManager : MonoBehaviour
     // enemy prefab and spawn point
     public Vector2 enemySpawnPoint;
     public GameObject enemyPrefab;
+    public GameObject enemySliderPrefab;
 
     //starting time until next enemy spawns
     private float spawnInterval = 1;
@@ -18,8 +20,11 @@ public class GameManager : MonoBehaviour
     public GameObject towerPrefab;
     //the transparent tower object which is moved around with the mouse
     public GameObject fakeTower;
-    
-    public GameObject TileManager;
+
+    public GameObject playerBase;
+
+    public TileManager TileManager;
+    public EnemyManager EnemyManager;
 
     //the size of each interval on the grid
     public int gridIntervalSize = 10;
@@ -28,6 +33,9 @@ public class GameManager : MonoBehaviour
 
     public Camera playCamera;
     public Camera buildCamera;
+
+    public int enemiesToSpawn;
+    private int enemiesSpawned;
 
     private enum GameState
     {
@@ -45,15 +53,25 @@ public class GameManager : MonoBehaviour
         playCamera.gameObject.SetActive(false);
         buildCamera.gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
+        playerBase.transform.GetChild(1).gameObject.SetActive(false);
+
+        enemiesSpawned = 0;
     }
 
     //spawns a new enemy and initializes its path
     void SpawnEnemy()
     {
+        enemiesSpawned += 1;
+
         GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
         newEnemy.GetComponent<EnemyScript>().CopyList(TileManager.GetComponent<TileManager>().enemyPath);
-    }
+        newEnemy.GetComponent<EnemyScript>().playerBase = playerBase;
+        EnemyManager.GetComponent<EnemyManager>().allEnemies.Add(newEnemy);
 
+        //eh, this is for a slider health bar but i think the objects would be easier
+        //GameObject enemyHealth = Instantiate(enemySliderPrefab);
+        //enemyHealth.transform.SetParent(UI.transform, false);
+    }
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
     void MoveFakeTower()
     {
@@ -77,12 +95,19 @@ public class GameManager : MonoBehaviour
     {
         if (currentGame == GameState.PlayPhase)
         {
-            //counts down to when the next enemy appears
-            spawnInterval -= Time.deltaTime;
-            if (spawnInterval <= 0)
+            if (enemiesSpawned <= enemiesToSpawn)
             {
-                SpawnEnemy();
-                spawnInterval = 5;
+                //counts down to when the next enemy appears
+                spawnInterval -= Time.deltaTime;
+                if (spawnInterval <= 0)
+                {
+                    SpawnEnemy();
+                    spawnInterval = 5;
+                }
+            }
+            else if(EnemyManager.allEnemies.Count == 0)
+            {
+                WinWave();
             }
         }
         if(currentGame == GameState.BuildPhase)
@@ -112,6 +137,8 @@ public class GameManager : MonoBehaviour
         playCamera.gameObject.SetActive(true);
         buildCamera.gameObject.SetActive(false);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
+
+        playerBase.transform.GetChild(1).gameObject.SetActive(true);
     }
 
     public void WinWave()
@@ -119,10 +146,16 @@ public class GameManager : MonoBehaviour
         currentGame = GameState.BuildPhase;
 
         waveNumber += 1;
+        UI.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
 
         playCamera.gameObject.SetActive(false);
         buildCamera.gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
+        EnemyManager.DestroyAll();
+
+        enemiesSpawned = 0;
+
+        playerBase.transform.GetChild(1).gameObject.SetActive(false);
     }
     public void LoseWave()
     {
@@ -133,6 +166,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
+        EnemyManager.FreezeAll();
     }
     public void WinGame()
     {
@@ -143,12 +177,14 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
+        EnemyManager.FreezeAll();
     }
     public void Restart()
     {
         currentGame = GameState.BuildPhase;
 
         waveNumber = 1;
+        UI.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
 
         playCamera.gameObject.SetActive(false);
         buildCamera.gameObject.SetActive(true);
@@ -156,5 +192,10 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Restart").gameObject.SetActive(false);
         UI.transform.FindChild("Win").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(false);
+        EnemyManager.DestroyAll();
+
+        enemiesSpawned = 0;
+
+        playerBase.transform.GetChild(1).gameObject.SetActive(false);
     }
 }
