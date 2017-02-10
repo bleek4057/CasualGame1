@@ -67,34 +67,74 @@ public class TileManager : MonoBehaviour
         Heap prq = new Heap();
 
         prq.Insert(0, spawnLocation);
+        pathParent[(int)spawnLocation.x, (int)spawnLocation.y] = new Vector2(-1, -1);
 
-        while(prq.GetSize() > 0)
+        while(true)
         {
             KeyValuePair<int, Vector2> currentTileData = prq.Pop();
-            if(currentTileData.Value.x - 1 >= 0)
+
+            if(currentTileData.Value == baseLocation)
             {
-                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x - 1, currentTileData.Value.y));
-            }
-            if (currentTileData.Value.x + 1 < x)
-            {
-                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x + 1, currentTileData.Value.y));
+                break;
             }
 
-            if (currentTileData.Value.y - 1 >= 0)
+
+            //check that the tile to the left can be moved too
+            if(currentTileData.Value.x - 1 >= 0 && !mapData[(int)currentTileData.Value.x - 1, (int)currentTileData.Value.y])
+            {
+                //add the new tile data to the heap
+                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x - 1, currentTileData.Value.y));
+
+                //pathDist[(int)currentTileData.Value.x - 1, (int)currentTileData.Value.y] = currentTileData.Key + 1;
+
+                //add the location of the parent of the path to the pathParent array
+                pathParent[(int)currentTileData.Value.x - 1, (int)currentTileData.Value.y] = currentTileData.Value;
+            }
+
+            if (currentTileData.Value.x + 1 < x && !mapData[(int)currentTileData.Value.x + 1, (int)currentTileData.Value.y])
+            {
+                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x + 1, currentTileData.Value.y));
+
+                //add the location of the parent of the path to the pathParent array
+                pathParent[(int)currentTileData.Value.x + 1, (int)currentTileData.Value.y] = currentTileData.Value;
+            }
+
+            if (currentTileData.Value.y - 1 >= 0 && !mapData[(int)currentTileData.Value.x, (int)currentTileData.Value.y - 1])
             {
                 prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x, currentTileData.Value.y - 1));
+
+                //add the location of the parent of the path to the pathParent array
+                pathParent[(int)currentTileData.Value.x, (int)currentTileData.Value.y - 1] = currentTileData.Value;
+
             }
-            if (currentTileData.Value.y + 1 < y)
+            if (currentTileData.Value.y + 1 < y && !mapData[(int)currentTileData.Value.x, (int)currentTileData.Value.y + 1])
             { 
                 prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x, currentTileData.Value.y + 1));
+
+                //add the location of the parent of the path to the pathParent array
+                pathParent[(int)currentTileData.Value.x, (int)currentTileData.Value.y + 1] = currentTileData.Value;
+            }
+
+            if(prq.GetSize() == 0)
+            {
+                return false;
             }
         }
+
+        AssignPath(pathParent);
 
         return true;
     }
 
-    void AssignPath()
+    void AssignPath(Vector2[,] pathParent)
     {
+        enemyPath.Clear();
 
+        Vector2 currentLocation = pathParent[(int)baseLocation.x, (int)baseLocation.y];
+
+        while(currentLocation != new Vector2(-1, -1))
+        {
+
+        }
     }
 }
