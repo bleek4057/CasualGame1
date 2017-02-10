@@ -12,7 +12,7 @@ public class TileManager : MonoBehaviour
     private int y = 11;
     
     //data on if a tile is occupied
-    private bool[,] mapData;
+    public bool[,] mapData;
     private Vector2 spawnLocation;
     private Vector2 baseLocation;
 
@@ -68,7 +68,27 @@ public class TileManager : MonoBehaviour
 
         prq.Insert(0, spawnLocation);
 
+        while(prq.GetSize() > 0)
+        {
+            KeyValuePair<int, Vector2> currentTileData = prq.Pop();
+            if(currentTileData.Value.x - 1 >= 0)
+            {
+                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x - 1, currentTileData.Value.y));
+            }
+            if (currentTileData.Value.x + 1 < x)
+            {
+                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x + 1, currentTileData.Value.y));
+            }
 
+            if (currentTileData.Value.y - 1 >= 0)
+            {
+                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x, currentTileData.Value.y - 1));
+            }
+            if (currentTileData.Value.y + 1 < y)
+            { 
+                prq.Insert(currentTileData.Key + 1, new Vector2(currentTileData.Value.x, currentTileData.Value.y + 1));
+            }
+        }
 
         return true;
     }

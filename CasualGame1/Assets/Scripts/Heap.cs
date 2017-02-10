@@ -101,5 +101,10 @@ namespace PathHeap
 
             return temp;
         }
+
+        public int GetSize()
+        {
+            return key.Count;
+        }
     }
 }
