@@ -42,18 +42,17 @@ public class EnemyScript : MonoBehaviour
         if (Vector2.Distance(path.Peek(), new Vector2(transform.position.x, transform.position.z)) <= .5f)
         {
             path.Dequeue();
+            Damage(1);
         }
         //destroy the object if it reached the end of its path (the base)
         if (path.Count == 0)
         {
             playerBase.GetComponent<BaseScript>().LoseHealth();
-            manager.allEnemies.Remove(gameObject);
-            Destroy(gameObject);
+            manager.DestroyEnemy(gameObject);
         }
         if(health <= 0)
         {
-            manager.allEnemies.Remove(gameObject);
-            Destroy(gameObject);
+            manager.DestroyEnemy(gameObject);
         }
     }
 

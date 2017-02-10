@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     public TileManager TileManager;
     public EnemyManager EnemyManager;
+    public PlayerManager PlayerManager;
 
     //the size of each interval on the grid
     public int gridIntervalSize = 10;
@@ -54,6 +55,9 @@ public class GameManager : MonoBehaviour
         buildCamera.gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
+
+        PlayerManager.GameManager = this;
+        EnemyManager.GameManager = this;
 
         enemiesSpawned = 0;
     }
@@ -117,7 +121,7 @@ public class GameManager : MonoBehaviour
 
             //places a new tower where the player clicks, if there is nothing there
             RaycastHit hit;
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && PlayerManager.CanAffordTower(25))
             {
                 Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
                 bool rayCast = Physics.Raycast(mouseRay, out hit);
@@ -126,6 +130,8 @@ public class GameManager : MonoBehaviour
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
                     Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
                     TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)Mathf.Floor(hit.point.z / 10) + 6] = true;
+                    PlayerManager.ChangeMoney(-25);
+                    //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
                 }
             }
         }
@@ -162,6 +168,8 @@ public class GameManager : MonoBehaviour
         enemiesSpawned = 0;
 
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
+
+        PlayerManager.ChangeMoney(50);
     }
     public void LoseWave()
     {
@@ -184,6 +192,8 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
         EnemyManager.FreezeAll();
+
+        PlayerManager.SetMoney(100);
     }
     public void Restart()
     {
