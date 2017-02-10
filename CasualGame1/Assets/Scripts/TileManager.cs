@@ -10,14 +10,21 @@ public class TileManager : MonoBehaviour
     public List<Vector2> enemyPath;
     private int x = 10;
     private int y = 11;
-    private Heap h;
+    
+    //data on if a tile is occupied
+    private bool[,] mapData;
+    private Vector2 spawnLocation;
+    private Vector2 baseLocation;
 
     // Use this for initialization
     void Start ()
     {
-        bool[,] mapData = new bool[x, y];
+        mapData = new bool[x, y];
+        enemyPath = new List<Vector2>();
+        spawnLocation = new Vector2(4, 0);
+        baseLocation = new Vector2(7, 9);
 
-        for(int i = 0; i < 10; i++)
+        for (int i = 0; i < 10; i++)
         {
             if(i != 5)
             {
@@ -26,19 +33,25 @@ public class TileManager : MonoBehaviour
         }
 
         //creates the path each enemy will use
-        enemyPath = new List<Vector2>();
-        enemyPath.Add(new Vector2(-5, 45));
-        enemyPath.Add(new Vector2(-5, 35));
-        enemyPath.Add(new Vector2(-5, 25));
-        enemyPath.Add(new Vector2(-5, 15));
-        enemyPath.Add(new Vector2(-5, 5));
-        enemyPath.Add(new Vector2(-5, -5));
-        enemyPath.Add(new Vector2(-5, -15));
-        enemyPath.Add(new Vector2(-5, -25));
-        enemyPath.Add(new Vector2(-5, -35));
-        enemyPath.Add(new Vector2(5, -35));
-        enemyPath.Add(new Vector2(15, -35));
-        enemyPath.Add(new Vector2(25, -35));
+        if (CreatePath())
+        {
+
+        }
+        else
+        {
+            enemyPath.Add(new Vector2(-5, 45));
+            enemyPath.Add(new Vector2(-5, 35));
+            enemyPath.Add(new Vector2(-5, 25));
+            enemyPath.Add(new Vector2(-5, 15));
+            enemyPath.Add(new Vector2(-5, 5));
+            enemyPath.Add(new Vector2(-5, -5));
+            enemyPath.Add(new Vector2(-5, -15));
+            enemyPath.Add(new Vector2(-5, -25));
+            enemyPath.Add(new Vector2(-5, -35));
+            enemyPath.Add(new Vector2(5, -35));
+            enemyPath.Add(new Vector2(15, -35));
+            enemyPath.Add(new Vector2(25, -35));
+        }
     }
 	
 	// Update is called once per frame
@@ -46,4 +59,22 @@ public class TileManager : MonoBehaviour
     {
 		
 	}
+
+    bool CreatePath()
+    {
+        Vector2[,] pathParent = new Vector2[x,y];
+        int[,] pathDist = new int[x, y];
+        Heap prq = new Heap();
+
+        prq.Insert(0, spawnLocation);
+
+
+
+        return true;
+    }
+
+    void AssignPath()
+    {
+
+    }
 }
