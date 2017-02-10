@@ -72,6 +72,7 @@ public class GameManager : MonoBehaviour
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
         //enemyHealth.transform.SetParent(UI.transform, false);
     }
+
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
     void MoveFakeTower()
     {
@@ -95,7 +96,7 @@ public class GameManager : MonoBehaviour
     {
         if (currentGame == GameState.PlayPhase)
         {
-            if (enemiesSpawned <= enemiesToSpawn)
+            if (enemiesSpawned < enemiesToSpawn)
             {
                 //counts down to when the next enemy appears
                 spawnInterval -= Time.deltaTime;
@@ -112,7 +113,6 @@ public class GameManager : MonoBehaviour
         }
         if(currentGame == GameState.BuildPhase)
         {
-                
             MoveFakeTower();
 
             //places a new tower where the player clicks, if there is nothing there
@@ -125,6 +125,7 @@ public class GameManager : MonoBehaviour
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
                     Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
+                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)Mathf.Floor(hit.point.z / 10) + 6] = true;
                 }
             }
         }
@@ -140,9 +141,14 @@ public class GameManager : MonoBehaviour
 
         playerBase.transform.GetChild(1).gameObject.SetActive(true);
     }
-
     public void WinWave()
     {
+        if (waveNumber == 10)
+        {
+            WinGame();
+            return;
+        }
+
         currentGame = GameState.BuildPhase;
 
         waveNumber += 1;

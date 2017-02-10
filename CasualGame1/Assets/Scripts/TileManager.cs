@@ -12,7 +12,7 @@ public class TileManager : MonoBehaviour
     private int y = 11;
     
     //data on if a tile is occupied
-    private bool[,] mapData;
+    public bool[,] mapData;
     private Vector2 spawnLocation;
     private Vector2 baseLocation;
 
