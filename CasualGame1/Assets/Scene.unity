@@ -37,7 +37,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.44657898, g: 0.4964133, b: 0.5748178, a: 1}
+  m_IndirectSpecularColor: {r: 0.44657844, g: 0.49641222, b: 0.57481694, a: 1}
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
@@ -956,7 +956,6 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 1799064220}
-  - component: {fileID: 1799064219}
   - component: {fileID: 1799064221}
   m_Layer: 0
   m_Name: TileManager
@@ -965,18 +964,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1799064219
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 114835923549193372, guid: 2ae692cc1408038408254581c12b7fdf,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1799064218}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b30f2874e4633684db9361d89388305a, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
 --- !u!4 &1799064220
 Transform:
   m_ObjectHideFlags: 0
