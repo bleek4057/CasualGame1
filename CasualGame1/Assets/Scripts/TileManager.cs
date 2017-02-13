@@ -32,6 +32,8 @@ public class TileManager : MonoBehaviour
             }
         }
 
+        //Debug.Log(mapData);
+
         //creates the path each enemy will use
         if (CreatePath())
         {
