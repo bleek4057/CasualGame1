@@ -165,7 +165,7 @@ public class TileManager : MonoBehaviour
         Vector2 currentLocation = baseLocation;
         while (currentLocation != new Vector2(-1, -1))
         {
-            Debug.Log(currentLocation);
+            //Debug.Log(currentLocation);
 
             enemyPath.Insert(0, new Vector2((currentLocation.x - 5) * 10 + 5, (currentLocation.y - 6) * -10 - 5));
 
