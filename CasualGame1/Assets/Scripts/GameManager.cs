@@ -128,9 +128,17 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
-                    Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
-                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)Mathf.Floor(hit.point.z / 10) + 6] = true;
+                    GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
+                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
                     PlayerManager.ChangeMoney(-25);
+                    if(!TileManager.CreatePath())
+                    {
+                        Destroy(newTower);
+                        TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = false;
+                        PlayerManager.ChangeMoney(+25);
+                        TileManager.CreatePath();
+                    }
+                    
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
                 }
             }

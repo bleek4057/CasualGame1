@@ -42,7 +42,7 @@ public class EnemyScript : MonoBehaviour
         if (Vector2.Distance(path.Peek(), new Vector2(transform.position.x, transform.position.z)) <= .5f)
         {
             path.Dequeue();
-            Damage(1);
+            //Damage(1);
         }
         //destroy the object if it reached the end of its path (the base)
         if (path.Count == 0)
