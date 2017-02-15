@@ -1,0 +1,9 @@
+diff a/CasualGame1/Assets/Scripts/TileManager.cs b/CasualGame1/Assets/Scripts/TileManager.cs	(rejected hunks)
+@@ -67,7 +67,6 @@
+         Heap prq = new Heap();
+ 
+         prq.Insert(0, spawnLocation);
+-        while(true)
+ 
+ 
+ 

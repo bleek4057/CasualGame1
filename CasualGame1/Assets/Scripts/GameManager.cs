@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
 
     public TileManager TileManager;
     public EnemyManager EnemyManager;
+    public PlayerManager PlayerManager;
 
     //the size of each interval on the grid
     public int gridIntervalSize = 10;
@@ -55,6 +56,9 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
+        PlayerManager.GameManager = this;
+        EnemyManager.GameManager = this;
+
         enemiesSpawned = 0;
     }
 
@@ -72,6 +76,7 @@ public class GameManager : MonoBehaviour
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
         //enemyHealth.transform.SetParent(UI.transform, false);
     }
+
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
     void MoveFakeTower()
     {
@@ -95,7 +100,7 @@ public class GameManager : MonoBehaviour
     {
         if (currentGame == GameState.PlayPhase)
         {
-            if (enemiesSpawned <= enemiesToSpawn)
+            if (enemiesSpawned < enemiesToSpawn)
             {
                 //counts down to when the next enemy appears
                 spawnInterval -= Time.deltaTime;
@@ -109,22 +114,56 @@ public class GameManager : MonoBehaviour
             {
                 WinWave();
             }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, -20 * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 20 * Time.deltaTime);
+            }
         }
         if(currentGame == GameState.BuildPhase)
         {
-                
             MoveFakeTower();
 
             //places a new tower where the player clicks, if there is nothing there
             RaycastHit hit;
-            if (Input.GetMouseButtonDown(0))
+            if (Input.GetMouseButtonDown(0) && PlayerManager.CanAffordTower(25))
             {
                 Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
                 bool rayCast = Physics.Raycast(mouseRay, out hit);
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
-                    Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
+                    GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
+                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
+                    PlayerManager.ChangeMoney(-25);
+                    if(!TileManager.CreatePath())
+                    {
+                        Destroy(newTower);
+                        TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = false;
+                        PlayerManager.ChangeMoney(+25);
+                        TileManager.CreatePath();
+                    }
+                    
+                    //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
+                }
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                bool rayCast = Physics.Raycast(mouseRay, out hit);
+                if (rayCast && hit.transform.tag == "Tower")
+                {
+                    Destroy(hit.transform.gameObject);
+                    Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
+                    TileManager.mapData[(int)(5 + (hit.transform.position.x - 5) / 10), (int)(5 - (hit.transform.position.z - 5) / 10)] = false;
+                    PlayerManager.ChangeMoney(+15);
+                    TileManager.CreatePath();
+
+                    //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
                 }
             }
         }
@@ -140,9 +179,14 @@ public class GameManager : MonoBehaviour
 
         playerBase.transform.GetChild(1).gameObject.SetActive(true);
     }
-
     public void WinWave()
     {
+        if (waveNumber == 10)
+        {
+            WinGame();
+            return;
+        }
+
         currentGame = GameState.BuildPhase;
 
         waveNumber += 1;
@@ -156,6 +200,8 @@ public class GameManager : MonoBehaviour
         enemiesSpawned = 0;
 
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
+
+        PlayerManager.ChangeMoney(50);
     }
     public void LoseWave()
     {
@@ -193,8 +239,15 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Win").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(false);
         EnemyManager.DestroyAll();
+        TileManager.Reset();
+
+        foreach(GameObject tower in GameObject.FindGameObjectsWithTag("Tower"))
+        {
+            Destroy(tower);
+        }
 
         enemiesSpawned = 0;
+        PlayerManager.SetMoney(100);
 
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
     }

@@ -5,6 +5,7 @@ using UnityEngine;
 public class EnemyManager : MonoBehaviour
 {
     public List<GameObject> allEnemies;
+    public GameManager GameManager;
 
     // Use this for initialization
     void Start ()
@@ -18,6 +19,12 @@ public class EnemyManager : MonoBehaviour
 
 	}
 
+    public void DestroyEnemy(GameObject target)
+    {
+        allEnemies.Remove(target);
+        Destroy(target);
+        GameManager.PlayerManager.ChangeMoney(20);
+    }
     public void FreezeAll()
     {
         foreach (GameObject enemy in allEnemies)
