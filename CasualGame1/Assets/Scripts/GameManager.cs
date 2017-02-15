@@ -114,6 +114,15 @@ public class GameManager : MonoBehaviour
             {
                 WinWave();
             }
+
+            if (Input.GetKey(KeyCode.D))
+            {
+                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, -20 * Time.deltaTime);
+            }
+            if (Input.GetKey(KeyCode.A))
+            {
+                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 20 * Time.deltaTime);
+            }
         }
         if(currentGame == GameState.BuildPhase)
         {
@@ -139,6 +148,21 @@ public class GameManager : MonoBehaviour
                         TileManager.CreatePath();
                     }
                     
+                    //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
+                }
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                bool rayCast = Physics.Raycast(mouseRay, out hit);
+                if (rayCast && hit.transform.tag == "Tower")
+                {
+                    Destroy(hit.transform.gameObject);
+                    Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
+                    TileManager.mapData[(int)(5 + (hit.transform.position.x - 5) / 10), (int)(5 - (hit.transform.position.z - 5) / 10)] = false;
+                    PlayerManager.ChangeMoney(+15);
+                    TileManager.CreatePath();
+
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
                 }
             }
@@ -200,8 +224,6 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
         EnemyManager.FreezeAll();
-
-        PlayerManager.SetMoney(100);
     }
     public void Restart()
     {
@@ -217,8 +239,15 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Win").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(false);
         EnemyManager.DestroyAll();
+        TileManager.Reset();
+
+        foreach(GameObject tower in GameObject.FindGameObjectsWithTag("Tower"))
+        {
+            Destroy(tower);
+        }
 
         enemiesSpawned = 0;
+        PlayerManager.SetMoney(100);
 
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
     }

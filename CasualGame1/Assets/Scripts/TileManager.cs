@@ -16,6 +16,8 @@ public class TileManager : MonoBehaviour
     private Vector2 spawnLocation;
     private Vector2 baseLocation;
 
+    public GameObject pathPrefab;
+
     // Use this for initialization
     void Start ()
     {
@@ -53,6 +55,8 @@ public class TileManager : MonoBehaviour
             enemyPath.Add(new Vector2(5, -35));
             enemyPath.Add(new Vector2(15, -35));
             enemyPath.Add(new Vector2(25, -35));
+
+            CreatePathIndicator();
         }
     }
 	
@@ -61,6 +65,76 @@ public class TileManager : MonoBehaviour
     {
 		
 	}
+
+    void CreatePathIndicator()
+    {
+        foreach(Transform child in transform.GetComponentInChildren<Transform>())
+        {
+            Destroy(child.gameObject);
+        }
+
+        for (int i = 1; i < enemyPath.Count; i++)
+        {
+            if (enemyPath[i-1].x < enemyPath[i].x)
+            {
+                Quaternion rotation = Quaternion.Euler(90, 90, 0);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x - 5, 1, enemyPath[i].y), rotation, transform);
+            }
+            else if (enemyPath[i - 1].x > enemyPath[i].x)
+            {
+                Quaternion rotation = Quaternion.Euler(90, 90, 0);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x + 5, 1, enemyPath[i].y), rotation, transform);
+            }
+            else if (enemyPath[i - 1].y < enemyPath[i].y)
+            {
+                Quaternion rotation = Quaternion.Euler(90, 0, 0);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x, 1, enemyPath[i].y - 5), rotation, transform);
+            }
+            else
+            {
+                Quaternion rotation = Quaternion.Euler(90, 0, 0);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x, 1, enemyPath[i].y + 5), rotation, transform);
+            }
+        }
+    }
+
+    public void Reset()
+    {
+        for (int i = 0; i < 10; i++)
+        {
+            for (int i2 = 0; i2 < 11; i2++)
+            {
+                mapData[i, i2] = false;
+            }
+            if (i != 4)
+            {
+                mapData[i, 0] = true;
+            }
+        }
+
+        //creates the path each enemy will use
+        if (CreatePath())
+        {
+
+        }
+        else
+        {
+            enemyPath.Add(new Vector2(-5, 45));
+            enemyPath.Add(new Vector2(-5, 35));
+            enemyPath.Add(new Vector2(-5, 25));
+            enemyPath.Add(new Vector2(-5, 15));
+            enemyPath.Add(new Vector2(-5, 5));
+            enemyPath.Add(new Vector2(-5, -5));
+            enemyPath.Add(new Vector2(-5, -15));
+            enemyPath.Add(new Vector2(-5, -25));
+            enemyPath.Add(new Vector2(-5, -35));
+            enemyPath.Add(new Vector2(5, -35));
+            enemyPath.Add(new Vector2(15, -35));
+            enemyPath.Add(new Vector2(25, -35));
+
+            CreatePathIndicator();
+        }
+    }
 
     public bool CreatePath()
     {
@@ -169,6 +243,7 @@ public class TileManager : MonoBehaviour
 
         AssignPath(pathParent);
 
+        CreatePathIndicator();
         return true;
     }
 

@@ -168,15 +168,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4663251872512876, guid: 346f64916871dc44dbb5f8db4d9a8685, type: 2}
       propertyPath: m_LocalPosition.x
-      value: 13.126912
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4663251872512876, guid: 346f64916871dc44dbb5f8db4d9a8685, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 17.371412
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4663251872512876, guid: 346f64916871dc44dbb5f8db4d9a8685, type: 2}
       propertyPath: m_LocalPosition.z
-      value: -29.49272
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4663251872512876, guid: 346f64916871dc44dbb5f8db4d9a8685, type: 2}
       propertyPath: m_LocalRotation.x
@@ -677,7 +677,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 694640897}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 17.174988, y: 20.59584, z: -29.642525}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -692,15 +692,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 4740258137920174, guid: ad26753475289f149b1418e9dfaa7a2a, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -7.9644656
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4740258137920174, guid: ad26753475289f149b1418e9dfaa7a2a, type: 2}
       propertyPath: m_LocalPosition.y
-      value: -24.513443
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4740258137920174, guid: ad26753475289f149b1418e9dfaa7a2a, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 43.399536
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 4740258137920174, guid: ad26753475289f149b1418e9dfaa7a2a, type: 2}
       propertyPath: m_LocalRotation.x
@@ -977,7 +977,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1799064218}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -25.290527, y: -28.57793, z: 19.831451}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -996,6 +996,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPath: []
+  pathPrefab: {fileID: 1711558355328576, guid: ed04bded13f6ed649950e31c5d5066ff, type: 2}
 --- !u!1 &2014165137 stripped
 GameObject:
   m_PrefabParentObject: {fileID: 1645338139568056, guid: 71f258c10e79a6b408359e734f031cf0,
