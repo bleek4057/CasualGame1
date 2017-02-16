@@ -152,7 +152,7 @@ public class TileManager : MonoBehaviour
         }
 
         //int[,] pathDist = new int[x, y];
-        PathList prq = new PathList();
+        Heap prq = new Heap();
 
 
 
@@ -172,7 +172,6 @@ public class TileManager : MonoBehaviour
             //Debug.Log(currentTile);
             //Debug.Log(prq.GetSize());
             //Debug.Log(mapData[(int)currentTile.Value.x, (int)currentTile.Value.y]);
-            prq.PrintList();
 
             //check the tile to the left
             if (currentTile.Value.x - 1 >= 0)

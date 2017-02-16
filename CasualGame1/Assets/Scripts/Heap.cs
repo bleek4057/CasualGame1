@@ -8,8 +8,7 @@ namespace PathHeap
 {
     class Heap
     {
-        List<int> key = new List<int>();
-        List<Vector2> values = new List<Vector2>();
+        List<KeyValuePair<int, Vector2>> keys = new List<KeyValuePair<int, Vector2>>();
 
         static int GetParent(int i)
         {
@@ -34,15 +33,11 @@ namespace PathHeap
             int j = GetParent(i);
 
             //check the values at the indexes
-            if (key[i] < key[j])
+            if (keys[i].Key < keys[j].Key)
             {
-                int temp = key[i];
-                key[i] = key[j];
-                key[j] = temp;
-
-                Vector2 tempV = values[i];
-                values[i] = values[j];
-                values[j] = tempV;
+                KeyValuePair<int, Vector2> temp = keys[i];
+                keys[i] = keys[j];
+                keys[j] = temp;
             }
 
             HeapifyUp(j);
@@ -53,28 +48,24 @@ namespace PathHeap
             int j;
 
             // If no children...
-            if (GetLeft(i) > key.Count - 1) return;
+            if (GetLeft(i) > keys.Count - 1) return;
 
             // If no right child...
-            if (GetRight(i) > key.Count - 1)
+            if (GetRight(i) > keys.Count - 1)
             {
                 j = GetLeft(i);
             }
             else
             {
                 // If both right and left children
-                j = (key[GetLeft(i)] < key[GetRight(i)]) ? (GetLeft(i)) : (GetRight(i));
+                j = (keys[GetLeft(i)].Key < keys[GetRight(i)].Key) ? (GetLeft(i)) : (GetRight(i));
             }
 
-            if (key[i] > key[j])
+            if (keys[i].Key > keys[j].Key)
             {
-                int temp = key[i];
-                key[i] = key[j];
-                key[j] = temp;
-
-                Vector2 tempV = values[i];
-                values[i] = values[j];
-                values[j] = tempV;
+                KeyValuePair<int, Vector2> temp = keys[i];
+                keys[i] = keys[j];
+                keys[j] = temp;
             }
 
             HeapifyDn(j);
@@ -82,20 +73,16 @@ namespace PathHeap
 
         public void Insert(int newKey, Vector2 newValue)
         {
-            key.Add(newKey);
-            values.Add(newValue);
-            HeapifyUp(key.Count - 1);
+            keys.Add(new KeyValuePair<int, Vector2>(newKey, newValue));
+            HeapifyUp(keys.Count - 1);
         }
 
         public KeyValuePair<int, Vector2> Pop()
         {
-            KeyValuePair<int, Vector2> temp = new KeyValuePair<int, Vector2>(key[0], values[0]);
+            KeyValuePair<int, Vector2> temp = keys[0];
 
-            key[0] = key[key.Count - 1];
-            key.RemoveAt(key.Count - 1);
-
-            values[0] = values[values.Count - 1];
-            values.RemoveAt(values.Count - 1);
+            keys[0] = keys[keys.Count - 1];
+            keys.RemoveAt(keys.Count - 1);
 
             HeapifyDn(0);
 
@@ -104,7 +91,7 @@ namespace PathHeap
 
         public int GetSize()
         {
-            return key.Count;
+            return keys.Count;
         }
     }
 }
