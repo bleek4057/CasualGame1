@@ -72,6 +72,8 @@ public class GameManager : MonoBehaviour
         newEnemy.GetComponent<EnemyScript>().playerBase = playerBase;
         EnemyManager.GetComponent<EnemyManager>().allEnemies.Add(newEnemy);
 
+        newEnemy.transform.GetChild(0).GetComponent<LookAtCamera>().cameraToSee = playCamera;
+
         //eh, this is for a slider health bar but i think the objects would be easier
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
         //enemyHealth.transform.SetParent(UI.transform, false);
@@ -81,8 +83,9 @@ public class GameManager : MonoBehaviour
     void MoveFakeTower()
     {
         RaycastHit hit;
+        int layermask = 1 << 8;
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool rayCast = Physics.Raycast(mouseRay, out hit);
+        bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
         if (rayCast && hit.transform.tag == "Ground")
         {
             Vector2 target = new Vector2(gridIntervalSize * Mathf.Floor(hit.point.x / gridIntervalSize) + (gridIntervalSize / 2), gridIntervalSize * Mathf.Floor(hit.point.z / gridIntervalSize) + (gridIntervalSize / 2));

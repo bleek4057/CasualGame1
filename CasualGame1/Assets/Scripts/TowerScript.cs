@@ -11,11 +11,12 @@ public class TowerScript : MonoBehaviour {
     private float _timer = 0.0f;
     public float _fireRate = 0.333f;
 
-    public ParticleSystem ps;
+    ParticleSystem ps;
 
 	// Use this for initialization
 	void Start () {
         rangeSphere = this.gameObject.GetComponent<SphereCollider>();
+        ps = GetComponent<ParticleSystem>();
 	}
 	
 	// Update is called once per frame
@@ -27,7 +28,23 @@ public class TowerScript : MonoBehaviour {
             if (enemies[0] == null) enemies.RemoveAt(0);
             else Attack(enemies[0]);
         }
-	}
+
+        RaycastHit hit;
+        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+        bool rayCast = Physics.Raycast(mouseRay, out hit);
+        if (rayCast && hit.transform.gameObject == gameObject)
+        {
+            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.red;
+            transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = Color.red;
+            transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = Color.red;
+        }
+        else
+        {
+            transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(34/255f, 34 / 255f, 34 / 255f, 1);
+            transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
+            transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
+        }
+    }
 
     private void Attack(EnemyScript enemy)
     {
@@ -35,6 +52,9 @@ public class TowerScript : MonoBehaviour {
         enemy.Damage(1);
 
         _timer = 1f * Mathf.Pow(2.0f, _fireRate);
+        
+        transform.GetChild(0).GetChild(1).LookAt(enemy.transform.position);
+        transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
     }
 
     void OnTriggerEnter(Collider obj)
