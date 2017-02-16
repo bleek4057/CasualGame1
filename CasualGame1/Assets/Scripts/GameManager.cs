@@ -8,14 +8,6 @@ public class GameManager : MonoBehaviour
     //current wave number
     private int waveNumber = 1;
 
-    // enemy prefab and spawn point
-    public Vector2 enemySpawnPoint;
-    public GameObject enemyPrefab;
-    public GameObject enemySliderPrefab;
-
-    //starting time until next enemy spawns
-    private float spawnInterval = 1;
-
     //the prefab allowing new towers to be placed
     public GameObject towerPrefab;
     //the transparent tower object which is moved around with the mouse
@@ -35,12 +27,9 @@ public class GameManager : MonoBehaviour
     public Camera playCamera;
     public Camera buildCamera;
 
-    public int enemiesToSpawn;
-    private int enemiesSpawned;
-
     private Vector2 prevMousePosition;
 
-    private enum GameState
+    public enum GameState
     {
         BuildPhase,
         PlayPhase,
@@ -48,7 +37,7 @@ public class GameManager : MonoBehaviour
         LosePhase,
     };
 
-    GameState currentGame = GameState.BuildPhase;
+    public GameState currentGame = GameState.BuildPhase;
 
     // Use this for initialization
     void Start ()
@@ -60,25 +49,6 @@ public class GameManager : MonoBehaviour
 
         PlayerManager.GameManager = this;
         EnemyManager.GameManager = this;
-
-        enemiesSpawned = 0;
-    }
-
-    //spawns a new enemy and initializes its path
-    void SpawnEnemy()
-    {
-        enemiesSpawned += 1;
-
-        GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
-        newEnemy.GetComponent<EnemyScript>().CopyList(TileManager.GetComponent<TileManager>().enemyPath);
-        newEnemy.GetComponent<EnemyScript>().playerBase = playerBase;
-        EnemyManager.GetComponent<EnemyManager>().allEnemies.Add(newEnemy);
-
-        newEnemy.transform.GetChild(0).GetComponent<LookAtCamera>().cameraToSee = playCamera;
-
-        //eh, this is for a slider health bar but i think the objects would be easier
-        //GameObject enemyHealth = Instantiate(enemySliderPrefab);
-        //enemyHealth.transform.SetParent(UI.transform, false);
     }
 
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
@@ -105,21 +75,6 @@ public class GameManager : MonoBehaviour
     {
         if (currentGame == GameState.PlayPhase)
         {
-            if (enemiesSpawned < enemiesToSpawn)
-            {
-                //counts down to when the next enemy appears
-                spawnInterval -= Time.deltaTime;
-                if (spawnInterval <= 0)
-                {
-                    SpawnEnemy();
-                    spawnInterval = 5;
-                }
-            }
-            else if(EnemyManager.allEnemies.Count == 0)
-            {
-                WinWave();
-            }
-
             if (Input.GetMouseButton(1))
             {
                 playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3*(Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
@@ -200,7 +155,10 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         EnemyManager.DestroyAll();
 
-        enemiesSpawned = 0;
+        EnemyManager.EnemiesSpawned = 0;
+        EnemyManager.RestartInterval();
+        EnemyManager.spawnInterval *= .9f;
+        EnemyManager.enemiesToSpawn += 1;
 
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
@@ -249,7 +207,8 @@ public class GameManager : MonoBehaviour
             Destroy(tower);
         }
 
-        enemiesSpawned = 0;
+        EnemyManager.EnemiesSpawned = 0;
+        EnemyManager.RestartInterval();
         PlayerManager.SetMoney(100);
 
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
