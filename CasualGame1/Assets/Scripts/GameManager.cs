@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     public int enemiesToSpawn;
     private int enemiesSpawned;
 
+    private Vector2 prevMousePosition;
+
     private enum GameState
     {
         BuildPhase,
@@ -118,14 +120,12 @@ public class GameManager : MonoBehaviour
                 WinWave();
             }
 
-            if (Input.GetKey(KeyCode.D))
+            if (Input.GetMouseButton(1))
             {
-                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, -20 * Time.deltaTime);
+                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3*(Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
             }
-            if (Input.GetKey(KeyCode.A))
-            {
-                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 20 * Time.deltaTime);
-            }
+            prevMousePosition = Input.mousePosition;
+
         }
         if(currentGame == GameState.BuildPhase)
         {
