@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PathHeap;
+using PathSortedList;
 
 
 public class TileManager : MonoBehaviour
@@ -148,10 +149,12 @@ public class TileManager : MonoBehaviour
                 availableTiles[i, j] = mapData[i, j];
                 //Debug.Log(i + ", " + j + " " + availableTiles[i, j]);
             }
-        } 
-        
+        }
+
         //int[,] pathDist = new int[x, y];
         Heap prq = new Heap();
+
+
 
         prq.Insert(0, spawnLocation);
         pathParent[(int)spawnLocation.x, (int)spawnLocation.y] = new Vector2(-1, -1);
@@ -169,7 +172,6 @@ public class TileManager : MonoBehaviour
             //Debug.Log(currentTile);
             //Debug.Log(prq.GetSize());
             //Debug.Log(mapData[(int)currentTile.Value.x, (int)currentTile.Value.y]);
-
 
             //check the tile to the left
             if (currentTile.Value.x - 1 >= 0)

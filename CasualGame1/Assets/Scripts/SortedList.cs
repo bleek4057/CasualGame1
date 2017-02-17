@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using UnityEngine;
 
-namespace PathHeap
+namespace PathSortedList
 {
-    class Heap
+    class SortedPathList
     {
         List<KeyValuePair<int, Vector2>> keys = new List<KeyValuePair<int, Vector2>>();
 
