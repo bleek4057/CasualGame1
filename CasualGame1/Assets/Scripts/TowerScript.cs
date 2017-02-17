@@ -5,6 +5,7 @@ using UnityEngine;
 
 public class TowerScript : MonoBehaviour {
 
+    public GameManager gameManager;
     public List<EnemyScript> enemies = new List<EnemyScript>();
 
     private SphereCollider rangeSphere;
@@ -29,20 +30,24 @@ public class TowerScript : MonoBehaviour {
             else Attack(enemies[0]);
         }
 
-        RaycastHit hit;
-        Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-        bool rayCast = Physics.Raycast(mouseRay, out hit);
-        if (rayCast && hit.transform.gameObject == gameObject)
+        if (gameManager.currentGame != GameManager.GameState.PlayPhase)
         {
-            transform.GetChild(0).GetComponent<Renderer>().material.color = Color.red;
-            transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = Color.red;
-            transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = Color.red;
-        }
-        else
-        {
-            transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(34/255f, 34 / 255f, 34 / 255f, 1);
-            transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
-            transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
+            RaycastHit hit;
+            Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+            int layermask = ~(1 << 9);
+            bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
+            if (rayCast && hit.transform.gameObject == gameObject)
+            {
+                transform.GetChild(0).GetComponent<Renderer>().material.color = Color.red;
+                transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = Color.red;
+                transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = Color.red;
+            }
+            else
+            {
+                transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
+                transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
+                transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
+            }
         }
     }
 

@@ -55,10 +55,10 @@ public class GameManager : MonoBehaviour
     void MoveFakeTower()
     {
         RaycastHit hit;
-        int layermask = 1 << 8;
+        int layermask = ~(1 << 9);
         Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
         bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
-        if (rayCast && hit.transform.tag == "Ground")
+        if (rayCast && hit.transform.tag == "Ground" && PlayerManager.CanAffordTower(25))
         {
             Vector2 target = new Vector2(gridIntervalSize * Mathf.Floor(hit.point.x / gridIntervalSize) + (gridIntervalSize / 2), gridIntervalSize * Mathf.Floor(hit.point.z / gridIntervalSize) + (gridIntervalSize / 2));
             fakeTower.transform.position = new Vector3(target.x, 5, target.y);
@@ -91,11 +91,13 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonDown(0) && PlayerManager.CanAffordTower(25))
             {
                 Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                bool rayCast = Physics.Raycast(mouseRay, out hit);
+                int layermask = ~(1 << 9);
+                bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
                     GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
+                    newTower.GetComponent<TowerScript>().gameManager = this;
                     TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
                     PlayerManager.ChangeMoney(-25);
                     if(!TileManager.CreatePath())
@@ -112,7 +114,8 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonDown(1))
             {
                 Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                bool rayCast = Physics.Raycast(mouseRay, out hit);
+                int layermask = ~(1 << 9);
+                bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
                 if (rayCast && hit.transform.tag == "Tower")
                 {
                     Destroy(hit.transform.gameObject);
@@ -162,7 +165,7 @@ public class GameManager : MonoBehaviour
 
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
-        PlayerManager.ChangeMoney(50);
+        PlayerManager.ChangeMoney(20);
     }
     public void LoseWave()
     {
