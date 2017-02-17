@@ -211,6 +211,8 @@ public class GameManager : MonoBehaviour
         }
 
         EnemyManager.EnemiesSpawned = 0;
+        EnemyManager.enemiesToSpawn = 3;
+        EnemyManager.spawnInterval = 5;
         EnemyManager.RestartInterval();
         PlayerManager.SetMoney(100);
 
