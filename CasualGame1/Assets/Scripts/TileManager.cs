@@ -19,6 +19,8 @@ public class TileManager : MonoBehaviour
 
     public GameObject pathPrefab;
 
+    private string fileName = "MapData\\level1.txt";
+
     // Use this for initialization
     void Start ()
     {
