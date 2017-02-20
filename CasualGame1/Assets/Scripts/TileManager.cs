@@ -51,7 +51,7 @@ public class TileManager : MonoBehaviour
 		
 	}
 
-    void CreatePathIndicator()
+    public void CreatePathIndicator()
     {
         foreach(Transform child in transform.GetComponentInChildren<Transform>())
         {

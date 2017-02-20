@@ -12,7 +12,7 @@ public class PlayerManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        money = 100;
+        money = 1000000;
 
     }
 	

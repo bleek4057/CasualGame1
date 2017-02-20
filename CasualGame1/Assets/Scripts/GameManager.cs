@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
             fakeTower.SetActive(false);
         }
     }
-
+    public List<Vector2> savedPath;
     // Update is called once per frame
     void Update ()
     {
@@ -96,18 +96,28 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
-                    GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
-                    newTower.GetComponent<TowerScript>().gameManager = this;
                     TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
-                    PlayerManager.ChangeMoney(-25);
-                    if(!TileManager.CreatePath())
+                    if (TileManager.enemyPath.Contains(target))
                     {
-                        Destroy(newTower);
-                        TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = false;
-                        PlayerManager.ChangeMoney(+25);
-                        TileManager.CreatePath();
+                        if (!TileManager.CreatePath())
+                        {
+                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = false;
+                            TileManager.CreatePath();
+                        }
+                        else
+                        {
+                            GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
+                            newTower.GetComponent<TowerScript>().gameManager = this;
+                            PlayerManager.ChangeMoney(-25);
+                        }
                     }
-                    
+                    else
+                    {
+                        GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
+                        newTower.GetComponent<TowerScript>().gameManager = this;
+                        PlayerManager.ChangeMoney(-25);
+                    }
+
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
                 }
             }
@@ -118,11 +128,19 @@ public class GameManager : MonoBehaviour
                 bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
                 if (rayCast && hit.transform.tag == "Tower")
                 {
-                    Destroy(hit.transform.gameObject);
-                    Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
+                    savedPath = new List<Vector2>(TileManager.enemyPath);
                     TileManager.mapData[(int)(5 + (hit.transform.position.x - 5) / 10), (int)(5 - (hit.transform.position.z - 5) / 10)] = false;
-                    PlayerManager.ChangeMoney(+15);
                     TileManager.CreatePath();
+                    Debug.Log(savedPath.Count + " - " + TileManager.enemyPath.Count);
+                    if (TileManager.enemyPath.Count == savedPath.Count)
+                    {
+                        Debug.Log("DOES THIS MEAN NOTHING");
+                        TileManager.enemyPath = new List<Vector2>(savedPath);
+                        TileManager.CreatePathIndicator();
+                    }
+                    //Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
+                    PlayerManager.ChangeMoney(+15);
+                    Destroy(hit.transform.gameObject);
 
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
                 }
