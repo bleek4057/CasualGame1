@@ -37,28 +37,10 @@ public class TileManager : MonoBehaviour
 
         //Debug.Log(mapData);
 
-        //creates the path each enemy will use
-        if (CreatePath())
-        {
-            
-        }
-        else
-        {
-            enemyPath.Add(new Vector2(-5, 45));
-            enemyPath.Add(new Vector2(-5, 35));
-            enemyPath.Add(new Vector2(-5, 25));
-            enemyPath.Add(new Vector2(-5, 15));
-            enemyPath.Add(new Vector2(-5, 5));
-            enemyPath.Add(new Vector2(-5, -5));
-            enemyPath.Add(new Vector2(-5, -15));
-            enemyPath.Add(new Vector2(-5, -25));
-            enemyPath.Add(new Vector2(-5, -35));
-            enemyPath.Add(new Vector2(5, -35));
-            enemyPath.Add(new Vector2(15, -35));
-            enemyPath.Add(new Vector2(25, -35));
-
-            CreatePathIndicator();
-        }
+        //creates the path the enemy will use
+        CreatePath();
+        
+        
     }
 	
 	// Update is called once per frame
@@ -142,6 +124,7 @@ public class TileManager : MonoBehaviour
         Vector2[,] pathParent = new Vector2[x,y];
         bool[,] availableTiles = new bool[x,y];
         
+        //copy the map data for manipulation
         for(int i = 0; i < x; i++)
         {
             for(int j = 0; j < y; j++)
@@ -151,10 +134,9 @@ public class TileManager : MonoBehaviour
             }
         }
 
-        //int[,] pathDist = new int[x, y];
         Heap prq = new Heap();
 
-
+        int heur = 0;
 
         prq.Insert(0, spawnLocation);
         pathParent[(int)spawnLocation.x, (int)spawnLocation.y] = new Vector2(-1, -1);
@@ -178,8 +160,10 @@ public class TileManager : MonoBehaviour
             {
                 if (!availableTiles[(int)currentTile.Value.x - 1, (int)currentTile.Value.y])
                 {
+                    heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x - 1, currentTile.Value.y), baseLocation);
+
                     //add the new tile to the heap
-                    prq.Insert(currentTile.Key + 1, new Vector2(currentTile.Value.x - 1, currentTile.Value.y));
+                    prq.Insert(currentTile.Key + 1 + heur, new Vector2(currentTile.Value.x - 1, currentTile.Value.y));
 
                     //add the location of he parent to the pathParent array
                     pathParent[(int)currentTile.Value.x - 1, (int)currentTile.Value.y] = currentTile.Value;
@@ -192,8 +176,10 @@ public class TileManager : MonoBehaviour
             {
                 if (!availableTiles[(int)currentTile.Value.x + 1, (int)currentTile.Value.y])
                 {
+                    heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x + 1, currentTile.Value.y), baseLocation);
+
                     //add the new tile to the heap
-                    prq.Insert(currentTile.Key + 1, new Vector2(currentTile.Value.x + 1, currentTile.Value.y));
+                    prq.Insert(currentTile.Key + 1 + heur, new Vector2(currentTile.Value.x + 1, currentTile.Value.y));
 
                     //add the location of he parent to the pathParent array
                     pathParent[(int)currentTile.Value.x + 1, (int)currentTile.Value.y] = currentTile.Value;
@@ -206,8 +192,10 @@ public class TileManager : MonoBehaviour
             {
                 if (!availableTiles[(int)currentTile.Value.x, (int)currentTile.Value.y - 1])
                 {
+                    heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x, currentTile.Value.y - 1), baseLocation);
+
                     //add the new tile to the heap
-                    prq.Insert(currentTile.Key + 1, new Vector2(currentTile.Value.x, currentTile.Value.y - 1));
+                    prq.Insert(currentTile.Key + 1 + heur, new Vector2(currentTile.Value.x, currentTile.Value.y - 1));
 
                     //add the location of he parent to the pathParent array
                     pathParent[(int)currentTile.Value.x, (int)currentTile.Value.y - 1] = currentTile.Value;
@@ -220,8 +208,10 @@ public class TileManager : MonoBehaviour
             {
                 if (!availableTiles[(int)currentTile.Value.x, (int)currentTile.Value.y + 1])
                 {
+                    heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x, currentTile.Value.y + 1), baseLocation);
+
                     //add the new tile to the heap
-                    prq.Insert(currentTile.Key + 1, new Vector2(currentTile.Value.x, currentTile.Value.y + 1));
+                    prq.Insert(currentTile.Key + 1 + heur, new Vector2(currentTile.Value.x, currentTile.Value.y + 1));
 
                     //add the location of he parent to the pathParent array
                     pathParent[(int)currentTile.Value.x, (int)currentTile.Value.y + 1] = currentTile.Value;
