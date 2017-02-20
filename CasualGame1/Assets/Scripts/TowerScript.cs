@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DigitalRuby.LightningBolt;
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -9,6 +10,7 @@ public class TowerScript : MonoBehaviour {
     public List<EnemyScript> enemies = new List<EnemyScript>();
 
     private SphereCollider rangeSphere;
+    private LightningBoltScript lightning;
     private float _timer = 0.0f;
     public float _fireRate = 0.333f;
 
@@ -17,6 +19,8 @@ public class TowerScript : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
         rangeSphere = this.gameObject.GetComponent<SphereCollider>();
+        lightning = gameObject.GetComponent<LightningBoltScript>();
+        lightning.StartObject = transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
         ps = GetComponent<ParticleSystem>();
 	}
 	
@@ -53,13 +57,14 @@ public class TowerScript : MonoBehaviour {
 
     private void Attack(EnemyScript enemy)
     {
-        ps.Play();
+        //ps.Play();
+        transform.GetChild(0).GetChild(1).LookAt(enemy.transform.position);
+        transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
+        lightning.EndObject = enemy.gameObject;
+        lightning.Trigger();
         enemy.Damage(1);
 
         _timer = 1f * Mathf.Pow(2.0f, _fireRate);
-        
-        transform.GetChild(0).GetChild(1).LookAt(enemy.transform.position);
-        transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
     }
 
     void OnTriggerEnter(Collider obj)
