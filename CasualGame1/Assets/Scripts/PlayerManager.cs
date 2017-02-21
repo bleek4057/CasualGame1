@@ -24,7 +24,7 @@ public class PlayerManager : MonoBehaviour
 
     public bool CanAffordTower(int cost)
     {
-        if(money >= 25)
+        if(money >= cost)
         {
             return true;
         }

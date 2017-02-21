@@ -23,7 +23,8 @@ public class BaseScript : MonoBehaviour
         health--;
         for(int i = health; i < 4; i++)
         {
-            healthDisplay.transform.GetChild(i).GetComponent<SpriteRenderer>().color = Color.black;
+            transform.GetChild(0).GetChild(i).GetComponent<SpriteRenderer>().color = Color.black;
+            transform.GetChild(1).GetChild(i).GetComponent<SpriteRenderer>().color = Color.black;
         }
         if (health == 0)
         {

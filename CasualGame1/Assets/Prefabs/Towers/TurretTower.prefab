@@ -483,7 +483,7 @@ GameObject:
   - component: {fileID: 199095584200472094}
   - component: {fileID: 54738096795244534}
   m_Layer: 0
-  m_Name: Tower
+  m_Name: TurretTower
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2495,9 +2495,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de333a0e927f9664bad165cb3dc2f73d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  cost: 50
   gameManager: {fileID: 0}
   enemies: []
+  fakeVersion: {fileID: 1645338139568056, guid: 71f258c10e79a6b408359e734f031cf0,
+    type: 2}
   _fireRate: 0.333
+  canAttack: 1
+  toBeColored:
+  - {fileID: 1281843798359158}
+  - {fileID: 1848550635554624}
+  - {fileID: 1411902243470620}
 --- !u!135 &135478731420815178
 SphereCollider:
   m_ObjectHideFlags: 1
@@ -2577,7 +2585,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -616598974
+  randomSeed: -1677788248
   InitialModule:
     serializedVersion: 3
     enabled: 1
