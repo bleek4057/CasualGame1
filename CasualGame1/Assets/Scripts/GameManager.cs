@@ -173,6 +173,19 @@ public class GameManager : MonoBehaviour
             prevMousePosition = Input.mousePosition;
         }
     }
+    public void ToMainMenu()
+    {
+        currentGame = GameState.MainMenu;
+
+        UI.gameObject.SetActive(false);
+        MainMenu.gameObject.SetActive(true);
+
+        buildCamera.transform.position = new Vector3(-400, 150, 0);
+
+        playCamera.gameObject.SetActive(false);
+        buildCamera.gameObject.SetActive(true);
+    }
+
     public void StartGame()
     {
         Restart();
@@ -228,9 +241,11 @@ public class GameManager : MonoBehaviour
 
         playCamera.gameObject.SetActive(true);
         buildCamera.gameObject.SetActive(false);
+        UI.transform.FindChild("Background").gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
+        UI.transform.FindChild("Quit2").gameObject.SetActive(true);
         EnemyManager.FreezeAll();
     }
     public void WinGame()
@@ -239,9 +254,11 @@ public class GameManager : MonoBehaviour
 
         playCamera.gameObject.SetActive(true);
         buildCamera.gameObject.SetActive(false);
+        UI.transform.FindChild("Background").gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
+        UI.transform.FindChild("Quit2").gameObject.SetActive(true);
         EnemyManager.FreezeAll();
     }
     public void Restart()
@@ -249,14 +266,16 @@ public class GameManager : MonoBehaviour
         currentGame = GameState.BuildPhase;
 
         waveNumber = 1;
-        UI.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
+        UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
 
         playCamera.gameObject.SetActive(false);
         buildCamera.gameObject.SetActive(true);
+        UI.transform.FindChild("Background").gameObject.SetActive(false);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(false);
         UI.transform.FindChild("Win").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(false);
+        UI.transform.FindChild("Quit2").gameObject.SetActive(false);
         EnemyManager.DestroyAll();
         TileManager.Reset();
 
@@ -274,5 +293,10 @@ public class GameManager : MonoBehaviour
         playerBase.transform.GetChild(0).gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
         buildCamera.transform.position = new Vector3(0, 150, 0);
+    }
+
+    public void SetUI()
+    {
+
     }
 }

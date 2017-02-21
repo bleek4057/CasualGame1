@@ -19,7 +19,7 @@ public class PlayerManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-        GameManager.UI.transform.GetChild(0).GetChild(2).GetComponent<Text>().text = "Money: " + money;
+        GameManager.UI.transform.FindChild("Extra UI").GetChild(2).GetComponent<Text>().text = "Money: " + money;
     }
 
     public bool CanAffordTower(int cost)
