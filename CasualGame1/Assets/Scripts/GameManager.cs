@@ -114,7 +114,7 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
-                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
+                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
                     if (TileManager.enemyPath.Contains(target))
                     {
                         if (!TileManager.CreatePath())
@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
         currentGame = GameState.BuildPhase;
 
         waveNumber += 1;
-        UI.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
+        UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
 
         playCamera.gameObject.SetActive(false);
         buildCamera.gameObject.SetActive(true);
