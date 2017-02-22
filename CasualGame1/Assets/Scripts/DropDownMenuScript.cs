@@ -22,10 +22,13 @@ public class DropDownMenuScript : MonoBehaviour
     public void ToggleDropdown()
     {
         transform.GetChild(1).gameObject.SetActive(!transform.GetChild(1).gameObject.activeInHierarchy);
+        transform.GetChild(2).gameObject.SetActive(!transform.GetChild(2).gameObject.activeInHierarchy);
     }
     public void SetActiveTower(int id)
     {
-        transform.GetChild(1).gameObject.SetActive(!transform.GetChild(1).gameObject.activeInHierarchy);
+        ToggleDropdown();
         GameManager.towerPrefab = towerPrefabs[id];
+        Destroy(GameManager.fakeTower);
+        GameManager.fakeTower = Instantiate(towerPrefabs[id].GetComponent<TowerScript>().fakeVersion);
     }
 }

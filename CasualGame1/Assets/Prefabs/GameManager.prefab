@@ -34,7 +34,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1708251606465002}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -7.9644656, y: -24.513443, z: 43.399536}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -51,19 +51,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 17aba3874379ceb47a88c29b7888bfec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  enemySpawnPoint: {x: -5, y: 55}
-  enemyPrefab: {fileID: 1726309524556342, guid: f135c888246449f4fa441cc70e1365da,
-    type: 2}
-  enemySliderPrefab: {fileID: 1697643459699834, guid: 4a9969648fb413040bf563515719972e,
-    type: 2}
   towerPrefab: {fileID: 1791498391173414, guid: 60b72d30636cbe549a01407919ff602c,
     type: 2}
   fakeTower: {fileID: 0}
   playerBase: {fileID: 0}
   TileManager: {fileID: 0}
   EnemyManager: {fileID: 0}
+  PlayerManager: {fileID: 0}
   gridIntervalSize: 10
   UI: {fileID: 0}
+  MainMenu: {fileID: 0}
   playCamera: {fileID: 0}
   buildCamera: {fileID: 0}
-  enemiesToSpawn: 3
+  currentGame: 0

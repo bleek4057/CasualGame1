@@ -89,7 +89,7 @@ public class EnemyManager : MonoBehaviour
     {
         allEnemies.Remove(target);
         Destroy(target);
-        //GameManager.PlayerManager.ChangeMoney(20);
+        GameManager.PlayerManager.ChangeMoney(3);
     }
     public void FreezeAll()
     {

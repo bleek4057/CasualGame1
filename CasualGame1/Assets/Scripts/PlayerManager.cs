@@ -12,19 +12,19 @@ public class PlayerManager : MonoBehaviour
 	// Use this for initialization
 	void Start ()
     {
-        money = 100;
+        money = 1000000;
 
     }
 	
 	// Update is called once per frame
 	void Update ()
     {
-        GameManager.UI.transform.GetChild(0).GetChild(2).GetComponent<Text>().text = "Money: " + money;
+        GameManager.UI.transform.FindChild("Extra UI").GetChild(2).GetComponent<Text>().text = "Money: " + money;
     }
 
     public bool CanAffordTower(int cost)
     {
-        if(money >= 25)
+        if(money >= cost)
         {
             return true;
         }

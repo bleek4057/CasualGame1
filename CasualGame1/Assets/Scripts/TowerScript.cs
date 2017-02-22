@@ -5,14 +5,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class TowerScript : MonoBehaviour {
+    public int cost;
 
     public GameManager gameManager;
     public List<EnemyScript> enemies = new List<EnemyScript>();
+    public GameObject fakeVersion;
 
     private SphereCollider rangeSphere;
     private LightningBoltScript lightning;
     private float _timer = 0.0f;
     public float _fireRate = 0.333f;
+
+    public bool canAttack = true;
+
+    Color defaultMainColor;
+    public List<GameObject> toBeColored;
+    List<Color> defaultColor;
 
     ParticleSystem ps;
 
@@ -22,19 +30,29 @@ public class TowerScript : MonoBehaviour {
         lightning = gameObject.GetComponent<LightningBoltScript>();
         lightning.StartObject = transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
         ps = GetComponent<ParticleSystem>();
+
+        defaultColor = new List<Color>();
+        defaultMainColor = GetComponent<Renderer>().material.color;
+        foreach (GameObject child in toBeColored)
+        {
+            defaultColor.Add(child.GetComponent<Renderer>().material.color);
+        }
 	}
 	
 	// Update is called once per frame
 	void Update () {
-        _timer -= Time.deltaTime;
-
-        if(_timer <= 0 && enemies.Count > 0)
+        if (canAttack)
         {
-            if (enemies[0] == null) enemies.RemoveAt(0);
-            else Attack(enemies[0]);
+            _timer -= Time.deltaTime;
+
+            if (_timer <= 0 && enemies.Count > 0)
+            {
+                if (enemies[0] == null) enemies.RemoveAt(0);
+                else Attack(enemies[0]);
+            }
         }
 
-        if (gameManager.currentGame != GameManager.GameState.PlayPhase)
+        if (gameManager.currentGame == GameManager.GameState.BuildPhase)
         {
             RaycastHit hit;
             Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -42,15 +60,27 @@ public class TowerScript : MonoBehaviour {
             bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
             if (rayCast && hit.transform.gameObject == gameObject)
             {
-                transform.GetChild(0).GetComponent<Renderer>().material.color = Color.red;
-                transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = Color.red;
-                transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = Color.red;
+                GetComponent<Renderer>().material.color = Color.red;
+                for (int i = 0; i < toBeColored.Count; i++)
+                {
+                    toBeColored[i].GetComponent<Renderer>().material.color = Color.red;
+                }
             }
             else
             {
-                transform.GetChild(0).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
-                transform.GetChild(0).GetChild(0).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
-                transform.GetChild(0).GetChild(1).GetComponent<Renderer>().material.color = new Color(34 / 255f, 34 / 255f, 34 / 255f, 1);
+                GetComponent<Renderer>().material.color = defaultMainColor;
+                for (int i = 0; i < toBeColored.Count; i++)
+                {
+                    toBeColored[i].GetComponent<Renderer>().material.color = defaultColor[i];
+                }
+            }
+        }
+        else
+        {
+            GetComponent<Renderer>().material.color = defaultMainColor;
+            for (int i = 0; i < toBeColored.Count; i++)
+            {
+                toBeColored[i].GetComponent<Renderer>().material.color = defaultColor[i];
             }
         }
     }
