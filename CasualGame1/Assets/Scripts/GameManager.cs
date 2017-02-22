@@ -37,9 +37,11 @@ public class GameManager : MonoBehaviour
         PlayPhase,
         WinPhase,
         LosePhase,
+        Paused
     };
 
     public GameState currentGame = GameState.BuildPhase;
+    private GameState pausedState;
 
     // Use this for initialization
     void Start ()
@@ -83,7 +85,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
-        if (currentGame == GameState.MainMenu)
+        if (currentGame == GameState.MainMenu || currentGame == GameState.Paused)
         {
 
         }
@@ -193,6 +195,22 @@ public class GameManager : MonoBehaviour
         
         UI.gameObject.SetActive(true);
         MainMenu.gameObject.SetActive(false);
+    }
+
+    public void TogglePause()
+    {
+        switch(currentGame)
+        {
+            case GameState.BuildPhase:
+            case GameState.PlayPhase:
+                pausedState = currentGame;
+                currentGame = GameState.Paused;
+                //UI.gameObject.SetActive(false);
+                break;
+            case GameState.Paused:
+                currentGame = pausedState;
+                break;
+        }
     }
 
     public void StartWave()
