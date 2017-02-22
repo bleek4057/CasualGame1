@@ -217,7 +217,7 @@ public class GameManager : MonoBehaviour
         currentGame = GameState.BuildPhase;
 
         waveNumber += 1;
-        UI.transform.GetChild(1).GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
+        UI.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
 
         playCamera.gameObject.SetActive(false);
         buildCamera.gameObject.SetActive(true);

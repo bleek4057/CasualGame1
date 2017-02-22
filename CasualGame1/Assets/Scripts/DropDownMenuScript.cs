@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class DropDownMenuScript : MonoBehaviour
 {
@@ -30,5 +31,6 @@ public class DropDownMenuScript : MonoBehaviour
         GameManager.towerPrefab = towerPrefabs[id];
         Destroy(GameManager.fakeTower);
         GameManager.fakeTower = Instantiate(towerPrefabs[id].GetComponent<TowerScript>().fakeVersion);
+        gameObject.GetComponentInChildren<Text>().text = transform.GetChild(id + 1).gameObject.GetComponentInChildren<Text>().text;
     }
 }

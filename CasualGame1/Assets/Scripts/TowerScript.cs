@@ -28,7 +28,8 @@ public class TowerScript : MonoBehaviour {
 	void Start () {
         rangeSphere = this.gameObject.GetComponent<SphereCollider>();
         lightning = gameObject.GetComponent<LightningBoltScript>();
-        lightning.StartObject = transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+        if(lightning != null)
+            lightning.StartObject = transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
         ps = GetComponent<ParticleSystem>();
 
         defaultColor = new List<Color>();
