@@ -289,7 +289,7 @@ Prefab:
     - target: {fileID: 114494460581959622, guid: 346f64916871dc44dbb5f8db4d9a8685,
         type: 2}
       propertyPath: enemySpawnPoint.y
-      value: 55
+      value: 45
       objectReference: {fileID: 0}
     - target: {fileID: 114494460581959622, guid: 346f64916871dc44dbb5f8db4d9a8685,
         type: 2}
@@ -831,7 +831,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 502251475}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -5, y: 0, z: 55}
+  m_LocalPosition: {x: -5, y: 0.1, z: 45}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -2246,7 +2246,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   enemyPath: []
+  x: 10
+  y: 10
   pathPrefab: {fileID: 1711558355328576, guid: ed04bded13f6ed649950e31c5d5066ff, type: 2}
+  ground: {fileID: 1310563557}
+  enemySpawn: {fileID: 502251475}
 --- !u!223 &2059034412 stripped
 Canvas:
   m_PrefabParentObject: {fileID: 223200769888951364, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,

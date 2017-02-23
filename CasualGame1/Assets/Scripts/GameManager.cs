@@ -114,12 +114,12 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
-                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
+                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x/2), (int)(((TileManager.y / 2)-1) - Mathf.Floor(hit.point.z / 10))] = true;
                     if (TileManager.enemyPath.Contains(target))
                     {
                         if (!TileManager.CreatePath())
                         {
-                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = false;
+                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2)-1) - Mathf.Floor(hit.point.z / 10))] = false;
                             TileManager.CreatePath();
                         }
                         else
@@ -147,7 +147,7 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Tower")
                 {
                     List<Vector2> savedPath = new List<Vector2>(TileManager.enemyPath);
-                    TileManager.mapData[(int)(5 + (hit.transform.position.x - 5) / 10), (int)(5 - (hit.transform.position.z - 5) / 10)] = false;
+                    TileManager.mapData[(int)(5 + (hit.transform.position.x - (TileManager.x / 2)) / 10), (int)(5 - (hit.transform.position.z - ((TileManager.y / 2) - 1)) / 10)] = false;
                     TileManager.CreatePath();
                     if (TileManager.enemyPath.Count == savedPath.Count)
                     {

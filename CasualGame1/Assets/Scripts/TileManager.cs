@@ -11,8 +11,8 @@ public class TileManager : MonoBehaviour
 {
     //the path each enemy will follow
     public List<Vector2> enemyPath;
-    private int x = 10;
-    private int y = 11;
+    public int x = 10;
+    public int y = 10;
     
     //data on if a tile is occupied
     public bool[,] mapData;
@@ -37,16 +37,13 @@ public class TileManager : MonoBehaviour
         
         enemyPath = new List<Vector2>();
         spawnLocation = new Vector2(4, 0);
-        baseLocation = new Vector2(7, 9);
-
-
+        baseLocation = new Vector2(7, 8);
+        
 
         //Debug.Log(mapData);
 
         //creates the path the enemy will use
         CreatePath();
-        
-        
     }
 	
 	// Update is called once per frame
@@ -250,7 +247,7 @@ public class TileManager : MonoBehaviour
         {
             //Debug.Log(currentLocation);
 
-            enemyPath.Insert(0, new Vector2((currentLocation.x - 5) * 10 + 5, (currentLocation.y - 6) * -10 - 5));
+            enemyPath.Insert(0, new Vector2((currentLocation.x - 5) * 10 + 5, (currentLocation.y - 5) * -10 - 5));
 
             currentLocation = pathParent[(int)currentLocation.x,(int)currentLocation.y];
         }
