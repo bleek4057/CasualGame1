@@ -27,6 +27,7 @@ public class GameManager : MonoBehaviour
 
     public Camera playCamera;
     public Camera buildCamera;
+    private GameObject currentCamera;
 
     private Vector2 prevMousePosition;
 
@@ -98,6 +99,27 @@ public class GameManager : MonoBehaviour
             {
                 playCamera.fieldOfView = 20;
             }
+            RaycastHit hit;
+            if (Input.GetMouseButtonUp(1))
+            {
+                if (playCamera.gameObject.activeSelf)
+                {
+                    Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    int layermask = ~(1 << 9);
+                    bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
+                    if (rayCast && hit.transform.tag == "Tower" && hit.transform.gameObject.GetComponent<TowerScript>().camera != null)
+                    {
+                        hit.transform.gameObject.GetComponent<TowerScript>().camera.gameObject.SetActive(true);
+                        playCamera.gameObject.SetActive(false);
+                        currentCamera = hit.transform.gameObject.GetComponent<TowerScript>().camera.gameObject;
+                    }
+                }
+                else
+                {
+                    currentCamera.gameObject.SetActive(false);
+                    playCamera.gameObject.SetActive(true);
+                }
+            }
             prevMousePosition = Input.mousePosition;
         }
         if(currentGame == GameState.BuildPhase)
@@ -155,7 +177,7 @@ public class GameManager : MonoBehaviour
                         TileManager.CreatePathIndicator();
                     }
                     //Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
-                    PlayerManager.ChangeMoney(3*towerPrefab.GetComponent<TowerScript>().cost/5);
+                    PlayerManager.ChangeMoney(3*hit.transform.gameObject.GetComponent<TowerScript>().cost/5);
                     Destroy(hit.transform.gameObject);
 
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
@@ -288,7 +310,7 @@ public class GameManager : MonoBehaviour
         EnemyManager.enemiesToSpawn = 3;
         EnemyManager.spawnInterval = 5;
         EnemyManager.RestartInterval();
-        PlayerManager.SetMoney(100);
+        PlayerManager.SetMoney(125);
 
         playerBase.transform.GetChild(0).gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
