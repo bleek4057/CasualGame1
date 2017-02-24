@@ -24,9 +24,11 @@ public class GameManager : MonoBehaviour
 
     public Canvas UI;
     public Canvas MainMenu;
+    public Canvas Credits;
 
     public Camera playCamera;
     public Camera buildCamera;
+    private GameObject currentCamera;
 
     private Vector2 prevMousePosition;
 
@@ -93,12 +95,39 @@ public class GameManager : MonoBehaviour
         {
             if (Input.GetMouseButton(1))
             {
-                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3*(Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
+                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
+                /*playCamera.transform.RotateAround(Vector3.zero, Vector3.left, 3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
+                playCamera.transform.Rotate(0, 0, -playCamera.transform.eulerAngles.z);
+                if (playCamera.transform.eulerAngles.x < 50 || playCamera.transform.eulerAngles.x > 70)
+                {
+                    playCamera.transform.RotateAround(Vector3.zero, Vector3.left, -3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
+                }*/
             }
             playCamera.fieldOfView -= Input.mouseScrollDelta.y;
             if (playCamera.fieldOfView < 20)
             {
                 playCamera.fieldOfView = 20;
+            }
+            RaycastHit hit;
+            if (Input.GetMouseButtonUp(1))
+            {
+                if (playCamera.gameObject.activeSelf)
+                {
+                    Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
+                    int layermask = ~(1 << 9);
+                    bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
+                    if (rayCast && hit.transform.tag == "Tower" && hit.transform.gameObject.GetComponent<TowerScript>().camera != null)
+                    {
+                        hit.transform.gameObject.GetComponent<TowerScript>().camera.gameObject.SetActive(true);
+                        playCamera.gameObject.SetActive(false);
+                        currentCamera = hit.transform.gameObject.GetComponent<TowerScript>().camera.gameObject;
+                    }
+                }
+                else
+                {
+                    currentCamera.gameObject.SetActive(false);
+                    playCamera.gameObject.SetActive(true);
+                }
             }
             prevMousePosition = Input.mousePosition;
         }
@@ -116,12 +145,12 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
-                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10)+5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = true;
+                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x/2), (int)(((TileManager.y / 2)-1) - Mathf.Floor(hit.point.z / 10))] = true;
                     if (TileManager.enemyPath.Contains(target))
                     {
                         if (!TileManager.CreatePath())
                         {
-                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + 5, (int)(5 - Mathf.Floor(hit.point.z / 10))] = false;
+                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2)-1) - Mathf.Floor(hit.point.z / 10))] = false;
                             TileManager.CreatePath();
                         }
                         else
@@ -149,7 +178,7 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Tower")
                 {
                     List<Vector2> savedPath = new List<Vector2>(TileManager.enemyPath);
-                    TileManager.mapData[(int)(5 + (hit.transform.position.x - 5) / 10), (int)(5 - (hit.transform.position.z - 5) / 10)] = false;
+                    TileManager.mapData[(int)(5 + (hit.transform.position.x - (TileManager.x / 2)) / 10), (int)(5 - (hit.transform.position.z - ((TileManager.y / 2) - 1)) / 10)] = false;
                     TileManager.CreatePath();
                     if (TileManager.enemyPath.Count == savedPath.Count)
                     {
@@ -157,7 +186,7 @@ public class GameManager : MonoBehaviour
                         TileManager.CreatePathIndicator();
                     }
                     //Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
-                    PlayerManager.ChangeMoney(3*towerPrefab.GetComponent<TowerScript>().cost/5);
+                    PlayerManager.ChangeMoney(3*hit.transform.gameObject.GetComponent<TowerScript>().cost/5);
                     Destroy(hit.transform.gameObject);
 
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
@@ -181,6 +210,7 @@ public class GameManager : MonoBehaviour
 
         UI.gameObject.SetActive(false);
         MainMenu.gameObject.SetActive(true);
+        Credits.gameObject.SetActive(false);
 
         buildCamera.transform.position = new Vector3(-400, 150, 0);
 
@@ -223,6 +253,9 @@ public class GameManager : MonoBehaviour
 
         playerBase.transform.GetChild(0).gameObject.SetActive(false);
         playerBase.transform.GetChild(1).gameObject.SetActive(true);
+
+        UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
+        UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
     }
     public void WinWave()
     {
@@ -235,7 +268,7 @@ public class GameManager : MonoBehaviour
         currentGame = GameState.BuildPhase;
 
         waveNumber += 1;
-        UI.transform.GetChild(2).GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
+        UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
 
         playCamera.gameObject.SetActive(false);
         buildCamera.gameObject.SetActive(true);
@@ -252,6 +285,13 @@ public class GameManager : MonoBehaviour
 
         PlayerManager.ChangeMoney(20);
         buildCamera.transform.position = new Vector3(0, 150, 0);
+
+        UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
+        UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
+        if(currentCamera.activeSelf)
+        {
+            currentCamera.SetActive(false);
+        }
     }
     public void LoseWave()
     {
@@ -265,6 +305,14 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Quit2").gameObject.SetActive(true);
         EnemyManager.FreezeAll();
+        
+        UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
+        UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
+
+        if (currentCamera.activeSelf)
+        {
+            currentCamera.SetActive(false);
+        }
     }
     public void WinGame()
     {
@@ -278,6 +326,11 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Win").gameObject.SetActive(true);
         UI.transform.FindChild("Quit2").gameObject.SetActive(true);
         EnemyManager.FreezeAll();
+
+        if (currentCamera.activeSelf)
+        {
+            currentCamera.SetActive(false);
+        }
     }
     public void Restart()
     {
@@ -306,15 +359,31 @@ public class GameManager : MonoBehaviour
         EnemyManager.enemiesToSpawn = 3;
         EnemyManager.spawnInterval = 5;
         EnemyManager.RestartInterval();
-        PlayerManager.SetMoney(100);
+        PlayerManager.SetMoney(125);
 
         playerBase.transform.GetChild(0).gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
         buildCamera.transform.position = new Vector3(0, 150, 0);
+
+        UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
+        UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
     }
 
-    public void SetUI()
+    public void ToggleHelp()
     {
+        if (currentGame == GameState.BuildPhase)
+        {
+            UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+        }
+        else if (currentGame == GameState.PlayPhase)
+        {
+            UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+        }
+    }
 
+    public void ToCredits()
+    {
+        MainMenu.gameObject.SetActive(false);
+        Credits.gameObject.SetActive(true);
     }
 }

@@ -24,6 +24,8 @@ public class TowerScript : MonoBehaviour {
 
     ParticleSystem ps;
 
+    public Camera camera;
+
 	// Use this for initialization
 	void Start () {
         rangeSphere = this.gameObject.GetComponent<SphereCollider>();

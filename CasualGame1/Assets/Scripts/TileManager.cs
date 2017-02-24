@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathHeap;
@@ -9,8 +11,8 @@ public class TileManager : MonoBehaviour
 {
     //the path each enemy will follow
     public List<Vector2> enemyPath;
-    private int x = 10;
-    private int y = 11;
+    public int x = 10;
+    public int y = 10;
     
     //data on if a tile is occupied
     public bool[,] mapData;
@@ -19,30 +21,29 @@ public class TileManager : MonoBehaviour
 
     public GameObject pathPrefab;
 
-    private string fileName = "MapData\\level1.txt";
+    public GameObject ground;
+    public GameObject enemySpawn;
+
+    private string fileName = "Assets\\MapData\\level1.txt";
 
     // Use this for initialization
     void Start ()
     {
-        mapData = new bool[x, y];
+
+        ReadInFileData();
+
+        AdjustMap();
+
+        
         enemyPath = new List<Vector2>();
         spawnLocation = new Vector2(4, 0);
-        baseLocation = new Vector2(7, 9);
-
-        for (int i = 0; i < 10; i++)
-        {
-            if(i != 4)
-            {
-                mapData[i, 0] = true;
-            }
-        }
+        baseLocation = new Vector2(7, 8);
+        
 
         //Debug.Log(mapData);
 
         //creates the path the enemy will use
         CreatePath();
-        
-        
     }
 	
 	// Update is called once per frame
@@ -85,15 +86,11 @@ public class TileManager : MonoBehaviour
 
     public void Reset()
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < x; i++)
         {
-            for (int i2 = 0; i2 < 11; i2++)
+            for (int i2 = 0; i2 < y; i2++)
             {
                 mapData[i, i2] = false;
-            }
-            if (i != 4)
-            {
-                mapData[i, 0] = true;
             }
         }
 
@@ -250,9 +247,52 @@ public class TileManager : MonoBehaviour
         {
             //Debug.Log(currentLocation);
 
-            enemyPath.Insert(0, new Vector2((currentLocation.x - 5) * 10 + 5, (currentLocation.y - 6) * -10 - 5));
+            enemyPath.Insert(0, new Vector2((currentLocation.x - 5) * 10 + 5, (currentLocation.y - 5) * -10 - 5));
 
             currentLocation = pathParent[(int)currentLocation.x,(int)currentLocation.y];
         }
+    }
+
+    void ReadInFileData()
+    {
+        StreamReader sr = File.OpenText(fileName);
+
+        string line = "";
+
+        line = sr.ReadLine();
+        x = Int32.Parse(line);
+
+        line = sr.ReadLine();
+        y = Int32.Parse(line);
+
+        mapData = new bool[x, y];
+
+        int tempX = 0;
+        int tempY = 0;
+
+        while ((line = sr.ReadLine()) != null)
+        {
+            string[] lineData = line.Split(' ');
+
+            if(lineData[0] == "S")
+            {
+                tempX = Int32.Parse(lineData[1]);
+                tempY = Int32.Parse(lineData[2]);
+
+                //Debug.Log(x + ", " + y);
+                //Debug.Log(tempX + ", " + tempY);
+
+                mapData[tempX, tempY] = true;
+
+                enemySpawn.transform.position = new Vector3((tempX - x / 2) * 10 - 5, 0.001f, (tempY - y / 2) * -10 - 5);
+
+                spawnLocation = new Vector2(tempX, tempY);
+            }
+        }
+    }
+
+    void AdjustMap()
+    {
+        ground.transform.localScale = new Vector3(x, 1, y);
     }
 }

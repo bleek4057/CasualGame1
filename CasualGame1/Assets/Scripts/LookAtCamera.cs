@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class LookAtCamera : MonoBehaviour
 {
-    public Camera cameraToSee;
 	// Use this for initialization
 	void Start ()
     {
@@ -14,6 +13,6 @@ public class LookAtCamera : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.rotation = cameraToSee.transform.rotation;
+        transform.rotation = Camera.main.transform.rotation;
     }
 }
