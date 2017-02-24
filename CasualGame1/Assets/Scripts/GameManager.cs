@@ -365,7 +365,7 @@ public class GameManager : MonoBehaviour
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
         buildCamera.transform.position = new Vector3(0, 150, 0);
 
-        playerBase.getComponent<BaseScript>().health = 4;
+        playerBase.GetComponent<BaseScript>().health = 4;
 
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
