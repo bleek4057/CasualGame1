@@ -279,8 +279,8 @@ public class TileManager : MonoBehaviour
                 tempX = Int32.Parse(lineData[1]);
                 tempY = Int32.Parse(lineData[2]);
 
-                Debug.Log(x + ", " + y);
-                Debug.Log(tempX + ", " + tempY);
+                //Debug.Log(x + ", " + y);
+                //Debug.Log(tempX + ", " + tempY);
 
                 mapData[tempX, tempY] = true;
 

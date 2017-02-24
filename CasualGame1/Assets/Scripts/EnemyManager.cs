@@ -61,8 +61,6 @@ public class EnemyManager : MonoBehaviour
         newEnemy.GetComponent<EnemyScript>().playerBase = GameManager.playerBase;
         allEnemies.Add(newEnemy);
 
-        newEnemy.transform.GetChild(0).GetComponent<LookAtCamera>().cameraToSee = GameManager.playCamera;
-
         //eh, this is for a slider health bar but i think the objects would be easier
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
         //enemyHealth.transform.SetParent(UI.transform, false);
