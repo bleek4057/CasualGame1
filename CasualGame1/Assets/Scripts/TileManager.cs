@@ -25,11 +25,8 @@ public class TileManager : MonoBehaviour
     public GameObject enemySpawn;
     public GameObject playerBase;
 
-    public GameObject wallPrefab;
 
-    public GameManager gm;
-
-    private string fileName = "Assets\\MapData\\level1.txt";
+    public string mapFileName = "Assets\\MapData\\level1.txt";
 
     // Use this for initialization
     void Start ()
@@ -260,7 +257,7 @@ public class TileManager : MonoBehaviour
 
     void ReadInFileData()
     {
-        StreamReader sr = File.OpenText(fileName);
+        StreamReader sr = File.OpenText(mapFileName);
 
         string line = "";
 

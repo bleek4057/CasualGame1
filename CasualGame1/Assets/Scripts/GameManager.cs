@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -360,6 +362,28 @@ public class GameManager : MonoBehaviour
 
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
+
+        //spawn in built in towers
+        StreamReader sr = File.OpenText(TileManager.mapFileName);
+
+        string line = "";
+
+        int x = Int32.Parse(sr.ReadLine());
+        int y = Int32.Parse(sr.ReadLine());
+
+        while ((line = sr.ReadLine()) != null)
+        {
+            string[] lineData = line.Split(' ');
+            if(lineData[0] == "W")
+            {
+                int tempX = Int32.Parse(lineData[1]);
+                int tempY = Int32.Parse(lineData[2]);
+
+                GameObject newTower = Instantiate(towerPrefab, new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
+
+                newTower.GetComponent<TowerScript>().gameManager = this;
+            }
+        }
     }
 
     public void ToggleHelp()
