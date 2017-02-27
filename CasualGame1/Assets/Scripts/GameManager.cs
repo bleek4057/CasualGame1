@@ -380,8 +380,6 @@ public class GameManager : MonoBehaviour
                 int tempY = Int32.Parse(lineData[2]);
 
                 GameObject newTower = Instantiate(towerPrefab, new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
-
-                newTower.GetComponent<TowerScript>().gameManager = this;
             }
         }
     }

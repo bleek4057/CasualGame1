@@ -2601,7 +2601,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cost: 50
-  gameManager: {fileID: 0}
   enemies: []
   fakeVersion: {fileID: 1645338139568056, guid: 71f258c10e79a6b408359e734f031cf0,
     type: 2}
