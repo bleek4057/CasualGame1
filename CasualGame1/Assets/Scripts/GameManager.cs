@@ -27,10 +27,13 @@ public class GameManager : MonoBehaviour
     public Canvas Credits;
 
     public Camera playCamera;
-    public Camera buildCamera;
-    private GameObject currentCamera;
 
     private Vector2 prevMousePosition;
+
+    public Vector3 menuCameraPos;
+    public Vector3 buildCameraPos;
+    public Vector3 playCameraPos;
+    public Vector3 playCameraAngles;
 
     public enum GameState
     {
@@ -48,8 +51,9 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        playCamera.gameObject.SetActive(false);
-        buildCamera.gameObject.SetActive(true);
+        playCamera.transform.position = menuCameraPos;
+        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
@@ -109,7 +113,7 @@ public class GameManager : MonoBehaviour
                 playCamera.fieldOfView = 20;
             }
             RaycastHit hit;
-            if (Input.GetMouseButtonUp(1))
+            /*if (Input.GetMouseButtonUp(1))
             {
                 if (playCamera.gameObject.activeSelf)
                 {
@@ -128,7 +132,7 @@ public class GameManager : MonoBehaviour
                     currentCamera.gameObject.SetActive(false);
                     playCamera.gameObject.SetActive(true);
                 }
-            }
+            }*/
             prevMousePosition = Input.mousePosition;
         }
         if(currentGame == GameState.BuildPhase)
@@ -194,12 +198,12 @@ public class GameManager : MonoBehaviour
             }
             if (Input.GetMouseButton(1))
             {
-                buildCamera.transform.Translate(5 * new Vector3(-(Input.mousePosition.x - prevMousePosition.x), -(Input.mousePosition.y - prevMousePosition.y), 0) * Time.deltaTime);
+                playCamera.transform.Translate(5 * new Vector3(-(Input.mousePosition.x - prevMousePosition.x), -(Input.mousePosition.y - prevMousePosition.y), 0) * Time.deltaTime);
             }
-            buildCamera.fieldOfView -= Input.mouseScrollDelta.y;
-            if(buildCamera.fieldOfView < 20)
+            //playCamera.fieldOfView -= Input.mouseScrollDelta.y;
+            if(playCamera.fieldOfView < 20)
             {
-                buildCamera.fieldOfView = 20;
+                playCamera.fieldOfView = 20;
             }
             prevMousePosition = Input.mousePosition;
         }
@@ -212,10 +216,8 @@ public class GameManager : MonoBehaviour
         MainMenu.gameObject.SetActive(true);
         Credits.gameObject.SetActive(false);
 
-        buildCamera.transform.position = new Vector3(-400, 150, 0);
-
-        playCamera.gameObject.SetActive(false);
-        buildCamera.gameObject.SetActive(true);
+        playCamera.transform.position = menuCameraPos;
+        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
     }
 
     public void StartGame()
@@ -246,9 +248,9 @@ public class GameManager : MonoBehaviour
     public void StartWave()
     {
         currentGame = GameState.PlayPhase;
-
-        playCamera.gameObject.SetActive(true);
-        buildCamera.gameObject.SetActive(false);
+        
+        playCamera.transform.position = playCameraPos;
+        playCamera.transform.eulerAngles = playCameraAngles;
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
 
         playerBase.transform.GetChild(0).gameObject.SetActive(false);
@@ -269,9 +271,9 @@ public class GameManager : MonoBehaviour
 
         waveNumber += 1;
         UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
-
-        playCamera.gameObject.SetActive(false);
-        buildCamera.gameObject.SetActive(true);
+        
+        playCamera.transform.position = buildCameraPos;
+        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         EnemyManager.DestroyAll();
 
@@ -284,21 +286,16 @@ public class GameManager : MonoBehaviour
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
         PlayerManager.ChangeMoney(20);
-        buildCamera.transform.position = new Vector3(0, 150, 0);
 
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
-        if(currentCamera.activeSelf)
-        {
-            currentCamera.SetActive(false);
-        }
     }
     public void LoseWave()
     {
         currentGame = GameState.LosePhase;
-
-        playCamera.gameObject.SetActive(true);
-        buildCamera.gameObject.SetActive(false);
+        
+        playCamera.transform.position = playCameraPos;
+        playCamera.transform.eulerAngles = playCameraAngles;
         UI.transform.FindChild("Background").gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(true);
@@ -308,29 +305,19 @@ public class GameManager : MonoBehaviour
         
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
-
-        if (currentCamera.activeSelf)
-        {
-            currentCamera.SetActive(false);
-        }
     }
     public void WinGame()
     {
         currentGame = GameState.WinPhase;
-
-        playCamera.gameObject.SetActive(true);
-        buildCamera.gameObject.SetActive(false);
+        
+        playCamera.transform.position = playCameraPos;
+        playCamera.transform.eulerAngles = playCameraAngles;
         UI.transform.FindChild("Background").gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
         UI.transform.FindChild("Quit2").gameObject.SetActive(true);
         EnemyManager.FreezeAll();
-
-        if (currentCamera.activeSelf)
-        {
-            currentCamera.SetActive(false);
-        }
     }
     public void Restart()
     {
@@ -338,9 +325,9 @@ public class GameManager : MonoBehaviour
 
         waveNumber = 1;
         UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
-
-        playCamera.gameObject.SetActive(false);
-        buildCamera.gameObject.SetActive(true);
+        
+        playCamera.transform.position = buildCameraPos;
+        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
         UI.transform.FindChild("Background").gameObject.SetActive(false);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(false);
@@ -363,7 +350,6 @@ public class GameManager : MonoBehaviour
 
         playerBase.transform.GetChild(0).gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
-        buildCamera.transform.position = new Vector3(0, 150, 0);
 
         playerBase.GetComponent<BaseScript>().health = 4;
 

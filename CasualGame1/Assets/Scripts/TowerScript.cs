@@ -25,6 +25,9 @@ public class TowerScript : MonoBehaviour {
     ParticleSystem ps;
 
     public Camera camera;
+    public Vector3 cameraPos;
+    public float cameraXAngle;
+    public int damagePerHit;
 
 	// Use this for initialization
 	void Start () {
@@ -43,15 +46,25 @@ public class TowerScript : MonoBehaviour {
 	}
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         if (canAttack)
         {
             _timer -= Time.deltaTime;
 
-            if (_timer <= 0 && enemies.Count > 0)
+            if (enemies.Count > 0)
             {
-                if (enemies[0] == null) enemies.RemoveAt(0);
-                else Attack(enemies[0]);
+                if (enemies[0] == null)
+                {
+                    enemies.RemoveAt(0);
+                }
+                transform.GetChild(0).GetChild(1).LookAt(enemies[0].transform.position);
+                transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
+
+                if (_timer <= 0)
+                {
+                    Attack(enemies[0]);
+                }
             }
         }
 
@@ -95,7 +108,7 @@ public class TowerScript : MonoBehaviour {
         transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
         lightning.EndObject = enemy.gameObject;
         lightning.Trigger();
-        enemy.Damage(1);
+        enemy.Damage(damagePerHit);
 
         _timer = 1f * Mathf.Pow(2.0f, _fireRate);
     }

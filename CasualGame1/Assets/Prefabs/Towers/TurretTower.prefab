@@ -2612,6 +2612,9 @@ MonoBehaviour:
   - {fileID: 1848550635554624}
   - {fileID: 1411902243470620}
   camera: {fileID: 20846255452378014}
+  cameraPos: {x: 0, y: 0, z: 0}
+  cameraXAngle: 0
+  damagePerHit: 10
 --- !u!120 &120362279793485242
 LineRenderer:
   m_ObjectHideFlags: 1
