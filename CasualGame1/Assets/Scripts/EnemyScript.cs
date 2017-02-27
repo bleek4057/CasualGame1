@@ -22,37 +22,40 @@ public class EnemyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //moves the enemy to its next point (VERY simple and not optimized)
-        if (path.Peek().x < transform.position.x)
+        if (GameManager.Instance.currentGame == GameManager.GameState.PlayPhase)
         {
-            this.transform.Translate(-speed * Time.deltaTime, 0, 0);
-        }
-        if (path.Peek().x > transform.position.x)
-        {
-            this.transform.Translate(speed * Time.deltaTime, 0, 0);
-        }
-        if (path.Peek().y < transform.position.z)
-        {
-            this.transform.Translate(0, 0, -speed * Time.deltaTime);
-        }
-        if (path.Peek().y > transform.position.z)
-        {
-            this.transform.Translate(0, 0, speed * Time.deltaTime);
-        }
-        if (Vector2.Distance(path.Peek(), new Vector2(transform.position.x, transform.position.z)) <= .5f)
-        {
-            path.Dequeue();
-            //Damage(1);
-        }
-        //destroy the object if it reached the end of its path (the base)
-        if (path.Count == 0)
-        {
-            playerBase.GetComponent<BaseScript>().LoseHealth();
-            manager.DestroyEnemy(gameObject);
-        }
-        if(health <= 0)
-        {
-            manager.DestroyEnemy(gameObject);
+            //moves the enemy to its next point (VERY simple and not optimized)
+            if (path.Peek().x < transform.position.x)
+            {
+                this.transform.Translate(-speed * Time.deltaTime, 0, 0);
+            }
+            if (path.Peek().x > transform.position.x)
+            {
+                this.transform.Translate(speed * Time.deltaTime, 0, 0);
+            }
+            if (path.Peek().y < transform.position.z)
+            {
+                this.transform.Translate(0, 0, -speed * Time.deltaTime);
+            }
+            if (path.Peek().y > transform.position.z)
+            {
+                this.transform.Translate(0, 0, speed * Time.deltaTime);
+            }
+            if (Vector2.Distance(path.Peek(), new Vector2(transform.position.x, transform.position.z)) <= .5f)
+            {
+                path.Dequeue();
+                //Damage(1);
+            }
+            //destroy the object if it reached the end of its path (the base)
+            if (path.Count == 0)
+            {
+                playerBase.GetComponent<BaseScript>().LoseHealth();
+                manager.DestroyEnemy(gameObject);
+            }
+            if (health <= 0)
+            {
+                manager.DestroyEnemy(gameObject);
+            }
         }
     }
 

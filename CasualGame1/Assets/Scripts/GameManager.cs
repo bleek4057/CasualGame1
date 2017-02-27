@@ -25,12 +25,15 @@ public class GameManager : MonoBehaviour
     public Canvas UI;
     public Canvas MainMenu;
     public Canvas Credits;
+    public Canvas PauseMenu;
 
     public Camera playCamera;
     public Camera buildCamera;
     private GameObject currentCamera;
 
     private Vector2 prevMousePosition;
+
+    public static GameManager Instance;
 
     public enum GameState
     {
@@ -55,6 +58,8 @@ public class GameManager : MonoBehaviour
 
         PlayerManager.GameManager = this;
         EnemyManager.GameManager = this;
+
+        Instance = this;
     }
 
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
@@ -156,14 +161,12 @@ public class GameManager : MonoBehaviour
                         else
                         {
                             GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
-                            newTower.GetComponent<TowerScript>().gameManager = this;
                             PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
                         }
                     }
                     else
                     {
                         GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
-                        newTower.GetComponent<TowerScript>().gameManager = this;
                         PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
                     }
 
@@ -235,10 +238,13 @@ public class GameManager : MonoBehaviour
             case GameState.PlayPhase:
                 pausedState = currentGame;
                 currentGame = GameState.Paused;
-                //UI.gameObject.SetActive(false);
+                UI.gameObject.SetActive(false);
+                PauseMenu.gameObject.SetActive(true);
                 break;
             case GameState.Paused:
                 currentGame = pausedState;
+                PauseMenu.gameObject.SetActive(false);
+                UI.gameObject.SetActive(true);
                 break;
         }
     }

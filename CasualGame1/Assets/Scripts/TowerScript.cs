@@ -7,7 +7,6 @@ using UnityEngine;
 public class TowerScript : MonoBehaviour {
     public int cost;
 
-    public GameManager gameManager;
     public List<EnemyScript> enemies = new List<EnemyScript>();
     public GameObject fakeVersion;
 
@@ -44,7 +43,7 @@ public class TowerScript : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (canAttack)
+        if (canAttack && GameManager.Instance.currentGame == GameManager.GameState.PlayPhase)
         {
             _timer -= Time.deltaTime;
 
@@ -55,7 +54,7 @@ public class TowerScript : MonoBehaviour {
             }
         }
 
-        if (gameManager.currentGame == GameManager.GameState.BuildPhase)
+        if (GameManager.Instance.currentGame == GameManager.GameState.BuildPhase)
         {
             RaycastHit hit;
             Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
