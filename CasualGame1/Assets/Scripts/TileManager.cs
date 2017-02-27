@@ -23,6 +23,11 @@ public class TileManager : MonoBehaviour
 
     public GameObject ground;
     public GameObject enemySpawn;
+    public GameObject playerBase;
+
+    public GameObject wallPrefab;
+
+    public GameManager gm;
 
     private string fileName = "Assets\\MapData\\level1.txt";
 
@@ -36,8 +41,8 @@ public class TileManager : MonoBehaviour
 
         
         enemyPath = new List<Vector2>();
-        spawnLocation = new Vector2(4, 0);
-        baseLocation = new Vector2(7, 8);
+        //spawnLocation = new Vector2(4, 0);
+        //baseLocation = new Vector2(7, 8);
         
 
         //Debug.Log(mapData);
@@ -99,7 +104,7 @@ public class TileManager : MonoBehaviour
         {
 
         }
-        else
+        /*else
         {
             enemyPath.Add(new Vector2(-5, 45));
             enemyPath.Add(new Vector2(-5, 35));
@@ -115,7 +120,7 @@ public class TileManager : MonoBehaviour
             enemyPath.Add(new Vector2(25, -35));
 
             CreatePathIndicator();
-        }
+        }*/
     }
 
     public bool CreatePath()
@@ -284,9 +289,18 @@ public class TileManager : MonoBehaviour
 
                 mapData[tempX, tempY] = true;
 
-                enemySpawn.transform.position = new Vector3((tempX - x / 2) * 10 - 5, 0.001f, (tempY - y / 2) * -10 - 5);
+                enemySpawn.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 0.001f, (tempY - y / 2) * -10 - 5);
 
                 spawnLocation = new Vector2(tempX, tempY);
+            }
+            if(lineData[0] == "B")
+            {
+                tempX = Int32.Parse(lineData[1]);
+                tempY = Int32.Parse(lineData[2]);
+
+                playerBase.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 8, (tempY - y / 2) * -10 - 5);
+
+                baseLocation = new Vector2(tempX, tempY);
             }
         }
     }
