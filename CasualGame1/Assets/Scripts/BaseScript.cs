@@ -16,16 +16,16 @@ public class BaseScript : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-	}
-
-    public void LoseHealth()
-    {
-        health--;
         for(int i = health; i < 4; i++)
         {
             transform.GetChild(0).GetChild(i).GetComponent<SpriteRenderer>().color = Color.black;
             transform.GetChild(1).GetChild(i).GetComponent<SpriteRenderer>().color = Color.black;
         }
+	}
+
+    public void LoseHealth()
+    {
+        health--;
         if (health == 0)
         {
             GameObject.FindGameObjectWithTag("Game Manager").GetComponent<GameManager>().LoseWave();
