@@ -585,7 +585,11 @@ Prefab:
     - target: {fileID: 224742178704354186, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,
         type: 2}
       propertyPath: m_RootOrder
+<<<<<<< HEAD
       value: 5
+=======
+      value: 7
+>>>>>>> grant
       objectReference: {fileID: 0}
     - target: {fileID: 224742178704354186, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,
         type: 2}
@@ -888,7 +892,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
       propertyPath: m_RootOrder
+<<<<<<< HEAD
       value: 9
+=======
+      value: 11
+>>>>>>> grant
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
@@ -1321,7 +1329,11 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
+<<<<<<< HEAD
   m_RootOrder: 7
+=======
+  m_RootOrder: 9
+>>>>>>> grant
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &529551611
 GameObject:
@@ -1461,7 +1473,11 @@ Transform:
   - {fileID: 394189982}
   - {fileID: 732718241}
   m_Father: {fileID: 0}
+<<<<<<< HEAD
   m_RootOrder: 11
+=======
+  m_RootOrder: 13
+>>>>>>> grant
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &648131408
 GameObject:
@@ -1610,7 +1626,11 @@ Transform:
   - {fileID: 274256047}
   - {fileID: 1799064220}
   m_Father: {fileID: 0}
+<<<<<<< HEAD
   m_RootOrder: 10
+=======
+  m_RootOrder: 12
+>>>>>>> grant
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &732718237
 GameObject:
@@ -2528,9 +2548,10 @@ Prefab:
       objectReference: {fileID: 456133294}
     - target: {fileID: 114141460724248728, guid: ad26753475289f149b1418e9dfaa7a2a,
         type: 2}
-      propertyPath: PauseMenu
-      value: 
-      objectReference: {fileID: 1796699283}
+<<<<<<< HEAD
+      propertyPath: menuCameraPos.x
+      value: -400
+      objectReference: {fileID: 0}
     - target: {fileID: 114141460724248728, guid: ad26753475289f149b1418e9dfaa7a2a,
         type: 2}
       propertyPath: menuCameraPos.y
@@ -2561,6 +2582,11 @@ Prefab:
       propertyPath: playCameraAngles.x
       value: 55
       objectReference: {fileID: 0}
+=======
+      propertyPath: PauseMenu
+      value: 
+      objectReference: {fileID: 1796699283}
+>>>>>>> grant
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad26753475289f149b1418e9dfaa7a2a, type: 2}
   m_IsPrefabParent: 0
@@ -2645,7 +2671,11 @@ Transform:
   m_LocalScale: {x: 10, y: 1, z: 10}
   m_Children: []
   m_Father: {fileID: 0}
+<<<<<<< HEAD
   m_RootOrder: 6
+=======
+  m_RootOrder: 8
+>>>>>>> grant
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1383284828
 GameObject:
@@ -3098,7 +3128,11 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 4134041911613986, guid: dc6fe22a1e34a4f4091b62547af0cb9d, type: 2}
       propertyPath: m_RootOrder
+<<<<<<< HEAD
       value: 8
+=======
+      value: 10
+>>>>>>> grant
       objectReference: {fileID: 0}
     - target: {fileID: 65088625760405554, guid: dc6fe22a1e34a4f4091b62547af0cb9d,
         type: 2}
