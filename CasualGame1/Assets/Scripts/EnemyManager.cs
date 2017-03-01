@@ -1,4 +1,6 @@
-﻿using System.Collections;
+﻿using System;
+using System.IO;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -19,10 +21,26 @@ public class EnemyManager : MonoBehaviour
     //starting time until next enemy spawns
     private float startInterval = 1;
 
+    //data of different enemies to spawn in a wave
+    private List<List<GameObject>> enemyTypesToSpawn;
+    //number of enemies to spawn, corresponds with enemyTypesToSpawn
+    private List<List<int>> enemyNumberToSpawn;
+    //time for enemies to spawn on a wave, corresponds with enemyTypesToSpawn
+    private List<float> enemySpawnTime;
+    //List of enemy prefabs
+    public List<GameObject> enemyPrefabs;
+
     // Use this for initialization
     void Start ()
     {
         allEnemies = new List<GameObject>();
+
+        //initialize enemy Lists
+        enemyTypesToSpawn = new List<List<GameObject>>();
+        enemyNumberToSpawn = new List<List<int>>();
+        enemySpawnTime = new List<float>();
+
+        GetEnemyData("level1");
 
         enemiesSpawned = 0;
 
@@ -111,5 +129,38 @@ public class EnemyManager : MonoBehaviour
         }
 
         allEnemies = new List<GameObject>();
+    }
+
+    private void GetEnemyData(string level)
+    {
+        StreamReader sr = File.OpenText("Assets\\WaveData\\" + level + ".txt");
+
+        string line = "";
+        int wave = 0;
+
+        while((line = sr.ReadLine()) != null)
+        {
+
+            enemySpawnTime.Add(float.Parse(line));
+
+            while((line = sr.ReadLine()) != null && line != "")
+            {
+                string[] lineData = line.Split(' ');
+
+                if (lineData[0] == "BE")
+                {
+                    enemyTypesToSpawn[wave].Add(enemyPrefabs[0]);
+                    enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
+                }
+            }
+
+            wave++;
+            
+        }
+
+        for(int i = 0; i < enemySpawnTime.Count; i++)
+        {
+            Debug.Log(enemySpawnTime[i]);
+        }
     }
 }
