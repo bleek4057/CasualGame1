@@ -44,7 +44,7 @@ public class TileManager : MonoBehaviour
         enemyPath = new List<Vector2>();
 
         //creates the path the enemy will use
-        CreatePath();
+        CreatePath(true);
     }
 	
 	// Update is called once per frame
@@ -98,12 +98,12 @@ public class TileManager : MonoBehaviour
         }
 
         //creates the path each enemy will use
-        CreatePath();
+        CreatePath(true);
 
     }
 
     //calculate the path from the enemy spawn to the player base
-    public bool CreatePath()
+    public bool CreatePath(bool assign)
     {
         //2D array of Vector2a to hold the data of the parent node location to find the path after calculation
         Vector2[,] pathParent = new Vector2[x,y];
@@ -228,10 +228,13 @@ public class TileManager : MonoBehaviour
         }
 
         //populate the enemyPath vector with the new path
-        AssignPath(pathParent);
+        if (assign)
+        {
+            AssignPath(pathParent);
 
-        //create indicators to show the path to the player
-        CreatePathIndicator();
+            //create indicators to show the path to the player
+            CreatePathIndicator();
+        }
         return true;
     }
 

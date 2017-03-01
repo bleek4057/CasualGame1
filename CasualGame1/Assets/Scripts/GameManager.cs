@@ -80,16 +80,24 @@ public class GameManager : MonoBehaviour
         if (rayCast && hit.transform.tag == "Ground")
         {
             Vector2 target = new Vector2(gridIntervalSize * Mathf.Floor(hit.point.x / gridIntervalSize) + (gridIntervalSize / 2), gridIntervalSize * Mathf.Floor(hit.point.z / gridIntervalSize) + (gridIntervalSize / 2));
+            
+            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = true;
+            Debug.Log((int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2) + " - " + (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10)));
             fakeTower.transform.position = new Vector3(target.x, 5, target.y);
             fakeTower.SetActive(true);
-            if (PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
-            {
-                fakeTower.GetComponent<TowerFakeScript>().SetColor(true);
-            }
-            else
+            if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
             {
                 fakeTower.GetComponent<TowerFakeScript>().SetColor(false);
             }
+            else if(!TileManager.CreatePath(false))
+            {
+                fakeTower.GetComponent<TowerFakeScript>().SetColor(false);
+            }
+            else
+            {
+                fakeTower.GetComponent<TowerFakeScript>().SetColor(true);
+            }
+            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = false;
         }
         else
         {
@@ -100,6 +108,7 @@ public class GameManager : MonoBehaviour
     // Update is called once per frame
     void Update ()
     {
+        UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(false);
         if (currentGame == GameState.MainMenu || currentGame == GameState.Paused)
         {
 
@@ -180,13 +189,13 @@ public class GameManager : MonoBehaviour
                 if (rayCast && hit.transform.tag == "Ground")
                 {
                     Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
-                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x/2), (int)(((TileManager.y / 2)-1) - Mathf.Floor(hit.point.z / 10))] = true;
+                    TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = true;
                     if (TileManager.enemyPath.Contains(target))
                     {
-                        if (!TileManager.CreatePath())
+                        if (!TileManager.CreatePath(true))
                         {
-                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2)-1) - Mathf.Floor(hit.point.z / 10))] = false;
-                            TileManager.CreatePath();
+                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = false;
+                            TileManager.CreatePath(true);
                         }
                         else
                         {
@@ -212,14 +221,14 @@ public class GameManager : MonoBehaviour
                 {
                     List<Vector2> savedPath = new List<Vector2>(TileManager.enemyPath);
                     TileManager.mapData[(int)(5 + (hit.transform.position.x - (TileManager.x / 2)) / 10), (int)(5 - (hit.transform.position.z - ((TileManager.y / 2) - 1)) / 10)] = false;
-                    TileManager.CreatePath();
+                    TileManager.CreatePath(true);
                     if (TileManager.enemyPath.Count == savedPath.Count)
                     {
                         TileManager.enemyPath = new List<Vector2>(savedPath);
                         TileManager.CreatePathIndicator();
                     }
                     //Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
-                    PlayerManager.ChangeMoney(3*hit.transform.gameObject.GetComponent<TowerScript>().cost/5);
+                    PlayerManager.ChangeMoney(3 * hit.transform.gameObject.GetComponent<TowerScript>().cost / 5);
                     Destroy(hit.transform.gameObject);
 
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
@@ -231,11 +240,15 @@ public class GameManager : MonoBehaviour
                 buildCameraPos = playCamera.transform.position;
             }
             //playCamera.fieldOfView -= Input.mouseScrollDelta.y;
-            if(playCamera.fieldOfView < 20)
+            if (playCamera.fieldOfView < 20)
             {
                 playCamera.fieldOfView = 20;
             }
             prevMousePosition = Input.mousePosition;
+            if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
+            {
+                UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(true);
+            }
         }
     }
     public void ToMainMenu()
@@ -384,7 +397,7 @@ public class GameManager : MonoBehaviour
 
         LoadMapTowers();
 
-        TileManager.CreatePath();
+        TileManager.CreatePath(true);
     }
 
     //read the current map file and place tiles that are there by default

@@ -716,7 +716,7 @@ Prefab:
     - target: {fileID: 114950831994977752, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,
         type: 2}
       propertyPath: m_Text
-      value: Blank Wall
+      value: Cost:5
       objectReference: {fileID: 0}
     - target: {fileID: 1536001485295190, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8, type: 2}
       propertyPath: m_IsActive
