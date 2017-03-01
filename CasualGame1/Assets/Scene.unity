@@ -1916,6 +1916,12 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 827016910}
+--- !u!114 &872828300 stripped
+MonoBehaviour:
+  m_PrefabParentObject: {fileID: 114075152806331950, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,
+    type: 2}
+  m_PrefabInternal: {fileID: 240364046}
+  m_Script: {fileID: 11500000, guid: 60f705da757008e40a37cef253984005, type: 3}
 --- !u!1 &910791807
 GameObject:
   m_ObjectHideFlags: 0
@@ -2561,6 +2567,16 @@ Prefab:
       propertyPath: playCameraAngles.x
       value: 55
       objectReference: {fileID: 0}
+    - target: {fileID: 114141460724248728, guid: ad26753475289f149b1418e9dfaa7a2a,
+        type: 2}
+      propertyPath: DropDownMenuScript
+      value: 
+      objectReference: {fileID: 872828300}
+    - target: {fileID: 114141460724248728, guid: ad26753475289f149b1418e9dfaa7a2a,
+        type: 2}
+      propertyPath: DropDownMenu
+      value: 
+      objectReference: {fileID: 872828300}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad26753475289f149b1418e9dfaa7a2a, type: 2}
   m_IsPrefabParent: 0
