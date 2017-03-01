@@ -11,12 +11,15 @@ public class TileManager : MonoBehaviour
 {
     //the path each enemy will follow
     public List<Vector2> enemyPath;
+    //map dimensions
     public int x = 10;
     public int y = 10;
     
     //data on if a tile is occupied
     public bool[,] mapData;
+    //location of the enemy spawn in mapData coordinates
     private Vector2 spawnLocation;
+    //location of the player base in mapData coordinates
     private Vector2 baseLocation;
 
     public GameObject pathPrefab;
@@ -25,23 +28,20 @@ public class TileManager : MonoBehaviour
     public GameObject enemySpawn;
     public GameObject playerBase;
 
-
+    //file path of the map data file
     public string mapFileName = "Assets\\MapData\\level1.txt";
 
     // Use this for initialization
     void Start ()
     {
+        //read in the map data file and grab info
         ReadInFileData();
 
+        //adjust the map in accordance with the new mapData
         AdjustMap();
 
-        
+        //initialize the enemy path
         enemyPath = new List<Vector2>();
-        //spawnLocation = new Vector2(4, 0);
-        //baseLocation = new Vector2(7, 8);
-        
-
-        //Debug.Log(mapData);
 
         //creates the path the enemy will use
         CreatePath();
@@ -50,7 +50,7 @@ public class TileManager : MonoBehaviour
 	// Update is called once per frame
 	void Update ()
     {
-		
+	
 	}
 
     public void CreatePathIndicator()
@@ -85,8 +85,10 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    //reset the map data
     public void Reset()
     {
+        //set mapData to default value
         for (int i = 0; i < x; i++)
         {
             for (int i2 = 0; i2 < y; i2++)
@@ -96,32 +98,17 @@ public class TileManager : MonoBehaviour
         }
 
         //creates the path each enemy will use
-        if (CreatePath())
-        {
+        CreatePath();
 
-        }
-        /*else
-        {
-            enemyPath.Add(new Vector2(-5, 45));
-            enemyPath.Add(new Vector2(-5, 35));
-            enemyPath.Add(new Vector2(-5, 25));
-            enemyPath.Add(new Vector2(-5, 15));
-            enemyPath.Add(new Vector2(-5, 5));
-            enemyPath.Add(new Vector2(-5, -5));
-            enemyPath.Add(new Vector2(-5, -15));
-            enemyPath.Add(new Vector2(-5, -25));
-            enemyPath.Add(new Vector2(-5, -35));
-            enemyPath.Add(new Vector2(5, -35));
-            enemyPath.Add(new Vector2(15, -35));
-            enemyPath.Add(new Vector2(25, -35));
-
-            CreatePathIndicator();
-        }*/
     }
 
+    //calculate the path from the enemy spawn to the player base
     public bool CreatePath()
     {
+        //2D array of Vector2a to hold the data of the parent node location to find the path after calculation
         Vector2[,] pathParent = new Vector2[x,y];
+
+        //2D array of bools to keep track of visited nodes
         bool[,] availableTiles = new bool[x,y];
         
         //copy the map data for manipulation
@@ -130,36 +117,42 @@ public class TileManager : MonoBehaviour
             for(int j = 0; j < y; j++)
             {
                 availableTiles[i, j] = mapData[i, j];
-                //Debug.Log(i + ", " + j + " " + availableTiles[i, j]);
             }
         }
 
+        //create the priority queue
         Heap prq = new Heap();
 
+        //int to keep track of the heuristic value
         int heur = 0;
 
+        //insert the spawn location, this will be the starting location
         prq.Insert(0, spawnLocation);
+        //place a signal value in the pathParent array
         pathParent[(int)spawnLocation.x, (int)spawnLocation.y] = new Vector2(-1, -1);
+        //signal that this location has been visited
         availableTiles[(int)spawnLocation.x, (int)spawnLocation.y] = true;
 
+        //loop forever, will be broken inside the loop
         while (true)
         {
+            //get the next location from the priority queue
             KeyValuePair<int, Vector2> currentTile = prq.Pop();
 
+            //if the location gotten from the priority queue is the base, the path has been found
             if(currentTile.Value == baseLocation)
             {
+                //break out of the loop
                 break;
             }
-
-            //Debug.Log(currentTile);
-            //Debug.Log(prq.GetSize());
-            //Debug.Log(mapData[(int)currentTile.Value.x, (int)currentTile.Value.y]);
 
             //check the tile to the left
             if (currentTile.Value.x - 1 >= 0)
             {
+                //if the tile is available
                 if (!availableTiles[(int)currentTile.Value.x - 1, (int)currentTile.Value.y])
                 {
+                    //calculate the heuristic to the player base
                     heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x - 1, currentTile.Value.y), baseLocation);
 
                     //add the new tile to the heap
@@ -174,8 +167,10 @@ public class TileManager : MonoBehaviour
             
             if(currentTile.Value.x + 1 < x)
             {
+                //if the tile is available
                 if (!availableTiles[(int)currentTile.Value.x + 1, (int)currentTile.Value.y])
                 {
+                    //calculate the heuristic to the player base
                     heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x + 1, currentTile.Value.y), baseLocation);
 
                     //add the new tile to the heap
@@ -190,8 +185,10 @@ public class TileManager : MonoBehaviour
             
             if(currentTile.Value.y - 1 >= 0)
             {
+                //if the tile is available
                 if (!availableTiles[(int)currentTile.Value.x, (int)currentTile.Value.y - 1])
                 {
+                    //calculate the heuristic to the player base
                     heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x, currentTile.Value.y - 1), baseLocation);
 
                     //add the new tile to the heap
@@ -206,8 +203,10 @@ public class TileManager : MonoBehaviour
             
             if(currentTile.Value.y + 1 < y)
             {
+                //if the tile is available
                 if (!availableTiles[(int)currentTile.Value.x, (int)currentTile.Value.y + 1])
                 {
+                    //calculate the heuristic to the player base
                     heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x, currentTile.Value.y + 1), baseLocation);
 
                     //add the new tile to the heap
@@ -219,55 +218,63 @@ public class TileManager : MonoBehaviour
                     availableTiles[(int)currentTile.Value.x, (int)currentTile.Value.y + 1] = true;
                 }
             }
-            
 
-            
-
+            //if the priority queue is empty, then there is no possible path to travel
             if(prq.GetSize() == 0)
             {
+                //return false
                 return false;
             }
         }
 
-        //Debug.Log(pathParent);
-
-        //return false;
-
+        //populate the enemyPath vector with the new path
         AssignPath(pathParent);
 
+        //create indicators to show the path to the player
         CreatePathIndicator();
         return true;
     }
 
+    //assign the new path to the enemyPath List
     void AssignPath(Vector2[,] pathParent)
     {
+        //clear the current path
         enemyPath.Clear();
 
+        //set the current location to start at the player base
         Vector2 currentLocation = baseLocation;
+
+        //while we do not run into the end signal, loop
         while (currentLocation != new Vector2(-1, -1))
         {
-            //Debug.Log(currentLocation);
-
+            //insert the new location into the beginning of the enemyPath
+            //this is because we are moving from the end of the path to the beginning of the path and this will reverse it
             enemyPath.Insert(0, new Vector2((currentLocation.x - 5) * 10 + 5, (currentLocation.y - 5) * -10 - 5));
 
+            //grab the next location
             currentLocation = pathParent[(int)currentLocation.x,(int)currentLocation.y];
         }
     }
 
+    //read in data from the current map data file
     void ReadInFileData()
     {
+        //open the file
         StreamReader sr = File.OpenText(mapFileName);
 
         string line = "";
 
+        //read size of the map, the first and second line
         line = sr.ReadLine();
         x = Int32.Parse(line);
 
         line = sr.ReadLine();
         y = Int32.Parse(line);
 
+        //resize the map array
         mapData = new bool[x, y];
 
+        //holder variables
         int tempX = 0;
         int tempY = 0;
 
@@ -279,9 +286,6 @@ public class TileManager : MonoBehaviour
             {
                 tempX = Int32.Parse(lineData[1]);
                 tempY = Int32.Parse(lineData[2]);
-
-                //Debug.Log(x + ", " + y);
-                //Debug.Log(tempX + ", " + tempY);
 
                 mapData[tempX, tempY] = true;
 
@@ -301,6 +305,7 @@ public class TileManager : MonoBehaviour
         }
     }
 
+    //adjust the size of the map
     void AdjustMap()
     {
         ground.transform.localScale = new Vector3(x, 1, y);
