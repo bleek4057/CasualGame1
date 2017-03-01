@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
     public TileManager TileManager;
     public EnemyManager EnemyManager;
     public PlayerManager PlayerManager;
+    public DropDownMenuScript DropDownMenu;
 
     //the size of each interval on the grid
     public int gridIntervalSize = 10;
@@ -363,23 +364,71 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
 
-        //spawn in built in towers
+        LoadMapTowers();
+
+        TileManager.CreatePath();
+    }
+
+    //read the current map file and place tiles that are there by default
+    private void LoadMapTowers()
+    {
+        //open the file for the tower data
         StreamReader sr = File.OpenText(TileManager.mapFileName);
 
         string line = "";
 
+        //get the map size
         int x = Int32.Parse(sr.ReadLine());
         int y = Int32.Parse(sr.ReadLine());
+        //temp holders
+        int tempX;
+        int tempY;
 
+        //Debug.Log(DropDownMenu.towerPrefabs[1]);
+
+        //while there are lines to be read
         while ((line = sr.ReadLine()) != null)
         {
+            //split the data to be read easier
             string[] lineData = line.Split(' ');
-            if(lineData[0] == "W")
-            {
-                int tempX = Int32.Parse(lineData[1]);
-                int tempY = Int32.Parse(lineData[2]);
 
-                GameObject newTower = Instantiate(towerPrefab, new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
+            //create a wall signal
+            if (lineData[0] == "W")
+            {
+                //get the location data
+                tempX = Int32.Parse(lineData[1]);
+                tempY = Int32.Parse(lineData[2]);
+
+                //update the map data based on the location
+                TileManager.mapData[tempX, tempY] = true;
+
+                //create the wall
+                GameObject newTower = Instantiate(DropDownMenu.towerPrefabs[0], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
+            }
+
+            //create a tower signal
+            if(lineData[0] == "BT")
+            {
+                //get the location data
+                tempX = Int32.Parse(lineData[1]);
+                tempY = Int32.Parse(lineData[2]);
+
+                //update the map data based on the location
+                TileManager.mapData[tempX, tempY] = true;
+
+                //create the tower
+                GameObject newTower = Instantiate(DropDownMenu.towerPrefabs[1], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
+            }
+
+            //signal a null space on the map
+            if (lineData[0] == "N")
+            {
+                //get the location data
+                tempX = Int32.Parse(lineData[1]);
+                tempY = Int32.Parse(lineData[2]);
+
+                //update the map data based on the location
+                TileManager.mapData[tempX, tempY] = true;
             }
         }
     }

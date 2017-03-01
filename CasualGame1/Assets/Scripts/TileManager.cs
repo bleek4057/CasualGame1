@@ -31,7 +31,6 @@ public class TileManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-
         ReadInFileData();
 
         AdjustMap();
