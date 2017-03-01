@@ -2611,9 +2611,10 @@ MonoBehaviour:
   - {fileID: 1848550635554624}
   - {fileID: 1411902243470620}
   camera: {fileID: 20846255452378014}
-  cameraPos: {x: 0, y: 0, z: 0}
-  cameraXAngle: 0
+  cameraPos: {x: 0, y: 0.139, z: 0.77}
+  cameraAngle: {x: 0, y: 0, z: 0, w: 0}
   damagePerHit: 10
+  cameraParent: {fileID: 1411902243470620}
 --- !u!120 &120362279793485242
 LineRenderer:
   m_ObjectHideFlags: 1
@@ -2757,7 +2758,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1791498391173414}
   serializedVersion: 5
   lengthInSec: 0.5
-  speed: 1
+  simulationSpeed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0
@@ -2804,7 +2805,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -1946385474
+  randomSeed: 739323541
   InitialModule:
     serializedVersion: 3
     enabled: 1

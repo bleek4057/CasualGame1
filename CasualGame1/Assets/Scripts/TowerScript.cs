@@ -23,13 +23,14 @@ public class TowerScript : MonoBehaviour {
 
     ParticleSystem ps;
 
-    public Camera camera;
+    public Camera towerCamera;
     public Vector3 cameraPos;
-    public float cameraXAngle;
+    public Quaternion cameraAngle;
     public int damagePerHit;
+    public GameObject cameraParent;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start () {
         rangeSphere = this.gameObject.GetComponent<SphereCollider>();
         lightning = gameObject.GetComponent<LightningBoltScript>();
         if(lightning != null)
@@ -42,7 +43,9 @@ public class TowerScript : MonoBehaviour {
         {
             defaultColor.Add(child.GetComponent<Renderer>().material.color);
         }
-	}
+
+        cameraAngle = transform.GetChild(0).GetChild(1).GetChild(1).transform.localRotation;
+    }
 	
 	// Update is called once per frame
 	void Update () {

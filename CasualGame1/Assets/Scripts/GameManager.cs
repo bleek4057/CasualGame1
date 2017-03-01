@@ -38,6 +38,8 @@ public class GameManager : MonoBehaviour
     public Vector3 buildCameraPos;
     public Vector3 playCameraPos;
     public Vector3 playCameraAngles;
+    public GameObject towerFollow;
+
     public static GameManager Instance;
 
     public enum GameState
@@ -104,47 +106,69 @@ public class GameManager : MonoBehaviour
         }
         if (currentGame == GameState.PlayPhase)
         {
-            if (Input.GetMouseButton(1))
+            if (towerFollow == null)
             {
-                playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
-                /*playCamera.transform.RotateAround(Vector3.zero, Vector3.left, 3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
-                playCamera.transform.Rotate(0, 0, -playCamera.transform.eulerAngles.z);
-                if (playCamera.transform.eulerAngles.x < 50 || playCamera.transform.eulerAngles.x > 70)
+                //LINEAR -- playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, 1/ Vector3.Distance(playCamera.transform.position, playCameraPos));
+                //NONLINEAR -- 
+                playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, .04f);
+                playCamera.transform.eulerAngles = Vector3.Lerp(playCamera.transform.eulerAngles, playCameraAngles, .04f);
+                if (Input.GetMouseButton(1))
                 {
-                    playCamera.transform.RotateAround(Vector3.zero, Vector3.left, -3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
-                }*/
+                    playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
+                    playCameraPos = playCamera.transform.position;
+                    playCameraAngles = playCamera.transform.eulerAngles;
+                    /*playCamera.transform.RotateAround(Vector3.zero, Vector3.left, 3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
+                    playCamera.transform.Rotate(0, 0, -playCamera.transform.eulerAngles.z);
+                    if (playCamera.transform.eulerAngles.x < 50 || playCamera.transform.eulerAngles.x > 70)
+                    {
+                        playCamera.transform.RotateAround(Vector3.zero, Vector3.left, -3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
+                    }*/
+                }
+            }
+            else
+            {
+                playCamera.transform.localPosition = Vector3.Lerp(playCamera.transform.localPosition, towerFollow.GetComponent<TowerScript>().cameraPos, .04f);
+                //for linear, use Quaternion.Angle(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle)
+                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle, 1f);
             }
             playCamera.fieldOfView -= Input.mouseScrollDelta.y;
             if (playCamera.fieldOfView < 20)
             {
                 playCamera.fieldOfView = 20;
             }
-            RaycastHit hit;
-            /*if (Input.GetMouseButtonUp(1))
+            if (Input.GetMouseButtonUp(1))
             {
-                if (playCamera.gameObject.activeSelf)
+                if (towerFollow == null)
                 {
+                    RaycastHit hit;
                     Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
                     int layermask = ~(1 << 9);
                     bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
-                    if (rayCast && hit.transform.tag == "Tower" && hit.transform.gameObject.GetComponent<TowerScript>().camera != null)
+                    if (rayCast && hit.transform.tag == "Tower")
                     {
-                        hit.transform.gameObject.GetComponent<TowerScript>().camera.gameObject.SetActive(true);
-                        playCamera.gameObject.SetActive(false);
-                        currentCamera = hit.transform.gameObject.GetComponent<TowerScript>().camera.gameObject;
+                        towerFollow = hit.transform.gameObject;
+                        playCamera.transform.parent = hit.transform.GetComponent<TowerScript>().cameraParent.transform;
                     }
                 }
                 else
                 {
-                    currentCamera.gameObject.SetActive(false);
-                    playCamera.gameObject.SetActive(true);
+                    towerFollow = null;
+                    playCamera.transform.parent = null;
                 }
-            }*/
+            }
             prevMousePosition = Input.mousePosition;
         }
-        if(currentGame == GameState.BuildPhase)
+        else
+        {
+            towerFollow = null;
+            playCamera.transform.parent = null;
+        }
+        if (currentGame == GameState.BuildPhase)
         {
             MoveFakeTower();
+
+            playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, buildCameraPos, .04f);
+            playCamera.transform.eulerAngles = Vector3.Lerp(playCamera.transform.eulerAngles, new Vector3(90, 0, 0), .04f);
 
             //places a new tower where the player clicks, if there is nothing there
             RaycastHit hit;
@@ -204,6 +228,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButton(1))
             {
                 playCamera.transform.Translate(5 * new Vector3(-(Input.mousePosition.x - prevMousePosition.x), -(Input.mousePosition.y - prevMousePosition.y), 0) * Time.deltaTime);
+                buildCameraPos = playCamera.transform.position;
             }
             //playCamera.fieldOfView -= Input.mouseScrollDelta.y;
             if(playCamera.fieldOfView < 20)
@@ -229,7 +254,10 @@ public class GameManager : MonoBehaviour
     {
         Restart();
         currentGame = GameState.BuildPhase;
-        
+
+        playCamera.transform.position = buildCameraPos;
+        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+
         UI.gameObject.SetActive(true);
         MainMenu.gameObject.SetActive(false);
     }
@@ -257,8 +285,6 @@ public class GameManager : MonoBehaviour
     {
         currentGame = GameState.PlayPhase;
         
-        playCamera.transform.position = playCameraPos;
-        playCamera.transform.eulerAngles = playCameraAngles;
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
 
         playerBase.transform.GetChild(0).gameObject.SetActive(false);
@@ -280,8 +306,6 @@ public class GameManager : MonoBehaviour
         waveNumber += 1;
         UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
         
-        playCamera.transform.position = buildCameraPos;
-        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         EnemyManager.DestroyAll();
 
@@ -302,8 +326,6 @@ public class GameManager : MonoBehaviour
     {
         currentGame = GameState.LosePhase;
         
-        playCamera.transform.position = playCameraPos;
-        playCamera.transform.eulerAngles = playCameraAngles;
         UI.transform.FindChild("Background").gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(true);
@@ -318,8 +340,6 @@ public class GameManager : MonoBehaviour
     {
         currentGame = GameState.WinPhase;
         
-        playCamera.transform.position = playCameraPos;
-        playCamera.transform.eulerAngles = playCameraAngles;
         UI.transform.FindChild("Background").gameObject.SetActive(true);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
@@ -334,8 +354,6 @@ public class GameManager : MonoBehaviour
         waveNumber = 1;
         UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
         
-        playCamera.transform.position = buildCameraPos;
-        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
         UI.transform.FindChild("Background").gameObject.SetActive(false);
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(false);
