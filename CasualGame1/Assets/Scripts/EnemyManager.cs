@@ -114,7 +114,7 @@ public class EnemyManager : MonoBehaviour
     {
         enemiesSpawned = 0;
         RestartInterval();
-        spawnInterval *= .9f;
+        spawnInterval = enemySpawnTime[GameManager.waveNumber];
         enemiesToSpawn = enemyNumberToSpawn[GameManager.waveNumber - 1][0];
     }
     public void RestartAll()
@@ -157,41 +157,48 @@ public class EnemyManager : MonoBehaviour
 
     private void GetEnemyData(string level)
     {
-        //StreamReader sr = File.OpenText("Assets\\WaveData\\" + level + ".txt");
-        StreamReader sr = File.OpenText("Assets\\MapData\\level1.txt");
+        StreamReader sr = File.OpenText("Assets\\WaveData\\" + level + ".txt");
+        //StreamReader sr = File.OpenText("Assets\\MapData\\level1.txt");
 
         string line = "";
         int wave = 0;
 
-        line = sr.ReadLine();
-        while (line != null)
+        while ((line = sr.ReadLine()) != null)
         {
-            //enemySpawnTime.Add(float.Parse(line));
-
-            //while((line = sr.ReadLine()) != null && line != "")
-            //{
-                string[] lineData = line.Split(' ');
-                Debug.Log("HI - " + line);
+            string[] lineData = line.Split(' ');
+            //Debug.Log("HI - " + line);
             
             if (lineData[0] == "BE")
-                {
-                    wave = Int32.Parse(lineData[2]);
-                    Debug.Log("HIIII - " + wave);
-                    enemyTypesToSpawn[wave].Add(enemyPrefabs[Int32.Parse(lineData[3])]);
-                    enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
+            {
+                wave = Int32.Parse(lineData[2]);
+                //Debug.Log("Wave # " + wave);
+                enemyTypesToSpawn[wave].Add(enemyPrefabs[0]);
+                enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
+                enemySpawnTime.Add(float.Parse(lineData[3]));
             }
-            line = sr.ReadLine();
-            //}
-
-            //wave++;
-
+            if(lineData[0] == "FE")
+            {
+                wave = Int32.Parse(lineData[2]);
+                //Debug.Log("Wave # " + wave);
+                enemyTypesToSpawn[wave].Add(enemyPrefabs[1]);
+                enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
+                enemySpawnTime.Add(float.Parse(lineData[3]));
+            }
+            if(lineData[0] == "SE")
+            {
+                wave = Int32.Parse(lineData[2]);
+                //Debug.Log("Wave # " + wave);
+                enemyTypesToSpawn[wave].Add(enemyPrefabs[2]);
+                enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
+                enemySpawnTime.Add(float.Parse(lineData[3]));
+            }
         }
 
-        //sr.Close();
-
-        for(int i = 0; i < enemySpawnTime.Count; i++)
-        {
-            Debug.Log(enemySpawnTime[i]);
-        }
+        //Debug.Log("spawn time count " + enemySpawnTime.Count);
+        //
+        //for(int i = 0; i < enemySpawnTime.Count; i++)
+        //{
+        //    Debug.Log(enemySpawnTime[i]);
+        //}
     }
 }
