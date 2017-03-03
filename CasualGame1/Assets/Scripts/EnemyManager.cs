@@ -22,7 +22,7 @@ public class EnemyManager : MonoBehaviour
     private float startInterval = 1;
 
     //data of different enemies to spawn in a wave
-    private List<List<GameObject>> enemyTypesToSpawn;
+    public List<List<GameObject>> enemyTypesToSpawn;
     //number of enemies to spawn, corresponds with enemyTypesToSpawn
     private List<List<int>> enemyNumberToSpawn;
     //time for enemies to spawn on a wave, corresponds with enemyTypesToSpawn
@@ -39,6 +39,12 @@ public class EnemyManager : MonoBehaviour
         enemyTypesToSpawn = new List<List<GameObject>>();
         enemyNumberToSpawn = new List<List<int>>();
         enemySpawnTime = new List<float>();
+        for(int i = 0; i < 10; i++)
+        {
+            enemyNumberToSpawn.Add(new List<int>());
+            enemyTypesToSpawn.Add(new List<GameObject>());
+            //enemyNumberToSpawn.Add();
+        }
 
         GetEnemyData("level1");
 
@@ -72,12 +78,15 @@ public class EnemyManager : MonoBehaviour
     //spawns a new enemy and initializes its path
     void SpawnEnemy()
     {
-        enemiesSpawned += 1;
-
-        GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
+        //GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
+        Debug.Log(GameManager.waveNumber - 1);
+        Debug.Log(enemiesSpawned);
+        GameObject newEnemy = Instantiate(enemyTypesToSpawn[GameManager.waveNumber - 1][0], new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
         newEnemy.GetComponent<EnemyScript>().CopyList(GameManager.TileManager.GetComponent<TileManager>().enemyPath);
         newEnemy.GetComponent<EnemyScript>().playerBase = GameManager.playerBase;
         allEnemies.Add(newEnemy);
+
+        enemiesSpawned += 1;
 
         //eh, this is for a slider health bar but i think the objects would be easier
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
@@ -99,6 +108,21 @@ public class EnemyManager : MonoBehaviour
     public void RestartInterval()
     {
         interval = startInterval;
+    }
+
+    public void NextWave()
+    {
+        enemiesSpawned = 0;
+        RestartInterval();
+        spawnInterval *= .9f;
+        enemiesToSpawn = enemyNumberToSpawn[GameManager.waveNumber - 1][0];
+    }
+    public void RestartAll()
+    {
+        enemiesSpawned = 0;
+        enemiesToSpawn = enemyNumberToSpawn[0][0];
+        spawnInterval = 5;
+        RestartInterval();
     }
 
     public void DestroyEnemy(GameObject target)
@@ -133,30 +157,37 @@ public class EnemyManager : MonoBehaviour
 
     private void GetEnemyData(string level)
     {
-        StreamReader sr = File.OpenText("Assets\\WaveData\\" + level + ".txt");
+        //StreamReader sr = File.OpenText("Assets\\WaveData\\" + level + ".txt");
+        StreamReader sr = File.OpenText("Assets\\MapData\\level1.txt");
 
         string line = "";
         int wave = 0;
 
-        while((line = sr.ReadLine()) != null)
+        line = sr.ReadLine();
+        while (line != null)
         {
+            //enemySpawnTime.Add(float.Parse(line));
 
-            enemySpawnTime.Add(float.Parse(line));
-
-            while((line = sr.ReadLine()) != null && line != "")
-            {
+            //while((line = sr.ReadLine()) != null && line != "")
+            //{
                 string[] lineData = line.Split(' ');
-
-                if (lineData[0] == "BE")
-                {
-                    enemyTypesToSpawn[wave].Add(enemyPrefabs[0]);
-                    enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
-                }
-            }
-
-            wave++;
+                Debug.Log("HI - " + line);
             
+            if (lineData[0] == "BE")
+                {
+                    wave = Int32.Parse(lineData[2]);
+                    Debug.Log("HIIII - " + wave);
+                    enemyTypesToSpawn[wave].Add(enemyPrefabs[Int32.Parse(lineData[3])]);
+                    enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
+            }
+            line = sr.ReadLine();
+            //}
+
+            //wave++;
+
         }
+
+        //sr.Close();
 
         for(int i = 0; i < enemySpawnTime.Count; i++)
         {

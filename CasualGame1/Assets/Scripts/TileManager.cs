@@ -306,6 +306,7 @@ public class TileManager : MonoBehaviour
                 baseLocation = new Vector2(tempX, tempY);
             }
         }
+        sr.Close();
     }
 
     //adjust the size of the map

@@ -323,6 +323,11 @@ Prefab:
   m_Modification:
     m_TransformParent: {fileID: 725826223}
     m_Modifications:
+    - target: {fileID: 114494460581959622, guid: 346f64916871dc44dbb5f8db4d9a8685,
+        type: 2}
+      propertyPath: enemyPrefabs.Array.size
+      value: 3
+      objectReference: {fileID: 0}
     - target: {fileID: 4663251872512876, guid: 346f64916871dc44dbb5f8db4d9a8685, type: 2}
       propertyPath: m_LocalPosition.x
       value: 78.02657
@@ -375,6 +380,24 @@ Prefab:
       propertyPath: enemyPrefab
       value: 
       objectReference: {fileID: 1726309524556342, guid: f135c888246449f4fa441cc70e1365da,
+        type: 2}
+    - target: {fileID: 114494460581959622, guid: 346f64916871dc44dbb5f8db4d9a8685,
+        type: 2}
+      propertyPath: enemyPrefabs.Array.data[0]
+      value: 
+      objectReference: {fileID: 1726309524556342, guid: f135c888246449f4fa441cc70e1365da,
+        type: 2}
+    - target: {fileID: 114494460581959622, guid: 346f64916871dc44dbb5f8db4d9a8685,
+        type: 2}
+      propertyPath: enemyPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 1054906122793712, guid: ebb2296da52ca2b4abc19b7cab7ff4b2,
+        type: 2}
+    - target: {fileID: 114494460581959622, guid: 346f64916871dc44dbb5f8db4d9a8685,
+        type: 2}
+      propertyPath: enemyPrefabs.Array.data[2]
+      value: 
+      objectReference: {fileID: 1074356566856162, guid: e9c42bf9f43b3984f8c5c3c40543d85d,
         type: 2}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 346f64916871dc44dbb5f8db4d9a8685, type: 2}

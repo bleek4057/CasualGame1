@@ -8,7 +8,7 @@ using UnityEngine.UI;
 public class GameManager : MonoBehaviour
 {
     //current wave number
-    private int waveNumber = 1;
+    public int waveNumber = 1;
 
     //the prefab allowing new towers to be placed
     public GameObject towerPrefab;
@@ -82,7 +82,7 @@ public class GameManager : MonoBehaviour
             Vector2 target = new Vector2(gridIntervalSize * Mathf.Floor(hit.point.x / gridIntervalSize) + (gridIntervalSize / 2), gridIntervalSize * Mathf.Floor(hit.point.z / gridIntervalSize) + (gridIntervalSize / 2));
             
             TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = true;
-            Debug.Log((int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2) + " - " + (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10)));
+            //Debug.Log((int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2) + " - " + (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10)));
             fakeTower.transform.position = new Vector3(target.x, 5, target.y);
             fakeTower.SetActive(true);
             if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
@@ -322,10 +322,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
         EnemyManager.DestroyAll();
 
-        EnemyManager.EnemiesSpawned = 0;
-        EnemyManager.RestartInterval();
-        EnemyManager.spawnInterval *= .9f;
-        EnemyManager.enemiesToSpawn += 1;
+        EnemyManager.NextWave();
 
         playerBase.transform.GetChild(0).gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
@@ -381,11 +378,8 @@ public class GameManager : MonoBehaviour
             Destroy(tower);
         }
 
-        EnemyManager.EnemiesSpawned = 0;
-        EnemyManager.enemiesToSpawn = 3;
-        EnemyManager.spawnInterval = 5;
-        EnemyManager.RestartInterval();
-        PlayerManager.SetMoney(125);
+        EnemyManager.RestartAll();
+        PlayerManager.SetMoney(75);
 
         playerBase.transform.GetChild(0).gameObject.SetActive(true);
         playerBase.transform.GetChild(1).gameObject.SetActive(false);
@@ -462,6 +456,7 @@ public class GameManager : MonoBehaviour
                 TileManager.mapData[tempX, tempY] = true;
             }
         }
+        sr.Close();
     }
 
     public void ToggleHelp()
