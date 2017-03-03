@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     public Vector3 menuCameraPos;
     public Vector3 buildCameraPos;
     public Vector3 playCameraPos;
-    public Vector3 playCameraAngles;
+    public Quaternion playCameraAngles;
     public GameObject towerFollow;
 
     public static GameManager Instance;
@@ -58,6 +58,8 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+        playCameraAngles = Quaternion.Euler(55, 0, 0);
+
         playCamera.transform.position = menuCameraPos;
         playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
 
@@ -66,6 +68,8 @@ public class GameManager : MonoBehaviour
 
         PlayerManager.GameManager = this;
         EnemyManager.GameManager = this;
+
+        //playCameraAngles = 
 
         Instance = this;
     }
@@ -109,6 +113,7 @@ public class GameManager : MonoBehaviour
     void Update ()
     {
         UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(false);
+        fakeTower.SetActive(false);
         if (currentGame == GameState.MainMenu || currentGame == GameState.Paused)
         {
 
@@ -120,18 +125,13 @@ public class GameManager : MonoBehaviour
                 //LINEAR -- playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, 1/ Vector3.Distance(playCamera.transform.position, playCameraPos));
                 //NONLINEAR -- 
                 playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, .04f);
-                playCamera.transform.eulerAngles = Vector3.Lerp(playCamera.transform.eulerAngles, playCameraAngles, .04f);
-                if (Input.GetMouseButton(1))
+                //playCamera.transform.eulerAngles = Vector3.Lerp(playCamera.transform.eulerAngles, playCameraAngles, .04f);
+                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, playCameraAngles, 1f);
+                if (Input.GetMouseButton(2) && Vector3.Distance(playCamera.transform.position, playCameraPos) < 5)
                 {
                     playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
                     playCameraPos = playCamera.transform.position;
-                    playCameraAngles = playCamera.transform.eulerAngles;
-                    /*playCamera.transform.RotateAround(Vector3.zero, Vector3.left, 3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
-                    playCamera.transform.Rotate(0, 0, -playCamera.transform.eulerAngles.z);
-                    if (playCamera.transform.eulerAngles.x < 50 || playCamera.transform.eulerAngles.x > 70)
-                    {
-                        playCamera.transform.RotateAround(Vector3.zero, Vector3.left, -3 * (Input.mousePosition.y - prevMousePosition.y) * Time.deltaTime);
-                    }*/
+                    playCameraAngles = playCamera.transform.rotation;
                 }
             }
             else
@@ -140,7 +140,7 @@ public class GameManager : MonoBehaviour
                 //for linear, use Quaternion.Angle(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle)
                 playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle, 1f);
             }
-            playCamera.fieldOfView -= Input.mouseScrollDelta.y;
+            //playCamera.fieldOfView -= Input.mouseScrollDelta.y;
             if (playCamera.fieldOfView < 20)
             {
                 playCamera.fieldOfView = 20;
@@ -234,7 +234,7 @@ public class GameManager : MonoBehaviour
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
                 }
             }
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(2))
             {
                 playCamera.transform.Translate(5 * new Vector3(-(Input.mousePosition.x - prevMousePosition.x), -(Input.mousePosition.y - prevMousePosition.y), 0) * Time.deltaTime);
                 buildCameraPos = playCamera.transform.position;
