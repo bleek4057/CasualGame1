@@ -89,7 +89,7 @@ public class GameManager : MonoBehaviour
             //Debug.Log((int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2) + " - " + (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10)));
             fakeTower.transform.position = new Vector3(target.x, 5, target.y);
             fakeTower.SetActive(true);
-            if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
+            if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
             {
                 fakeTower.GetComponent<TowerFakeScript>().SetColor(false);
             }
@@ -136,9 +136,9 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                playCamera.transform.localPosition = Vector3.Lerp(playCamera.transform.localPosition, towerFollow.GetComponent<TowerScript>().cameraPos, .04f);
-                //for linear, use Quaternion.Angle(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle)
-                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle, 1f);
+                playCamera.transform.localPosition = Vector3.Lerp(playCamera.transform.localPosition, towerFollow.GetComponent<BaseTower>().cameraPos, .04f);
+                //for linear, use Quaternion.Angle(playCamera.transform.localRotation, towerFollow.GetComponent<BaseTower>().cameraAngle)
+                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, towerFollow.GetComponent<BaseTower>().cameraAngle, 1f);
             }
             //playCamera.fieldOfView -= Input.mouseScrollDelta.y;
             if (playCamera.fieldOfView < 20)
@@ -156,7 +156,7 @@ public class GameManager : MonoBehaviour
                     if (rayCast && hit.transform.tag == "Tower")
                     {
                         towerFollow = hit.transform.gameObject;
-                        playCamera.transform.parent = hit.transform.GetComponent<TowerScript>().cameraParent.transform;
+                        playCamera.transform.parent = hit.transform.GetComponent<BaseTower>().cameraParent.transform;
                     }
                 }
                 else
@@ -181,7 +181,7 @@ public class GameManager : MonoBehaviour
 
             //places a new tower where the player clicks, if there is nothing there
             RaycastHit hit;
-            if (Input.GetMouseButtonDown(0) && PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
+            if (Input.GetMouseButtonDown(0) && PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
             {
                 Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
                 int layermask = ~(1 << 9);
@@ -200,13 +200,13 @@ public class GameManager : MonoBehaviour
                         else
                         {
                             GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
-                            PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
+                            PlayerManager.ChangeMoney(-towerPrefab.GetComponent<BaseTower>().cost);
                         }
                     }
                     else
                     {
                         GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity);
-                        PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
+                        PlayerManager.ChangeMoney(-towerPrefab.GetComponent<BaseTower>().cost);
                     }
 
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
@@ -228,7 +228,7 @@ public class GameManager : MonoBehaviour
                         TileManager.CreatePathIndicator();
                     }
                     //Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
-                    PlayerManager.ChangeMoney(3 * hit.transform.gameObject.GetComponent<TowerScript>().cost / 5);
+                    PlayerManager.ChangeMoney(3 * hit.transform.gameObject.GetComponent<BaseTower>().cost / 5);
                     Destroy(hit.transform.gameObject);
 
                     //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
@@ -245,7 +245,7 @@ public class GameManager : MonoBehaviour
                 playCamera.fieldOfView = 20;
             }
             prevMousePosition = Input.mousePosition;
-            if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
+            if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
             {
                 UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(true);
             }
