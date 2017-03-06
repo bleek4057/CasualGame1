@@ -17,6 +17,8 @@ public class TileManager : MonoBehaviour
     
     //data on if a tile is occupied
     public bool[,] mapData;
+    //data on the contents and modular capacity of each tile
+    public Tile[,] tileTowers;
     //location of the enemy spawn in mapData coordinates
     private Vector2 spawnLocation;
     //location of the player base in mapData coordinates
@@ -34,8 +36,19 @@ public class TileManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
+
         //read in the map data file and grab info
         ReadInFileData();
+
+        tileTowers = new Tile[x, y];
+
+        for (int i = 0; i < x; i++)
+        {
+            for (int i2 = 0; i2 < y; i2++)
+            {
+                tileTowers[i, i2] = new Tile(3);
+            }
+        }
 
         //adjust the map in accordance with the new mapData
         AdjustMap();
@@ -313,5 +326,17 @@ public class TileManager : MonoBehaviour
     void AdjustMap()
     {
         ground.transform.localScale = new Vector3(x, 1, y);
+    }
+}
+
+public class Tile
+{
+    public int capacity;
+    public List<GameObject> contents;
+
+    public Tile(int cap)
+    {
+        capacity = cap;
+        contents = new List<GameObject>();
     }
 }
