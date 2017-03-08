@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TowerScript : MonoBehaviour
 {
+    public bool isBase;
     public int cost;
 
     public List<EnemyScript> enemies = new List<EnemyScript>();
@@ -70,27 +71,23 @@ public class TowerScript : MonoBehaviour
             }
         }
 
+        SetColor(true);
         if (GameManager.Instance.currentGame == GameManager.GameState.BuildPhase)
         {
-            RaycastHit hit;
-            Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int layermask = ~(1 << 9);
-            bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
-            if (rayCast && hit.transform.gameObject == gameObject)
+            if(GameManager.Instance.towerMouseOver == gameObject)
             {
-                GetComponent<Renderer>().material.color = Color.red;
-                for (int i = 0; i < toBeColored.Count; i++)
-                {
-                    toBeColored[i].GetComponent<Renderer>().material.color = Color.red;
-                }
+                SetColor(false);
             }
-            else
+        }
+    }
+    public void SetColor(bool def)
+    {
+        if (!def)
+        {
+            GetComponent<Renderer>().material.color = Color.red;
+            for (int i = 0; i < toBeColored.Count; i++)
             {
-                GetComponent<Renderer>().material.color = defaultMainColor;
-                for (int i = 0; i < toBeColored.Count; i++)
-                {
-                    toBeColored[i].GetComponent<Renderer>().material.color = defaultColor[i];
-                }
+                toBeColored[i].GetComponent<Renderer>().material.color = Color.red;
             }
         }
         else

@@ -120,11 +120,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: de333a0e927f9664bad165cb3dc2f73d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isBase: 1
   cost: 5
-  gameManager: {fileID: 0}
   enemies: []
   fakeVersion: {fileID: 1578354068256016, guid: b601d8ff84922c046ac9ee9d51d7c3a5,
     type: 2}
   _fireRate: 0
   canAttack: 0
   toBeColored: []
+  towerCamera: {fileID: 0}
+  cameraPos: {x: 0, y: 0, z: 0}
+  cameraAngle: {x: 0, y: 0, z: 0, w: 0}
+  damagePerHit: 0
+  cameraParent: {fileID: 0}
