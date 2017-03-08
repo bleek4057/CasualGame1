@@ -27,20 +27,27 @@ public class EnemyScript : MonoBehaviour
             //moves the enemy to its next point (VERY simple and not optimized)
             if (path.Peek().x < transform.position.x)
             {
-                this.transform.Translate(-speed * Time.deltaTime, 0, 0);
+                //this.transform.Translate(-speed * Time.deltaTime, 0, 0);
+                this.transform.rotation = Quaternion.Euler(0, 90, 0);
             }
-            if (path.Peek().x > transform.position.x)
+            else if (path.Peek().x > transform.position.x)
             {
-                this.transform.Translate(speed * Time.deltaTime, 0, 0);
+                //this.transform.Translate(speed * Time.deltaTime, 0, 0);
+                this.transform.rotation = Quaternion.Euler(0, -90, 0);
             }
-            if (path.Peek().y < transform.position.z)
+            else if (path.Peek().y < transform.position.z)
             {
-                this.transform.Translate(0, 0, -speed * Time.deltaTime);
+                //this.transform.Translate(0, 0, -speed * Time.deltaTime);
+                this.transform.rotation = Quaternion.Euler(0, 180, 0);
             }
-            if (path.Peek().y > transform.position.z)
+            else if (path.Peek().y > transform.position.z)
             {
-                this.transform.Translate(0, 0, speed * Time.deltaTime);
+                //this.transform.Translate(0, 0, speed * Time.deltaTime);
+                this.transform.rotation = Quaternion.Euler(0, 0, 0);
             }
+
+            this.transform.Translate(0, 0, -speed * Time.deltaTime);
+
             if (Vector2.Distance(path.Peek(), new Vector2(transform.position.x, transform.position.z)) <= .5f)
             {
                 path.Dequeue();
