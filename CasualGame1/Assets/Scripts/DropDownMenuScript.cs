@@ -24,7 +24,9 @@ public class DropDownMenuScript : MonoBehaviour
     {
         transform.GetChild(1).gameObject.SetActive(!transform.GetChild(1).gameObject.activeInHierarchy);
         transform.GetChild(2).gameObject.SetActive(!transform.GetChild(2).gameObject.activeInHierarchy);
+        transform.GetChild(3).gameObject.SetActive(!transform.GetChild(3).gameObject.activeInHierarchy);
     }
+
     public void SetActiveTower(int id)
     {
         ToggleDropdown();
@@ -32,6 +34,6 @@ public class DropDownMenuScript : MonoBehaviour
         Destroy(GameManager.fakeTower);
         GameManager.fakeTower = Instantiate(towerPrefabs[id].GetComponent<BaseTower>().fakeVersion);
         gameObject.transform.GetChild(0).GetComponent<Text>().text = transform.GetChild(id + 1).gameObject.GetComponentInChildren<Text>().text;
-        gameObject.transform.GetChild(3).GetComponent<Text>().text = "Cost:" + towerPrefabs[id].GetComponent<BaseTower>().cost;
+        gameObject.transform.GetChild(4).GetComponent<Text>().text = "Cost:" + towerPrefabs[id].GetComponent<BaseTower>().cost;
     }
 }

@@ -10,8 +10,8 @@ public class BaseTower : MonoBehaviour {
     public GameObject fakeVersion;
 
     protected SphereCollider rangeSphere;
-    protected float _timer = 0.0f;
-    protected float _fireRate = 0.333f;
+    public float _timer = 0.0f;
+    public float _fireRate = 0.333f;
 
     public bool canAttack = true;
 
