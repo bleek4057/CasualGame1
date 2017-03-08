@@ -91,7 +91,7 @@ public class GameManager : MonoBehaviour
                 fakeTower.transform.position = new Vector3(target.x, 5, target.y);
                 fakeTower.SetActive(true);
                 TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = true;
-                if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
+                if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
                 {
                     fakeTower.GetComponent<TowerFakeScript>().SetColor(false);
                 }
