@@ -50,6 +50,8 @@ public class EnemyManager : MonoBehaviour
 
         enemiesSpawned = 0;
 
+        spawnInterval = enemySpawnTime[0];
+
         interval = startInterval;
     }
 	
@@ -79,14 +81,17 @@ public class EnemyManager : MonoBehaviour
     void SpawnEnemy()
     {
         //GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
-        Debug.Log(GameManager.waveNumber - 1);
-        Debug.Log(enemiesSpawned);
+        Debug.Log("Wave #" + (GameManager.waveNumber - 1));
+        
+
         GameObject newEnemy = Instantiate(enemyTypesToSpawn[GameManager.waveNumber - 1][0], new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
         newEnemy.GetComponent<EnemyScript>().CopyList(GameManager.TileManager.GetComponent<TileManager>().enemyPath);
         newEnemy.GetComponent<EnemyScript>().playerBase = GameManager.playerBase;
         allEnemies.Add(newEnemy);
 
         enemiesSpawned += 1;
+
+        Debug.Log("Enemies Spawned " + enemiesSpawned);
 
         //eh, this is for a slider health bar but i think the objects would be easier
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
@@ -114,14 +119,25 @@ public class EnemyManager : MonoBehaviour
     {
         enemiesSpawned = 0;
         RestartInterval();
-        spawnInterval = enemySpawnTime[GameManager.waveNumber];
-        enemiesToSpawn = enemyNumberToSpawn[GameManager.waveNumber - 1][0];
+        spawnInterval = enemySpawnTime[GameManager.waveNumber - 1];
+
+        enemiesToSpawn = 0;
+
+        Debug.Log("wave " + (GameManager.waveNumber - 1));
+
+        for (int i = 0; i < enemyNumberToSpawn[GameManager.waveNumber - 1].Count; i++)
+        {
+            Debug.Log(enemyNumberToSpawn[GameManager.waveNumber - 1][i]);
+            enemiesToSpawn += enemyNumberToSpawn[GameManager.waveNumber - 1][i];
+        }
+
+        Debug.Log("enemies to spawn: " + enemiesToSpawn);
     }
     public void RestartAll()
     {
         enemiesSpawned = 0;
         enemiesToSpawn = enemyNumberToSpawn[0][0];
-        spawnInterval = 5;
+        spawnInterval = enemySpawnTime[0];
         RestartInterval();
     }
 
@@ -174,7 +190,13 @@ public class EnemyManager : MonoBehaviour
                 //Debug.Log("Wave # " + wave);
                 enemyTypesToSpawn[wave].Add(enemyPrefabs[0]);
                 enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
-                enemySpawnTime.Add(float.Parse(lineData[3]));
+
+                if(enemySpawnTime.Count <= wave)
+                {
+                    //Debug.Log("wave" + wave);
+                    enemySpawnTime.Add(float.Parse(lineData[3]));
+                }
+                
             }
             if(lineData[0] == "FE")
             {
@@ -182,7 +204,11 @@ public class EnemyManager : MonoBehaviour
                 //Debug.Log("Wave # " + wave);
                 enemyTypesToSpawn[wave].Add(enemyPrefabs[1]);
                 enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
-                enemySpawnTime.Add(float.Parse(lineData[3]));
+                if (enemySpawnTime.Count <= wave)
+                {
+                    //Debug.Log("wave" + wave);
+                    enemySpawnTime.Add(float.Parse(lineData[3]));
+                }
             }
             if(lineData[0] == "SE")
             {
@@ -190,9 +216,15 @@ public class EnemyManager : MonoBehaviour
                 //Debug.Log("Wave # " + wave);
                 enemyTypesToSpawn[wave].Add(enemyPrefabs[2]);
                 enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
-                enemySpawnTime.Add(float.Parse(lineData[3]));
+                if (enemySpawnTime.Count <= wave)
+                {
+                    //Debug.Log("wave" + wave);
+                    enemySpawnTime.Add(float.Parse(lineData[3]));
+                }
             }
         }
+
+
 
         //Debug.Log("spawn time count " + enemySpawnTime.Count);
         //

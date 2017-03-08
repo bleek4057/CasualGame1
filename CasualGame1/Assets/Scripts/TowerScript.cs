@@ -4,7 +4,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TowerScript : MonoBehaviour {
+public class TowerScript : MonoBehaviour
+{
     public int cost;
 
     public List<EnemyScript> enemies = new List<EnemyScript>();
