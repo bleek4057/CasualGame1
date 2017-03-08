@@ -109,7 +109,7 @@ public class GameManager : MonoBehaviour
             {
                 Vector2 target = new Vector2(hit.transform.position.x, hit.transform.position.z);
                 Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
-                Debug.Log(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity);
+                //Debug.Log("tile towers capacity " + TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity);
             }
             else
             {
