@@ -36,7 +36,7 @@ public class TowerScript : MonoBehaviour
         rangeSphere = this.gameObject.GetComponent<SphereCollider>();
         lightning = gameObject.GetComponent<LightningBoltScript>();
         if(lightning != null)
-            lightning.StartObject = transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+            lightning.StartObject = transform.GetChild(0).GetChild(0).gameObject;
         ps = GetComponent<ParticleSystem>();
 
         defaultColor = new List<Color>();
@@ -61,8 +61,8 @@ public class TowerScript : MonoBehaviour
                 {
                     enemies.RemoveAt(0);
                 }
-                transform.GetChild(0).GetChild(1).LookAt(enemies[0].transform.position);
-                transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
+                transform.GetChild(0).LookAt(enemies[0].transform.position);
+                transform.GetChild(0).eulerAngles = new Vector3(-90, transform.GetChild(0).eulerAngles.y, 0);
 
                 if (_timer <= 0)
                 {
@@ -103,8 +103,6 @@ public class TowerScript : MonoBehaviour
     private void Attack(EnemyScript enemy)
     {
         //ps.Play();
-        transform.GetChild(0).GetChild(1).LookAt(enemy.transform.position);
-        transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
         lightning.EndObject = enemy.gameObject;
         lightning.Trigger();
         enemy.Damage(damagePerHit);

@@ -129,7 +129,7 @@ public class GameManager : MonoBehaviour
                 Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
                 if (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity)
                 {
-                    fakeTower.transform.position = new Vector3(target.x, 5 + (10 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y);
+                    fakeTower.transform.position = new Vector3(target.x, 9 + (2 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y);
                     fakeTower.SetActive(true);
                 }
                 else
@@ -265,12 +265,17 @@ public class GameManager : MonoBehaviour
                             {
                                 GameObject tower = new GameObject("Tower");
                                 tower.transform.position = new Vector3(target.x, 5, target.y);
+                                GameObject newTower;
                                 if (!towerPrefab.GetComponent<TowerScript>().isBase)
                                 {
-                                    GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(0, 5, 0), Quaternion.identity, tower.transform);
+                                    GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
                                     TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newBaseTower);
+                                    newTower = Instantiate(towerPrefab, new Vector3(target.x, 9 + (2 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y), Quaternion.identity, tower.transform);
                                 }
-                                GameObject newTower = Instantiate(towerPrefab, new Vector3(0, 5 + (10 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), 0), Quaternion.identity, tower.transform);
+                                else
+                                {
+                                    newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
+                                }
                                 PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
                                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
                             }
@@ -279,12 +284,17 @@ public class GameManager : MonoBehaviour
                         {
                             GameObject tower = new GameObject("Tower");
                             tower.transform.position = new Vector3(target.x, 5, target.y);
+                            GameObject newTower;
                             if (!towerPrefab.GetComponent<TowerScript>().isBase)
                             {
                                 GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
                                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newBaseTower);
+                                newTower = Instantiate(towerPrefab, new Vector3(target.x, 9 + (2 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y), Quaternion.identity, tower.transform);
                             }
-                            GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5 + (10 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y), Quaternion.identity, tower.transform);
+                            else
+                            {
+                                newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
+                            }
                             PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
                             TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
                         }
@@ -297,7 +307,7 @@ public class GameManager : MonoBehaviour
                         Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
                         if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity && !towerPrefab.GetComponent<TowerScript>().isBase)
                         {
-                            GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 5 + (10 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y), Quaternion.identity, hit.transform.parent);
+                            GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 9 + (2 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y), Quaternion.identity, hit.transform.parent);
                             TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
                         }
                     }
@@ -305,25 +315,9 @@ public class GameManager : MonoBehaviour
             }
             if (Input.GetMouseButtonUp(1)) //use towerMouseOver
             {
-                Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-                int layermask = ~(1 << 9);
-                bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
-                if (rayCast && hit.transform.tag == "Tower")
-                {
-                    List<Vector2> savedPath = new List<Vector2>(TileManager.enemyPath);
-                    TileManager.mapData[(int)(5 + (hit.transform.position.x - (TileManager.x / 2)) / 10), (int)(5 - (hit.transform.position.z - ((TileManager.y / 2) - 1)) / 10)] = false;
-                    TileManager.CreatePath(true);
-                    if (TileManager.enemyPath.Count == savedPath.Count)
-                    {
-                        TileManager.enemyPath = new List<Vector2>(savedPath);
-                        TileManager.CreatePathIndicator();
-                    }
-                    //Debug.Log((5+(hit.transform.position.x - 5)/10) + " -- " + (5 - (hit.transform.position.z - 5) / 10));
-                    PlayerManager.ChangeMoney(3 * hit.transform.gameObject.GetComponent<TowerScript>().cost / 5);
-                    Destroy(hit.transform.gameObject);
-
-                    //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
-                }
+                Vector2 gridPos = new Vector2(((towerMouseOver.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerMouseOver.transform.position.z - 5) / 10));
+                TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.RemoveAt(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count - 1);
+                Destroy(towerMouseOver);
             }
             if (Input.GetMouseButton(2))
             {
