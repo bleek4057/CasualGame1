@@ -97,7 +97,7 @@ public class EnemyManager : MonoBehaviour
     void SpawnEnemy(int waveSection)
     {
         //GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
-        Debug.Log("Wave #" + (GameManager.waveNumber - 1));
+        //Debug.Log("Wave #" + (GameManager.waveNumber - 1));
         
 
         GameObject newEnemy = Instantiate(enemyTypesToSpawn[GameManager.waveNumber - 1][waveSection], new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
@@ -107,7 +107,7 @@ public class EnemyManager : MonoBehaviour
 
         enemiesSpawned += 1;
 
-        Debug.Log("Enemies Spawned " + enemiesSpawned);
+        //Debug.Log("Enemies Spawned " + enemiesSpawned);
 
         //eh, this is for a slider health bar but i think the objects would be easier
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
