@@ -29,6 +29,9 @@ public class EnemyManager : MonoBehaviour
     private List<float> enemySpawnTime;
     //List of enemy prefabs
     public List<GameObject> enemyPrefabs;
+    //int representing section of enemy wave that we are on
+    private int currentEnemySection;
+
 
     // Use this for initialization
     void Start ()
@@ -46,6 +49,8 @@ public class EnemyManager : MonoBehaviour
             //enemyNumberToSpawn.Add();
         }
 
+        currentEnemySection = 0;
+
         GetEnemyData("level1");
 
         enemiesSpawned = 0;
@@ -62,11 +67,22 @@ public class EnemyManager : MonoBehaviour
         {
             if (enemiesSpawned < enemiesToSpawn)
             {
+                //Debug.Log("Enemis in current section: " + enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection]);
+
+                //if we have spawned enough of the type of enemies in this section of a wave
+                if(enemiesSpawned == enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection])
+                {
+                    enemiesSpawned -= enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection];
+                    enemiesToSpawn -= enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection];
+
+                    currentEnemySection++;
+                }
+
                 //counts down to when the next enemy appears
                 interval -= Time.deltaTime;
                 if (interval <= 0)
                 {
-                    SpawnEnemy();
+                    SpawnEnemy(currentEnemySection);
                     interval = spawnInterval;
                 }
             }
@@ -78,20 +94,20 @@ public class EnemyManager : MonoBehaviour
     }
 
     //spawns a new enemy and initializes its path
-    void SpawnEnemy()
+    void SpawnEnemy(int waveSection)
     {
         //GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
-        Debug.Log("Wave #" + (GameManager.waveNumber - 1));
+        //Debug.Log("Wave #" + (GameManager.waveNumber - 1));
         
 
-        GameObject newEnemy = Instantiate(enemyTypesToSpawn[GameManager.waveNumber - 1][0], new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
+        GameObject newEnemy = Instantiate(enemyTypesToSpawn[GameManager.waveNumber - 1][waveSection], new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
         newEnemy.GetComponent<EnemyScript>().CopyList(GameManager.TileManager.GetComponent<TileManager>().enemyPath);
         newEnemy.GetComponent<EnemyScript>().playerBase = GameManager.playerBase;
         allEnemies.Add(newEnemy);
 
         enemiesSpawned += 1;
 
-        Debug.Log("Enemies Spawned " + enemiesSpawned);
+        //Debug.Log("Enemies Spawned " + enemiesSpawned);
 
         //eh, this is for a slider health bar but i think the objects would be easier
         //GameObject enemyHealth = Instantiate(enemySliderPrefab);
@@ -118,6 +134,7 @@ public class EnemyManager : MonoBehaviour
     public void NextWave()
     {
         enemiesSpawned = 0;
+        currentEnemySection = 0;
         RestartInterval();
         spawnInterval = enemySpawnTime[GameManager.waveNumber - 1];
 
@@ -138,6 +155,7 @@ public class EnemyManager : MonoBehaviour
         enemiesSpawned = 0;
         enemiesToSpawn = enemyNumberToSpawn[0][0];
         spawnInterval = enemySpawnTime[0];
+        currentEnemySection = 0;
         RestartInterval();
     }
 

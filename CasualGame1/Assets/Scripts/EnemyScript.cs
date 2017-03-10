@@ -25,22 +25,43 @@ public class EnemyScript : MonoBehaviour
         if (GameManager.Instance.currentGame == GameManager.GameState.PlayPhase)
         {
             //moves the enemy to its next point (VERY simple and not optimized)
-            if (path.Peek().x < transform.position.x)
-            {
-                this.transform.Translate(-speed * Time.deltaTime, 0, 0);
-            }
-            if (path.Peek().x > transform.position.x)
-            {
-                this.transform.Translate(speed * Time.deltaTime, 0, 0);
-            }
-            if (path.Peek().y < transform.position.z)
-            {
-                this.transform.Translate(0, 0, -speed * Time.deltaTime);
-            }
-            if (path.Peek().y > transform.position.z)
-            {
-                this.transform.Translate(0, 0, speed * Time.deltaTime);
-            }
+            //if (path.Peek().x < transform.position.x)
+            //{
+            //    //this.transform.Translate(-speed * Time.deltaTime, 0, 0);
+            //    this.transform.rotation = Quaternion.Euler(0, 90, 0);
+            //}
+            //else if (path.Peek().x > transform.position.x)
+            //{
+            //    //this.transform.Translate(speed * Time.deltaTime, 0, 0);
+            //    this.transform.rotation = Quaternion.Euler(0, -90, 0);
+            //}
+            //else if (path.Peek().y < transform.position.z)
+            //{
+            //    //this.transform.Translate(0, 0, -speed * Time.deltaTime);
+            //    this.transform.rotation = Quaternion.Euler(0, 180, 0);
+            //}
+            //else if (path.Peek().y > transform.position.z)
+            //{
+            //    //this.transform.Translate(0, 0, speed * Time.deltaTime);
+            //    this.transform.rotation = Quaternion.Euler(0, 0, 0);
+            //}
+
+
+            //get the direction to the next path location
+            //is backwards because the of the model
+            Vector3 direction = this.transform.position - new Vector3(path.Peek().x, 0, path.Peek().y);
+
+            //set y to zero so it stays on the map
+            direction.y = 0;
+
+            //Debug.Log("enemy direction: x " + direction.x + " y " + direction.y + " z " + direction.z);
+
+            //find the roation to facein the direction
+            this.transform.rotation = Quaternion.LookRotation(direction);
+
+            //move the enemy backwards because of the model
+            this.transform.Translate(0, 0, -speed * Time.deltaTime);
+
             if (Vector2.Distance(path.Peek(), new Vector2(transform.position.x, transform.position.z)) <= .5f)
             {
                 path.Dequeue();

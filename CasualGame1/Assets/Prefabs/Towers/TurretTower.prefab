@@ -139,8 +139,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1589094388730610}
   m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 18.4, y: 18.400007, z: 35}
+  m_LocalPosition: {x: 0, y: 0.000000059605, z: -0.000000095367}
+  m_LocalScale: {x: 33, y: 33, z: 35}
   m_Children:
   - {fileID: 4647399009885186}
   m_Father: {fileID: 4152171357546464}
@@ -179,7 +179,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791498391173414}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 10, y: 2, z: 10}
   m_Children:
   - {fileID: 4035720289574922}
@@ -428,9 +428,7 @@ MonoBehaviour:
   _fireRate: 0.333
   canAttack: 1
   toBeColored:
-  - {fileID: 0}
-  - {fileID: 0}
-  - {fileID: 0}
+  - {fileID: 1589094388730610}
   towerCamera: {fileID: 0}
   cameraPos: {x: 0, y: 0.139, z: 0.77}
   cameraAngle: {x: 0, y: 0, z: 0, w: 0}
@@ -619,7 +617,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: -1679657797
+  randomSeed: 1305812641
   InitialModule:
     serializedVersion: 3
     enabled: 1
