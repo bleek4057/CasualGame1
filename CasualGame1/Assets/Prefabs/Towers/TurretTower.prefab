@@ -36,6 +36,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4428727692315872}
   - component: {fileID: 135706854274603542}
+  - component: {fileID: 136261979242525298}
   m_Layer: 9
   m_Name: GameObject
   m_TagString: Untagged
@@ -95,6 +96,7 @@ GameObject:
   - component: {fileID: 54738096795244534}
   - component: {fileID: 120362279793485242}
   - component: {fileID: 114122709968605404}
+  - component: {fileID: 136882023938557366}
   m_Layer: 0
   m_Name: TurretTower
   m_TagString: Tower
@@ -139,7 +141,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1589094388730610}
   m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.70710677}
-  m_LocalPosition: {x: 0, y: 0.000000059605, z: -0.000000095367}
+  m_LocalPosition: {x: 0, y: 0, z: -0.000000095367}
   m_LocalScale: {x: 33, y: 33, z: 35}
   m_Children:
   - {fileID: 4647399009885186}
@@ -179,7 +181,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791498391173414}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 11, z: 0}
   m_LocalScale: {x: 10, y: 2, z: 10}
   m_Children:
   - {fileID: 4035720289574922}
@@ -558,9 +560,35 @@ SphereCollider:
   m_GameObject: {fileID: 1429014965937000}
   m_Material: {fileID: 0}
   m_IsTrigger: 1
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Radius: 2
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &136261979242525298
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1429014965937000}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  m_Radius: 2
+  m_Height: 40
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!136 &136882023938557366
+CapsuleCollider:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1791498391173414}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 0
+  m_Radius: 0.5
+  m_Height: 1
+  m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
 --- !u!198 &198279157618840204
 ParticleSystem:
@@ -617,7 +645,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 22441870
+  randomSeed: -2040996889
   InitialModule:
     serializedVersion: 3
     enabled: 1
