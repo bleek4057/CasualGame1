@@ -423,7 +423,7 @@ MonoBehaviour:
   isBase: 0
   cost: 50
   enemies: []
-  fakeVersion: {fileID: 1645338139568056, guid: 71f258c10e79a6b408359e734f031cf0,
+  fakeVersion: {fileID: 1935278899293338, guid: 71f258c10e79a6b408359e734f031cf0,
     type: 2}
   _fireRate: 0.333
   canAttack: 1
@@ -617,7 +617,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 1305812641
+  randomSeed: 22441870
   InitialModule:
     serializedVersion: 3
     enabled: 1

@@ -913,6 +913,10 @@ Prefab:
       propertyPath: m_RootOrder
       value: 10
       objectReference: {fileID: 0}
+    - target: {fileID: 1578354068256016, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
   m_IsPrefabParent: 0
@@ -1484,7 +1488,7 @@ Transform:
   - {fileID: 394189982}
   - {fileID: 732718241}
   m_Father: {fileID: 0}
-  m_RootOrder: 12
+  m_RootOrder: 13
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &648131408
 GameObject:
@@ -1633,7 +1637,7 @@ Transform:
   - {fileID: 274256047}
   - {fileID: 1799064220}
   m_Father: {fileID: 0}
-  m_RootOrder: 11
+  m_RootOrder: 12
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &732718237
 GameObject:
@@ -2620,8 +2624,7 @@ Prefab:
         type: 2}
       propertyPath: baseTowerFake
       value: 
-      objectReference: {fileID: 1578354068256016, guid: b601d8ff84922c046ac9ee9d51d7c3a5,
-        type: 2}
+      objectReference: {fileID: 1989055587}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: ad26753475289f149b1418e9dfaa7a2a, type: 2}
   m_IsPrefabParent: 0
@@ -3393,6 +3396,61 @@ Prefab:
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: dc6fe22a1e34a4f4091b62547af0cb9d, type: 2}
   m_IsPrefabParent: 0
+--- !u!1001 &1629073929
+Prefab:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    m_TransformParent: {fileID: 0}
+    m_Modifications:
+    - target: {fileID: 114454798653919754, guid: b601d8ff84922c046ac9ee9d51d7c3a5,
+        type: 2}
+      propertyPath: toBeColored.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_LocalPosition.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_LocalPosition.y
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_LocalPosition.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_LocalRotation.x
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_LocalRotation.y
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_LocalRotation.z
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_LocalRotation.w
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 4007471264214060, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_RootOrder
+      value: 11
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578354068256016, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_Name
+      value: FakeBlank (1)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1578354068256016, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+  m_ParentPrefab: {fileID: 100100000, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
+  m_IsPrefabParent: 0
 --- !u!1 &1633427611
 GameObject:
   m_ObjectHideFlags: 0
@@ -4102,6 +4160,11 @@ CanvasRenderer:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1927809601}
+--- !u!1 &1989055587 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 1578354068256016, guid: b601d8ff84922c046ac9ee9d51d7c3a5,
+    type: 2}
+  m_PrefabInternal: {fileID: 1629073929}
 --- !u!223 &2059034412 stripped
 Canvas:
   m_PrefabParentObject: {fileID: 223200769888951364, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,

@@ -46,7 +46,7 @@ public class TowerScript : MonoBehaviour
             defaultColor.Add(child.GetComponent<Renderer>().material.color);
         }
 
-        cameraAngle = transform.GetChild(0).GetChild(1).GetChild(1).transform.localRotation;
+        //cameraAngle = transform.GetChild(0).GetChild(1).GetChild(1).transform.localRotation;
     }
 	
 	// Update is called once per frame
