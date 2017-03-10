@@ -6,6 +6,7 @@ using UnityEngine;
 
 public class TowerScript : MonoBehaviour
 {
+    public bool isBase;
     public int cost;
 
     public List<EnemyScript> enemies = new List<EnemyScript>();
@@ -35,7 +36,7 @@ public class TowerScript : MonoBehaviour
         rangeSphere = this.gameObject.GetComponent<SphereCollider>();
         lightning = gameObject.GetComponent<LightningBoltScript>();
         if(lightning != null)
-            lightning.StartObject = transform.GetChild(0).GetChild(1).GetChild(0).gameObject;
+            lightning.StartObject = transform.GetChild(0).GetChild(0).gameObject;
         ps = GetComponent<ParticleSystem>();
 
         defaultColor = new List<Color>();
@@ -45,7 +46,7 @@ public class TowerScript : MonoBehaviour
             defaultColor.Add(child.GetComponent<Renderer>().material.color);
         }
 
-        cameraAngle = transform.GetChild(0).GetChild(1).GetChild(1).transform.localRotation;
+        //cameraAngle = transform.GetChild(0).GetChild(1).GetChild(1).transform.localRotation;
     }
 	
 	// Update is called once per frame
@@ -60,8 +61,8 @@ public class TowerScript : MonoBehaviour
                 {
                     enemies.RemoveAt(0);
                 }
-                transform.GetChild(0).GetChild(1).LookAt(enemies[0].transform.position);
-                transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
+                transform.GetChild(0).LookAt(enemies[0].transform.position);
+                transform.GetChild(0).eulerAngles = new Vector3(-90, transform.GetChild(0).eulerAngles.y, 0);
 
                 if (_timer <= 0)
                 {
@@ -70,27 +71,23 @@ public class TowerScript : MonoBehaviour
             }
         }
 
+        SetColor(true);
         if (GameManager.Instance.currentGame == GameManager.GameState.BuildPhase)
         {
-            RaycastHit hit;
-            Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
-            int layermask = ~(1 << 9);
-            bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
-            if (rayCast && hit.transform.gameObject == gameObject)
+            if(GameManager.Instance.towerMouseOver == gameObject)
             {
-                GetComponent<Renderer>().material.color = Color.red;
-                for (int i = 0; i < toBeColored.Count; i++)
-                {
-                    toBeColored[i].GetComponent<Renderer>().material.color = Color.red;
-                }
+                SetColor(false);
             }
-            else
+        }
+    }
+    public void SetColor(bool def)
+    {
+        if (!def)
+        {
+            GetComponent<Renderer>().material.color = Color.red;
+            for (int i = 0; i < toBeColored.Count; i++)
             {
-                GetComponent<Renderer>().material.color = defaultMainColor;
-                for (int i = 0; i < toBeColored.Count; i++)
-                {
-                    toBeColored[i].GetComponent<Renderer>().material.color = defaultColor[i];
-                }
+                toBeColored[i].GetComponent<Renderer>().material.color = Color.red;
             }
         }
         else
@@ -106,8 +103,6 @@ public class TowerScript : MonoBehaviour
     private void Attack(EnemyScript enemy)
     {
         //ps.Play();
-        transform.GetChild(0).GetChild(1).LookAt(enemy.transform.position);
-        transform.GetChild(0).GetChild(1).eulerAngles = new Vector3(-90, transform.GetChild(0).GetChild(1).eulerAngles.y, 0);
         lightning.EndObject = enemy.gameObject;
         lightning.Trigger();
         enemy.Damage(damagePerHit);

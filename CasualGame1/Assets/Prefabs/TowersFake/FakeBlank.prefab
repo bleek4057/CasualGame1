@@ -29,7 +29,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &4007471264214060
 Transform:
   m_ObjectHideFlags: 1
@@ -104,5 +104,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 53972130842023d42a6c5170a6484551, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  toBeColored: []
+  toBeColored:
+  - {fileID: 1578354068256016}
   defaultColor: []

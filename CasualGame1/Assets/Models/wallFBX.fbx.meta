@@ -1,19 +1,21 @@
 fileFormatVersion: 2
-guid: ac1010f8409ce1c42983f97e7512de24
+guid: 626c790b4cf9de3498b994b232461c50
+timeCreated: 1489165530
+licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Barrel
-    100002: //RootNode
-    400000: Barrel
-    400002: //RootNode
-    2300000: Barrel
-    2300002: //RootNode
-    3300000: Barrel
-    3300002: //RootNode
-    4300000: Turret
-    4300002: Barrel
-    9500000: //RootNode
+    100000: Camera
+    100002: Cube
+    100004: Lamp
+    100006: //RootNode
+    400000: Camera
+    400002: Cube
+    400004: Lamp
+    400006: //RootNode
+    2300000: Cube
+    3300000: Cube
+    4300000: Cube
   materials:
     importMaterials: 1
     materialName: 0
@@ -76,7 +78,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 

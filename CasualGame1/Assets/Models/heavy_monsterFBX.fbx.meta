@@ -1,19 +1,73 @@
 fileFormatVersion: 2
-guid: ac1010f8409ce1c42983f97e7512de24
+guid: 3d570bfecdffc484e87f6e7a6139def0
+timeCreated: 1489165530
+licenseType: Pro
 ModelImporter:
   serializedVersion: 19
   fileIDToRecycleName:
-    100000: Barrel
-    100002: //RootNode
-    400000: Barrel
-    400002: //RootNode
-    2300000: Barrel
-    2300002: //RootNode
-    3300000: Barrel
-    3300002: //RootNode
-    4300000: Turret
-    4300002: Barrel
-    9500000: //RootNode
+    100000: Antenna1.002
+    100002: Antenna1.003
+    100004: Body
+    100006: Camera
+    100008: Cap
+    100010: Cap.001
+    100012: Cylinder.000
+    100014: Cylinder.001
+    100016: Cylinder.004
+    100018: Cylinder.005
+    100020: Cylinder.006
+    100022: Cylinder.007
+    100024: //RootNode
+    100026: Lamp
+    100028: Legs
+    400000: Antenna1.002
+    400002: Antenna1.003
+    400004: Body
+    400006: Camera
+    400008: Cap
+    400010: Cap.001
+    400012: Cylinder.000
+    400014: Cylinder.001
+    400016: Cylinder.004
+    400018: Cylinder.005
+    400020: Cylinder.006
+    400022: Cylinder.007
+    400024: //RootNode
+    400026: Lamp
+    400028: Legs
+    2300000: Antenna1.002
+    2300002: Antenna1.003
+    2300004: Body
+    2300006: Cap
+    2300008: Cap.001
+    2300010: Cylinder.000
+    2300012: Cylinder.001
+    2300014: Cylinder.004
+    2300016: Cylinder.005
+    2300018: Cylinder.006
+    2300020: Cylinder.007
+    3300000: Antenna1.002
+    3300002: Antenna1.003
+    3300004: Body
+    3300006: Cap
+    3300008: Cap.001
+    3300010: Cylinder.000
+    3300012: Cylinder.001
+    3300014: Cylinder.004
+    3300016: Cylinder.005
+    3300018: Cylinder.006
+    3300020: Cylinder.007
+    4300000: Body
+    4300002: Cap.001
+    4300004: Antenna1.003
+    4300006: Antenna1.002
+    4300008: Cylinder.001
+    4300010: Cylinder.000
+    4300012: Cylinder.007
+    4300014: Cylinder.006
+    4300016: Cylinder.005
+    4300018: Cylinder.004
+    4300020: Cap
   materials:
     importMaterials: 1
     materialName: 0
@@ -76,7 +130,7 @@ ModelImporter:
     hasExtraRoot: 0
     skeletonHasParents: 1
   lastHumanDescriptionAvatarSource: {instanceID: 0}
-  animationType: 2
+  animationType: 0
   humanoidOversampling: 1
   additionalBone: 0
   userData: 
