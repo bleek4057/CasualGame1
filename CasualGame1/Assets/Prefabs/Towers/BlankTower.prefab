@@ -283,7 +283,8 @@ MonoBehaviour:
     type: 2}
   _fireRate: 0
   canAttack: 0
-  toBeColored: []
+  toBeColored:
+  - {fileID: 1662657981976986}
   towerCamera: {fileID: 0}
   cameraPos: {x: 0, y: 0, z: 0}
   cameraAngle: {x: 0, y: 0, z: 0, w: 0}

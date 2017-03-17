@@ -39,8 +39,11 @@ public class GameManager : MonoBehaviour
 
     public Vector3 menuCameraPos;
     public Vector3 buildCameraPos;
+    private Vector3 updateBuildCameraPos;
     public Vector3 playCameraPos;
+    private Vector3 updatePlayCameraPos;
     public Quaternion playCameraAngles;
+    private Quaternion updatePlayCameraAngles;
     public GameObject towerFollow;
 
     public GameObject towerMouseOver;
@@ -63,7 +66,7 @@ public class GameManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-        playCameraAngles = Quaternion.Euler(55, 0, 0);
+        playCameraAngles = Quaternion.Euler(playCameraAngles.x, playCameraAngles.y, playCameraAngles.z);
 
         playCamera.transform.position = menuCameraPos;
         playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
@@ -107,6 +110,16 @@ public class GameManager : MonoBehaviour
                 }
                 fakeTower.SetActive(true);
                 TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = true;
+                if (TileManager.CreatePath(false))
+                {
+                    TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                    TileManager.CreateFakePathIndicator(TileManager.CreatePathPoints());
+                }
+                else
+                {
+                    TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                }
+
                 if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<TowerScript>().cost))
                 {
                     fakeTower.GetComponent<TowerFakeScript>().SetColor(false);
@@ -146,7 +159,6 @@ public class GameManager : MonoBehaviour
                 {
                     fakeTower.GetComponent<TowerFakeScript>().SetColor(true);
                 }
-                //Debug.Log(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity);
             }
             else
             {
@@ -165,25 +177,24 @@ public class GameManager : MonoBehaviour
     void Update ()
     {
         UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(false);
-        fakeTower.SetActive(false);
         if (currentGame == GameState.MainMenu || currentGame == GameState.Paused)
         {
-
+            fakeTower.SetActive(false);
         }
         if (currentGame == GameState.PlayPhase)
         {
+            fakeTower.SetActive(false);
             if (towerFollow == null)
             {
-                //LINEAR -- playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, 1/ Vector3.Distance(playCamera.transform.position, playCameraPos));
+                //LINEAR -- playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, 1/ Vector3.Distance(playCamera.transform.position, updatePlayCameraPos));
                 //NONLINEAR -- 
-                playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, .04f);
-                //playCamera.transform.eulerAngles = Vector3.Lerp(playCamera.transform.eulerAngles, playCameraAngles, .04f);
-                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, playCameraAngles, 1f);
-                if (Input.GetMouseButton(2) && Vector3.Distance(playCamera.transform.position, playCameraPos) < 5)
+                playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, updatePlayCameraPos, .04f);
+                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, updatePlayCameraAngles, 1f);
+                if (Input.GetMouseButton(2) && Mathf.Abs(Vector3.Distance(playCamera.transform.position, Vector3.zero) - Vector3.Distance(playCamera.transform.position, Vector3.zero)) < 5)
                 {
                     playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
-                    playCameraPos = playCamera.transform.position;
-                    playCameraAngles = playCamera.transform.rotation;
+                    updatePlayCameraPos = playCamera.transform.position;
+                    updatePlayCameraAngles = playCamera.transform.rotation;
                 }
             }
             else
@@ -228,7 +239,7 @@ public class GameManager : MonoBehaviour
         {
             MoveFakeTower();
 
-            playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, buildCameraPos, .04f);
+            playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, updateBuildCameraPos, .04f);
             playCamera.transform.eulerAngles = Vector3.Lerp(playCamera.transform.eulerAngles, new Vector3(90, 0, 0), .04f);
 
             towerMouseOver = null;
@@ -239,7 +250,18 @@ public class GameManager : MonoBehaviour
             if (rayCast2 && hit2.transform.tag == "Tower")
             {
                 Vector2 gridPos = new Vector2(((hit2.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit2.transform.position.z - 5) / 10));
-                towerMouseOver = TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents[TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count -1];
+                towerMouseOver = TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents[TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count - 1];
+                if (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count == 1)
+                {
+                    TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(true);
+                    TileManager.mapData[(int)gridPos.x, (int)gridPos.y] = false;
+                    TileManager.CreateFakePathIndicator(TileManager.CreatePathPoints());
+                    TileManager.mapData[(int)gridPos.x, (int)gridPos.y] = true;
+                }
+                else
+                {
+                    TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+                }
             }
 
             //places a new tower where the player clicks, if there is nothing there
@@ -256,31 +278,10 @@ public class GameManager : MonoBehaviour
                         Vector2 target = new Vector2(10 * Mathf.Floor(hit.point.x / 10) + 5, 10 * Mathf.Floor(hit.point.z / 10) + 5);
                         Vector2 gridPos = new Vector2(((target.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((target.y - 5) / 10));
                         TileManager.mapData[(int)gridPos.x, (int)gridPos.y] = true;
-                        if (TileManager.enemyPath.Contains(target))
+                        if (!TileManager.CreatePath(true))
                         {
-                            if (!TileManager.CreatePath(true))
-                            {
-                                TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = false;
-                                TileManager.CreatePath(true);
-                            }
-                            else
-                            {
-                                GameObject tower = new GameObject("Tower");
-                                tower.transform.position = new Vector3(target.x, 5, target.y);
-                                GameObject newTower;
-                                if (!towerPrefab.GetComponent<TowerScript>().isBase)
-                                {
-                                    GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
-                                    TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newBaseTower);
-                                    newTower = Instantiate(towerPrefab, new Vector3(target.x, 9 + (2 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y), Quaternion.identity, tower.transform);
-                                }
-                                else
-                                {
-                                    newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
-                                }
-                                PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
-                                TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
-                            }
+                            TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = false;
+                            TileManager.CreatePath(true);
                         }
                         else
                         {
@@ -319,15 +320,19 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonUp(1) && towerMouseOver != null) //use towerMouseOver
             {
                 Vector2 gridPos = new Vector2(((towerMouseOver.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerMouseOver.transform.position.z - 5) / 10));
+                if (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count == 1)
+                {
+                    TileManager.mapData[(int)gridPos.x, (int)gridPos.y] = false;
+                    TileManager.CreatePath(true);
+                }
                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.RemoveAt(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count - 1);
                 Destroy(towerMouseOver);
             }
-            if (Input.GetMouseButton(1))
+            if (Input.GetMouseButton(2))
             {
-                Debug.Log("What");
                 playCamera.transform.Translate(5 * new Vector3(-(Input.mousePosition.x - prevMousePosition.x), -(Input.mousePosition.y - prevMousePosition.y), 0) * Time.deltaTime);
-                buildCameraPos = playCamera.transform.position;
-                playCamera.transform.position = new Vector3(playCamera.transform.position.x, 150, playCamera.transform.position.z);
+                updateBuildCameraPos = playCamera.transform.position;
+                playCamera.transform.position = new Vector3(playCamera.transform.position.x, buildCameraPos.y, playCamera.transform.position.z);
             }
             //playCamera.fieldOfView -= Input.mouseScrollDelta.y;
             if (playCamera.fieldOfView < 20)
@@ -450,6 +455,10 @@ public class GameManager : MonoBehaviour
     public void Restart()
     {
         currentGame = GameState.BuildPhase;
+
+        updateBuildCameraPos = buildCameraPos;
+        updatePlayCameraPos = playCameraPos;
+        updatePlayCameraAngles = playCameraAngles;
 
         waveNumber = 1;
         UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;

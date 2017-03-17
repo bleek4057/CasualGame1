@@ -65,9 +65,59 @@ public class TileManager : MonoBehaviour
 	
 	}
 
+    public void CreateFakePathIndicator(Vector2[,] path)
+    {
+        foreach (Transform child in transform.GetChild(1).GetComponentInChildren<Transform>())
+        {
+            Destroy(child.gameObject);
+        }
+
+        List<Vector2> fakePath = new List<Vector2>();
+        //set the current location to start at the player base
+        Vector2 currentLocation = baseLocation;
+
+        //while we do not run into the end signal, loop
+        while (currentLocation != new Vector2(-1, -1))
+        {
+            //insert the new location into the beginning of the enemyPath
+            //this is because we are moving from the end of the path to the beginning of the path and this will reverse it
+            fakePath.Insert(0, new Vector2((currentLocation.x - 5) * 10 + 5, (currentLocation.y - 5) * -10 - 5));
+
+            //grab the next location
+            currentLocation = path[(int)currentLocation.x, (int)currentLocation.y];
+        }
+
+        for (int i = 1; i < fakePath.Count; i++)
+        {
+            if (fakePath[i - 1].x < fakePath[i].x)
+            {
+                Quaternion rotation = Quaternion.Euler(90, 90, 0);
+                GameObject point = Instantiate(pathPrefab, new Vector3(fakePath[i].x - 5, .5f, fakePath[i].y), rotation, transform.GetChild(1));
+                point.GetComponent<SpriteRenderer>().color = new Color(130 / 255f, 130 / 255f, 130 / 255f, 130 / 255f);
+            }
+            else if (fakePath[i - 1].x > fakePath[i].x)
+            {
+                Quaternion rotation = Quaternion.Euler(90, 90, 0);
+                GameObject point = Instantiate(pathPrefab, new Vector3(fakePath[i].x + 5, .5f, fakePath[i].y), rotation, transform.GetChild(1));
+                point.GetComponent<SpriteRenderer>().color = new Color(130 / 255f, 130 / 255f, 130 / 255f, 130 / 255f);
+            }
+            else if (fakePath[i - 1].y < fakePath[i].y)
+            {
+                Quaternion rotation = Quaternion.Euler(90, 0, 0);
+                GameObject point = Instantiate(pathPrefab, new Vector3(fakePath[i].x, .5f, fakePath[i].y - 5), rotation, transform.GetChild(1));
+                point.GetComponent<SpriteRenderer>().color = new Color(130 / 255f, 130 / 255f, 130 / 255f, 130 / 255f);
+            }
+            else
+            {
+                Quaternion rotation = Quaternion.Euler(90, 0, 0);
+                GameObject point = Instantiate(pathPrefab, new Vector3(fakePath[i].x, .5f, fakePath[i].y + 5), rotation, transform.GetChild(1));
+                point.GetComponent<SpriteRenderer>().color = new Color(130 / 255f, 130 / 255f, 130 / 255f, 130 / 255f);
+            }
+        }
+    }
     public void CreatePathIndicator()
     {
-        foreach(Transform child in transform.GetComponentInChildren<Transform>())
+        foreach(Transform child in transform.GetChild(0).GetComponentInChildren<Transform>())
         {
             Destroy(child.gameObject);
         }
@@ -77,22 +127,22 @@ public class TileManager : MonoBehaviour
             if (enemyPath[i-1].x < enemyPath[i].x)
             {
                 Quaternion rotation = Quaternion.Euler(90, 90, 0);
-                Instantiate(pathPrefab, new Vector3(enemyPath[i].x - 5, 1, enemyPath[i].y), rotation, transform);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x - 5, 1, enemyPath[i].y), rotation, transform.GetChild(0));
             }
             else if (enemyPath[i - 1].x > enemyPath[i].x)
             {
                 Quaternion rotation = Quaternion.Euler(90, 90, 0);
-                Instantiate(pathPrefab, new Vector3(enemyPath[i].x + 5, 1, enemyPath[i].y), rotation, transform);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x + 5, 1, enemyPath[i].y), rotation, transform.GetChild(0));
             }
             else if (enemyPath[i - 1].y < enemyPath[i].y)
             {
                 Quaternion rotation = Quaternion.Euler(90, 0, 0);
-                Instantiate(pathPrefab, new Vector3(enemyPath[i].x, 1, enemyPath[i].y - 5), rotation, transform);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x, 1, enemyPath[i].y - 5), rotation, transform.GetChild(0));
             }
             else
             {
                 Quaternion rotation = Quaternion.Euler(90, 0, 0);
-                Instantiate(pathPrefab, new Vector3(enemyPath[i].x, 1, enemyPath[i].y + 5), rotation, transform);
+                Instantiate(pathPrefab, new Vector3(enemyPath[i].x, 1, enemyPath[i].y + 5), rotation, transform.GetChild(0));
             }
         }
     }
@@ -115,8 +165,26 @@ public class TileManager : MonoBehaviour
 
     }
 
-    //calculate the path from the enemy spawn to the player base
     public bool CreatePath(bool assign)
+    {
+        Vector2[,] pathParent = CreatePathPoints();
+        if(pathParent == null)
+        {
+            return false;
+        }
+        //populate the enemyPath vector with the new path
+        if (assign)
+        {
+            AssignPath(pathParent);
+
+            //create indicators to show the path to the player
+            CreatePathIndicator();
+        }
+        return true;
+    }
+
+    //calculate the path from the enemy spawn to the player base
+    public Vector2[,] CreatePathPoints()
     {
         //2D array of Vector2a to hold the data of the parent node location to find the path after calculation
         Vector2[,] pathParent = new Vector2[x,y];
@@ -169,7 +237,8 @@ public class TileManager : MonoBehaviour
                     heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x - 1, currentTile.Value.y), baseLocation);
 
                     //add the new tile to the heap
-                    prq.Insert(currentTile.Key + 1 + heur, new Vector2(currentTile.Value.x - 1, currentTile.Value.y));
+                    //TYLER : changed (+ 1 +) to (+ 19 +), to go for the y direction first
+                    prq.Insert(currentTile.Key + 19 + heur, new Vector2(currentTile.Value.x - 1, currentTile.Value.y));
 
                     //add the location of he parent to the pathParent array
                     pathParent[(int)currentTile.Value.x - 1, (int)currentTile.Value.y] = currentTile.Value;
@@ -187,7 +256,8 @@ public class TileManager : MonoBehaviour
                     heur = (int)Vector2.Distance(new Vector2(currentTile.Value.x + 1, currentTile.Value.y), baseLocation);
 
                     //add the new tile to the heap
-                    prq.Insert(currentTile.Key + 1 + heur, new Vector2(currentTile.Value.x + 1, currentTile.Value.y));
+                    //TYLER : changed (+ 1 +) to (+ 19 +), to go for the y direction first
+                    prq.Insert(currentTile.Key + 19 + heur, new Vector2(currentTile.Value.x + 1, currentTile.Value.y));
 
                     //add the location of he parent to the pathParent array
                     pathParent[(int)currentTile.Value.x + 1, (int)currentTile.Value.y] = currentTile.Value;
@@ -236,19 +306,10 @@ public class TileManager : MonoBehaviour
             if(prq.GetSize() == 0)
             {
                 //return false
-                return false;
+                return null;
             }
         }
-
-        //populate the enemyPath vector with the new path
-        if (assign)
-        {
-            AssignPath(pathParent);
-
-            //create indicators to show the path to the player
-            CreatePathIndicator();
-        }
-        return true;
+        return pathParent;
     }
 
     //assign the new path to the enemyPath List

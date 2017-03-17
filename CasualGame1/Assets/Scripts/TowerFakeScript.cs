@@ -12,6 +12,19 @@ public class TowerFakeScript : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        Debug.Log("START");
+        //defaultColor = new List<Color>();
+        defaultMainColor = new Color(GetComponent<Renderer>().material.color.r, GetComponent<Renderer>().material.color.g, GetComponent<Renderer>().material.color.b, GetComponent<Renderer>().material.color.a);
+        foreach (GameObject child in toBeColored)
+        {
+            //defaultColor.Add(new Color(child.GetComponent<Renderer>().material.color.r, child.GetComponent<Renderer>().material.color.g, child.GetComponent<Renderer>().material.color.b, child.GetComponent<Renderer>().material.color.a));
+        }
+        //SetDefaultColors();
+    }
+
+    public void SetDefaultColors()
+    {
+        Debug.Log("DEFAULT");
         defaultColor = new List<Color>();
         defaultMainColor = GetComponent<Renderer>().material.color;
         foreach (GameObject child in toBeColored)
