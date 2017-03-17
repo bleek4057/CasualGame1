@@ -98,10 +98,10 @@ public class EnemyManager : MonoBehaviour
     {
         //GameObject newEnemy = Instantiate(enemyPrefab, new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
         //Debug.Log("Wave #" + (GameManager.waveNumber - 1));
-        
 
         GameObject newEnemy = Instantiate(enemyTypesToSpawn[GameManager.waveNumber - 1][waveSection], new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
         newEnemy.GetComponent<EnemyScript>().CopyList(GameManager.TileManager.GetComponent<TileManager>().enemyPath);
+        newEnemy.GetComponent<EnemyScript>().maxHealth += 5 * (GameManager.waveNumber - 1);
         newEnemy.GetComponent<EnemyScript>().playerBase = GameManager.playerBase;
         allEnemies.Add(newEnemy);
 

@@ -36,7 +36,6 @@ public class TileManager : MonoBehaviour
     // Use this for initialization
     void Start ()
     {
-
         //read in the map data file and grab info
         ReadInFileData();
 
@@ -106,6 +105,7 @@ public class TileManager : MonoBehaviour
         {
             for (int i2 = 0; i2 < y; i2++)
             {
+                tileTowers[i, i2] = new Tile(3);
                 mapData[i, i2] = false;
             }
         }
@@ -314,7 +314,7 @@ public class TileManager : MonoBehaviour
                 tempX = Int32.Parse(lineData[1]);
                 tempY = Int32.Parse(lineData[2]);
 
-                playerBase.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 8, (tempY - y / 2) * -10 - 5);
+                playerBase.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 0, (tempY - y / 2) * -10 - 5);
 
                 baseLocation = new Vector2(tempX, tempY);
             }
