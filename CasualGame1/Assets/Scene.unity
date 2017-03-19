@@ -717,6 +717,11 @@ Prefab:
       propertyPath: defaultColor.Array.data[0].a
       value: 0.2784314
       objectReference: {fileID: 0}
+    - target: {fileID: 114454798653919754, guid: b601d8ff84922c046ac9ee9d51d7c3a5,
+        type: 2}
+      propertyPath: range
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}
   m_IsPrefabParent: 0
@@ -2938,6 +2943,11 @@ Prefab:
         type: 2}
       propertyPath: defaultColor.Array.data[0].a
       value: 0.2784314
+      objectReference: {fileID: 0}
+    - target: {fileID: 114454798653919754, guid: b601d8ff84922c046ac9ee9d51d7c3a5,
+        type: 2}
+      propertyPath: range
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b601d8ff84922c046ac9ee9d51d7c3a5, type: 2}

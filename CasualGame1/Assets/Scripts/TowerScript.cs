@@ -11,11 +11,12 @@ public class TowerScript : MonoBehaviour
 
     public List<EnemyScript> enemies = new List<EnemyScript>();
     public GameObject fakeVersion;
-
-    private SphereCollider rangeSphere;
+    
     private LightningBoltScript lightning;
     private float _timer = 0.0f;
     public float _fireRate = 0.333f;
+
+    public int range = 0;
 
     public bool canAttack = true;
 
@@ -24,16 +25,11 @@ public class TowerScript : MonoBehaviour
     List<Color> defaultColor;
 
     ParticleSystem ps;
-
-    public Camera towerCamera;
-    public Vector3 cameraPos;
-    public Quaternion cameraAngle;
+    
     public int damagePerHit;
-    public GameObject cameraParent;
 
     // Use this for initialization
     void Start () {
-        rangeSphere = this.gameObject.GetComponent<SphereCollider>();
         lightning = gameObject.GetComponent<LightningBoltScript>();
         if(lightning != null)
             lightning.StartObject = transform.GetChild(0).GetChild(0).gameObject;
@@ -46,7 +42,11 @@ public class TowerScript : MonoBehaviour
             defaultColor.Add(child.GetComponent<Renderer>().material.color);
         }
 
-        //cameraAngle = transform.GetChild(0).GetChild(1).GetChild(1).transform.localRotation;
+        if (!isBase)
+        {
+            transform.FindChild("Collider").GetComponent<CapsuleCollider>().radius = range;
+            transform.FindChild("ShootingRange").transform.localScale = new Vector3(10 * range, 10 * range, 1);
+        }
     }
 	
 	// Update is called once per frame
@@ -72,11 +72,19 @@ public class TowerScript : MonoBehaviour
         }
 
         SetColor(true);
+        if (!isBase)
+        {
+            transform.FindChild("ShootingRange").gameObject.SetActive(false);
+        }
         if (GameManager.Instance.currentGame == GameManager.GameState.BuildPhase)
         {
             if(GameManager.Instance.towerMouseOver == gameObject)
             {
                 SetColor(false);
+                if (!isBase)
+                {
+                    transform.FindChild("ShootingRange").gameObject.SetActive(true);
+                }
             }
         }
     }

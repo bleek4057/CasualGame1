@@ -32,6 +32,7 @@ public class DropDownMenuScript : MonoBehaviour
         Destroy(GameManager.fakeTower);
         GameManager.fakeTower = Instantiate(towerPrefabs[id].GetComponent<TowerScript>().fakeVersion);
         GameManager.fakeTower.GetComponent<TowerFakeScript>().SetDefaultColors();
+        GameManager.fakeTower.GetComponent<TowerFakeScript>().range = towerPrefabs[id].GetComponent<TowerScript>().range;
         gameObject.transform.GetChild(0).GetComponent<Text>().text = transform.GetChild(id + 1).gameObject.GetComponentInChildren<Text>().text;
         gameObject.transform.GetChild(3).GetComponent<Text>().text = "Cost:" + towerPrefabs[id].GetComponent<TowerScript>().cost;
     }

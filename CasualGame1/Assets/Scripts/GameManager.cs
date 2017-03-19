@@ -44,6 +44,7 @@ public class GameManager : MonoBehaviour
     private Vector3 updatePlayCameraPos;
     public Quaternion playCameraAngles;
     private Quaternion updatePlayCameraAngles;
+    private Quaternion followAngles;
     public GameObject towerFollow;
 
     public GameObject towerMouseOver;
@@ -164,12 +165,14 @@ public class GameManager : MonoBehaviour
             {
                 fakeTower.SetActive(false);
                 baseTowerFake.SetActive(false);
+                TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
             }
         }
         else
         {
             fakeTower.SetActive(false);
             baseTowerFake.SetActive(false);
+            TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
         }
     }
 
@@ -184,6 +187,8 @@ public class GameManager : MonoBehaviour
         if (currentGame == GameState.PlayPhase)
         {
             fakeTower.SetActive(false);
+            TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
+            //handles moving the camera to its desired location
             if (towerFollow == null)
             {
                 //LINEAR -- playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, playCameraPos, 1/ Vector3.Distance(playCamera.transform.position, updatePlayCameraPos));
@@ -199,18 +204,21 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                playCamera.transform.localPosition = Vector3.Lerp(playCamera.transform.localPosition, towerFollow.GetComponent<TowerScript>().cameraPos, .04f);
+                Vector3 followPos = new Vector3(towerFollow.transform.position.x, towerFollow.transform.position.y + 9.5f, towerFollow.transform.position.z);
+
+                playCamera.transform.localPosition = Vector3.Lerp(playCamera.transform.localPosition, followPos, .04f);
                 //for linear, use Quaternion.Angle(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle)
-                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle, 1f);
+                playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, followAngles, 1f);
+                if (Input.GetMouseButton(2))
+                {
+                    playCamera.transform.Rotate(0, 10 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime, 0, Space.World);
+                    followAngles = playCamera.transform.rotation;
+                }
             }
-            //playCamera.fieldOfView -= Input.mouseScrollDelta.y;
-            if (playCamera.fieldOfView < 20)
-            {
-                playCamera.fieldOfView = 20;
-            }
+            //handles right clicking, which will either zoom the camera to a tower or back the camera out to the main view
             if (Input.GetMouseButtonUp(1))
             {
-                /*if (towerFollow == null)
+                if (towerFollow == null)
                 {
                     RaycastHit hit;
                     Ray mouseRay = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -218,15 +226,18 @@ public class GameManager : MonoBehaviour
                     bool rayCast = Physics.Raycast(mouseRay, out hit, 1000, layermask);
                     if (rayCast && hit.transform.tag == "Tower")
                     {
-                        towerFollow = hit.transform.gameObject;
-                        playCamera.transform.parent = hit.transform.GetComponent<TowerScript>().cameraParent.transform;
+                        Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
+                        if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count > 1)
+                        {
+                            followAngles = Quaternion.Euler(20, 0, 0);
+                            towerFollow = hit.transform.parent.gameObject;
+                        }
                     }
                 }
                 else
                 {
                     towerFollow = null;
-                    playCamera.transform.parent = null;
-                }*/
+                }
             }
             prevMousePosition = Input.mousePosition;
         }

@@ -263,3 +263,4 @@ MonoBehaviour:
   toBeColored:
   - {fileID: 1578433606492984}
   defaultColor: []
+  range: 0
