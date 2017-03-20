@@ -463,6 +463,7 @@ MonoBehaviour:
   toBeColored:
   - {fileID: 1589094388730610}
   damagePerHit: 10
+  controlled: 0
 --- !u!120 &120362279793485242
 LineRenderer:
   m_ObjectHideFlags: 1

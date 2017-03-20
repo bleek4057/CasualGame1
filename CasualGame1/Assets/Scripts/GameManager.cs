@@ -195,7 +195,8 @@ public class GameManager : MonoBehaviour
                 //NONLINEAR -- 
                 playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, updatePlayCameraPos, .04f);
                 playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, updatePlayCameraAngles, 1f);
-                if (Input.GetMouseButton(2) && Mathf.Abs(Vector3.Distance(playCamera.transform.position, Vector3.zero) - Vector3.Distance(playCamera.transform.position, Vector3.zero)) < 5)
+                
+                if (Input.GetMouseButton(2) && Mathf.Abs(Vector3.Distance(playCamera.transform.position, Vector3.zero) - Vector3.Distance(updatePlayCameraPos, Vector3.zero)) < 5)
                 {
                     playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
                     updatePlayCameraPos = playCamera.transform.position;
@@ -214,6 +215,26 @@ public class GameManager : MonoBehaviour
                     playCamera.transform.Rotate(0, 10 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime, 0, Space.World);
                     followAngles = playCamera.transform.rotation;
                 }
+                Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+                foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+                {
+                    if (!shooter.GetComponent<TowerScript>().isBase)
+                    {
+                        shooter.transform.eulerAngles = new Vector3(0, playCamera.transform.eulerAngles.y, 0);
+                    }
+                }
+
+                //DO MANUALLY SHOOTING TOWERS HERE
+                if (Input.GetMouseButton(0))
+                {
+                    foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+                    {
+                        if (shooter.GetComponent<TowerScript>().canAttack && shooter.GetComponent<TowerScript>().Timer <= 0)
+                        {
+                            shooter.GetComponent<TowerScript>().Attack(EnemyManager.allEnemies[0].GetComponent<EnemyScript>());
+                        }
+                    }
+                }
             }
             //handles right clicking, which will either zoom the camera to a tower or back the camera out to the main view
             if (Input.GetMouseButtonUp(1))
@@ -231,11 +252,22 @@ public class GameManager : MonoBehaviour
                         {
                             followAngles = Quaternion.Euler(20, 0, 0);
                             towerFollow = hit.transform.parent.gameObject;
+                            UI.transform.FindChild("TakeControl").gameObject.SetActive(true);
                         }
                     }
                 }
                 else
                 {
+                    Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+                    foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+                    {
+                        if (!shooter.GetComponent<TowerScript>().isBase)
+                        {
+                            shooter.GetComponent<TowerScript>().controlled = false;
+                        }
+                    }
+                    UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+                    UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
                     towerFollow = null;
                 }
             }
@@ -357,6 +389,31 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+    public void ChangeControl(bool control)
+    {
+        if(towerFollow != null)
+        {
+            Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+            foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+            {
+                if (!shooter.GetComponent<TowerScript>().isBase)
+                {
+                    shooter.GetComponent<TowerScript>().controlled = control;
+                }
+            }
+        }
+
+        if(control)
+        {
+            UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+            UI.transform.FindChild("LeaveControl").gameObject.SetActive(true);
+        }
+        else
+        {
+            UI.transform.FindChild("TakeControl").gameObject.SetActive(true);
+            UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
+        }
+    }
     public void ToMainMenu()
     {
         currentGame = GameState.MainMenu;
@@ -426,6 +483,8 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Wave UI").GetChild(0).GetComponent<Text>().text = "Wave " + waveNumber;
         
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
+        UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+        UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.DestroyAll();
 
         EnemyManager.NextWave();
@@ -447,6 +506,8 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Lose").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Quit2").gameObject.SetActive(true);
+        UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+        UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
         
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
@@ -461,6 +522,8 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
         UI.transform.FindChild("Quit2").gameObject.SetActive(true);
+        UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+        UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
     }
     public void Restart()
@@ -480,6 +543,8 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Win").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(false);
         UI.transform.FindChild("Quit2").gameObject.SetActive(false);
+        UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+        UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.DestroyAll();
         TileManager.Reset();
 

@@ -28,11 +28,16 @@ public class TowerScript : MonoBehaviour
     
     public int damagePerHit;
 
+    public bool controlled = false;
+
     // Use this for initialization
-    void Start () {
+    void Start ()
+    {
         lightning = gameObject.GetComponent<LightningBoltScript>();
-        if(lightning != null)
+        if (lightning != null)
+        {
             lightning.StartObject = transform.GetChild(0).GetChild(0).gameObject;
+        }
         ps = GetComponent<ParticleSystem>();
 
         defaultColor = new List<Color>();
@@ -50,19 +55,20 @@ public class TowerScript : MonoBehaviour
     }
 	
 	// Update is called once per frame
-	void Update () {
+	void Update ()
+    {
         if (canAttack && GameManager.Instance.currentGame == GameManager.GameState.PlayPhase)
         {
             _timer -= Time.deltaTime;
 
-            if (enemies.Count > 0)
+            if (enemies.Count > 0 && !controlled)
             {
                 if (enemies[0] == null)
                 {
                     enemies.RemoveAt(0);
                 }
-                transform.GetChild(0).LookAt(enemies[0].transform.position);
-                transform.GetChild(0).eulerAngles = new Vector3(-90, transform.GetChild(0).eulerAngles.y, 0);
+                transform.LookAt(enemies[0].transform.position);
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
                 if (_timer <= 0)
                 {
@@ -108,12 +114,30 @@ public class TowerScript : MonoBehaviour
         }
     }
 
-    private void Attack(EnemyScript enemy)
+    public float Timer
+    {
+        get
+        {
+            return _timer;
+        }
+    }
+
+    public void Attack(EnemyScript enemy)
     {
         //ps.Play();
+        lightning.EndPosition = new Vector3(0,0,0);
         lightning.EndObject = enemy.gameObject;
         lightning.Trigger();
         enemy.Damage(damagePerHit);
+
+        _timer = 1f * Mathf.Pow(2.0f, _fireRate);
+    }
+    public void Attack(Vector3 position)
+    {
+        //ps.Play();
+        lightning.EndPosition = position;
+        lightning.EndObject = null;
+        lightning.Trigger();
 
         _timer = 1f * Mathf.Pow(2.0f, _fireRate);
     }
