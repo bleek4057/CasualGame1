@@ -10,6 +10,8 @@ public class GameManager : MonoBehaviour
     //current wave number
     public int waveNumber = 1;
 
+    public int levelNumber = 1;
+
     //the prefab allowing new towers to be placed
     public GameObject towerPrefab;
     //the transparent tower object which is moved around with the mouse
@@ -389,6 +391,7 @@ public class GameManager : MonoBehaviour
             }
         }
     }
+
     public void ChangeControl(bool control)
     {
         if(towerFollow != null)
@@ -414,6 +417,7 @@ public class GameManager : MonoBehaviour
             UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         }
     }
+
     public void ToMainMenu()
     {
         currentGame = GameState.MainMenu;
@@ -429,6 +433,9 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         Restart();
+
+        LoadLevelData();
+
         currentGame = GameState.BuildPhase;
 
         playCamera.transform.position = buildCameraPos;
@@ -436,6 +443,14 @@ public class GameManager : MonoBehaviour
 
         UI.gameObject.SetActive(true);
         MainMenu.gameObject.SetActive(false);
+    }
+
+    //loads in all data from files for the current level
+    private void LoadLevelData()
+    {
+        LoadMapTowers("level" + levelNumber);
+        TileManager.LoadLevelData("level" + levelNumber);
+        EnemyManager.LoadEnemyData("level" + levelNumber);
     }
 
     public void TogglePause()
@@ -469,6 +484,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
     }
+
     public void WinWave()
     {
         if (waveNumber == 10)
@@ -497,6 +513,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
     }
+
     public void LoseWave()
     {
         currentGame = GameState.LosePhase;
@@ -513,6 +530,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
     }
+
     public void WinGame()
     {
         currentGame = GameState.WinPhase;
@@ -526,6 +544,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
     }
+
     public void Restart()
     {
         currentGame = GameState.BuildPhase;
@@ -564,16 +583,16 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
 
-        LoadMapTowers();
+        LoadMapTowers("level" + levelNumber);
 
         TileManager.CreatePath(true);
     }
 
     //read the current map file and place tiles that are there by default
-    private void LoadMapTowers()
+    private void LoadMapTowers(string level)
     {
         //open the file for the tower data
-        StreamReader sr = File.OpenText(TileManager.mapFileName);
+        StreamReader sr = File.OpenText("Assets\\MapData\\" + level + ".txt");
 
         string line = "";
 
@@ -591,6 +610,16 @@ public class GameManager : MonoBehaviour
         {
             //split the data to be read easier
             string[] lineData = line.Split(' ');
+
+
+            if (lineData[0] == "S")
+            {
+                tempX = Int32.Parse(lineData[1]);
+                tempY = Int32.Parse(lineData[2]);
+
+                EnemyManager.enemySpawnPoint = new Vector2();
+            }
+
 
             //create a wall signal
             if (lineData[0] == "W")

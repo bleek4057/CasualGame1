@@ -51,7 +51,7 @@ public class EnemyManager : MonoBehaviour
 
         currentEnemySection = 0;
 
-        GetEnemyData("level1");
+        LoadEnemyData("level1");
 
         enemiesSpawned = 0;
 
@@ -189,7 +189,7 @@ public class EnemyManager : MonoBehaviour
         allEnemies = new List<GameObject>();
     }
 
-    private void GetEnemyData(string level)
+    public void LoadEnemyData(string level)
     {
         StreamReader sr = File.OpenText("Assets\\WaveData\\" + level + ".txt");
         //StreamReader sr = File.OpenText("Assets\\MapData\\level1.txt");

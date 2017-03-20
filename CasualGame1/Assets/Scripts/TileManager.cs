@@ -4,7 +4,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using PathHeap;
-using PathSortedList;
 
 
 public class TileManager : MonoBehaviour
@@ -37,7 +36,7 @@ public class TileManager : MonoBehaviour
     void Start ()
     {
         //read in the map data file and grab info
-        ReadInFileData();
+        LoadLevelData("level1");
 
         tileTowers = new Tile[x, y];
 
@@ -334,10 +333,10 @@ public class TileManager : MonoBehaviour
     }
 
     //read in data from the current map data file
-    void ReadInFileData()
+    public void LoadLevelData(string level)
     {
         //open the file
-        StreamReader sr = File.OpenText(mapFileName);
+        StreamReader sr = File.OpenText("Assets\\MapData\\" + level + ".txt");
 
         string line = "";
 
