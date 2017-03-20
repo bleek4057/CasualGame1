@@ -44,7 +44,7 @@ public class GameManager : MonoBehaviour
     private Vector3 updatePlayCameraPos;
     public Quaternion playCameraAngles;
     private Quaternion updatePlayCameraAngles;
-    private Quaternion followAngles;
+    public  Quaternion followAngles;
     public GameObject towerFollow;
 
     public GameObject towerMouseOver;
@@ -138,14 +138,14 @@ public class GameManager : MonoBehaviour
                 }
                 TileManager.mapData[(int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2), (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10))] = false;
             }
-            else if (hit.transform.tag == "Tower" && !towerPrefab.GetComponent<TowerScript>().isBase)
+            else if (hit.transform.tag == "Tower")
             {
                 baseTowerFake.SetActive(false);
                 Vector2 target = new Vector2(hit.transform.position.x, hit.transform.position.z);
                 Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
-                if (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity)
+                if ((!towerPrefab.GetComponent<TowerScript>().isBase || TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<TowerScript>().isBase) && TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity)
                 {
-                    fakeTower.transform.position = new Vector3(target.x, 9 + (2 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y);
+                    fakeTower.transform.position = new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (fakeTower.transform.localScale.y/2), target.y);
                     fakeTower.SetActive(true);
                 }
                 else
@@ -204,18 +204,23 @@ public class GameManager : MonoBehaviour
                 }
             }
             else
+            
             {
-                Vector3 followPos = new Vector3(towerFollow.transform.position.x, towerFollow.transform.position.y + 9.5f, towerFollow.transform.position.z);
+                Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+				
+                Vector3 followPos = new Vector3(towerFollow.transform.position.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + 2.5f, towerFollow.transform.position.z);
 
                 playCamera.transform.localPosition = Vector3.Lerp(playCamera.transform.localPosition, followPos, .04f);
                 //for linear, use Quaternion.Angle(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle)
                 playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, followAngles, 1f);
                 if (Input.GetMouseButton(2))
+                //if (Mathf.Abs(Vector3.Distance(playCamera.transform.position, Vector3.zero) - Vector3.Distance(followPos, Vector3.zero)) < 1)
                 {
                     playCamera.transform.Rotate(0, 10 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime, 0, Space.World);
                     followAngles = playCamera.transform.rotation;
+                    //followAngles.eulerAngles = new Vector3(20, playCamera.transform.rotation.y, 0);
                 }
-                Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+				
                 foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
                 {
                     if (!shooter.GetComponent<TowerScript>().isBase)
@@ -225,6 +230,11 @@ public class GameManager : MonoBehaviour
                 }
 
                 //DO MANUALLY SHOOTING TOWERS HERE
+				//for raycasting;
+				//raycast from ground in direction of camera, and therefore shooty towers
+				//IGNORE other towers completely
+				//Go until an enemy is hit
+				//use that enemy as the target for the tower's shots
                 if (Input.GetMouseButton(0))
                 {
                     foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
@@ -351,9 +361,9 @@ public class GameManager : MonoBehaviour
                     {
                         Vector2 target = new Vector2(hit.transform.position.x, hit.transform.position.z);
                         Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
-                        if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity && !towerPrefab.GetComponent<TowerScript>().isBase)
+                        if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity && (!towerPrefab.GetComponent<TowerScript>().isBase || TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<TowerScript>().isBase))
                         {
-                            GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, 9 + (2 * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count), target.y), Quaternion.identity, hit.transform.parent);
+                            GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (towerPrefab.transform.localScale.y/2), target.y), Quaternion.identity, hit.transform.parent);
                             PlayerManager.ChangeMoney(-towerPrefab.GetComponent<TowerScript>().cost);
                             TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
                         }
@@ -363,6 +373,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonUp(1) && towerMouseOver != null) //use towerMouseOver
             {
                 Vector2 gridPos = new Vector2(((towerMouseOver.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerMouseOver.transform.position.z - 5) / 10));
+                PlayerManager.ChangeMoney(towerMouseOver.GetComponent<TowerScript>().cost);
                 if (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count == 1)
                 {
                     TileManager.mapData[(int)gridPos.x, (int)gridPos.y] = false;

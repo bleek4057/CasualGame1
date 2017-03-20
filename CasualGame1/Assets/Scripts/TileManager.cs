@@ -400,4 +400,23 @@ public class Tile
         capacity = cap;
         contents = new List<GameObject>();
     }
+	
+	public float Height()
+	{
+		float height = 0;
+		for(int i = 0; i < contents.Count; i++)
+		{
+			height += contents[i].transform.localScale.y;
+		}
+		return height;
+	}
+	
+	public GameObject TopTower()
+	{
+		if(contents.Count > 0)
+		{
+			return contents[contents.Count - 1];
+		}
+		return null;
+	}
 }
