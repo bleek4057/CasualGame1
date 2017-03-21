@@ -66,6 +66,8 @@ public class GameManager : MonoBehaviour
     public GameState currentGame = GameState.BuildPhase;
     private GameState pausedState;
 
+    private GameObject pastLine;
+
     // Use this for initialization
     void Start ()
     {
@@ -195,7 +197,7 @@ public class GameManager : MonoBehaviour
                 //NONLINEAR -- 
                 playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, updatePlayCameraPos, .04f);
                 playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, updatePlayCameraAngles, 1f);
-                
+
                 if (Input.GetMouseButton(2) && Mathf.Abs(Vector3.Distance(playCamera.transform.position, Vector3.zero) - Vector3.Distance(updatePlayCameraPos, Vector3.zero)) < 5)
                 {
                     playCamera.transform.RotateAround(Vector3.zero, Vector3.up, 3 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime);
@@ -205,18 +207,18 @@ public class GameManager : MonoBehaviour
             }
             else
             {
-                Vector3 followPos = new Vector3(towerFollow.transform.position.x, towerFollow.transform.position.y + 9.5f, towerFollow.transform.position.z);
+                Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+                Vector3 followPos = new Vector3(towerFollow.transform.position.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height()*(2.5f/12f)), towerFollow.transform.position.z);
 
                 playCamera.transform.localPosition = Vector3.Lerp(playCamera.transform.localPosition, followPos, .04f);
                 //for linear, use Quaternion.Angle(playCamera.transform.localRotation, towerFollow.GetComponent<TowerScript>().cameraAngle)
                 playCamera.transform.localRotation = Quaternion.RotateTowards(playCamera.transform.localRotation, followAngles, 1f);
-                if (Input.GetMouseButton(2))
-                if (Mathf.Abs(Vector3.Distance(playCamera.transform.position, followPos)) < 1)
-                {
-                    playCamera.transform.Rotate(0, 10 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime, 0, Space.World);
-                    followAngles = playCamera.transform.rotation;
-                }
-                Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+                if (!Input.GetMouseButton(2))
+                    if (Mathf.Abs(Vector3.Distance(playCamera.transform.position, followPos)) < 1)
+                    {
+                        playCamera.transform.Rotate(0, 10 * (Input.mousePosition.x - prevMousePosition.x) * Time.deltaTime, 0, Space.World);
+                        followAngles = playCamera.transform.rotation;
+                    }
                 foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
                 {
                     if (!shooter.GetComponent<TowerScript>().isBase && shooter.GetComponent<TowerScript>().controlled)
@@ -226,32 +228,63 @@ public class GameManager : MonoBehaviour
                 }
 
                 //DO MANUALLY SHOOTING TOWERS HERE
-                Debug.DrawRay(new Vector3(towerFollow.transform.position.x, 0, towerFollow.transform.position.z), 1000*new Vector3(Mathf.Sin(Mathf.PI * playCamera.transform.eulerAngles.y/360), 0, Mathf.Cos(Mathf.PI * playCamera.transform.eulerAngles.y/360)), Color.red);
-                Debug.Log(Mathf.PI * playCamera.transform.eulerAngles.y / 360 + " - " + Mathf.Sin(Mathf.PI * playCamera.transform.eulerAngles.y / 360) + ", " + Mathf.Cos(Mathf.PI * playCamera.transform.eulerAngles.y / 360));
-                Debug.Log(" -- " + playCamera.transform.eulerAngles.y + " - " + Mathf.Sin(playCamera.transform.eulerAngles.y) + ", " + Mathf.Cos(playCamera.transform.eulerAngles.y));
-                Debug.Log(" -1 " + 0 + " - " + Mathf.Sin(0) + ", " + Mathf.Cos(0));
-                Debug.Log(" -2 " + 180 + " - " + Mathf.Sin(180) + ", " + Mathf.Cos(180));
-                Debug.Log(" -3 " + Mathf.PI + " - " + Mathf.Sin(Mathf.PI) + ", " + Mathf.Cos(Mathf.PI));
-                int layerMask = (1 << 10);
-                RaycastHit hit;
-                Physics.Raycast(new Vector3(towerFollow.transform.position.x, 0, towerFollow.transform.position.z), new Vector3(Mathf.Sin(playCamera.transform.eulerAngles.y), 0, Mathf.Cos(playCamera.transform.eulerAngles.y)), layerMask);
-                if (Input.GetMouseButton(0))
+                if (UI.transform.FindChild("LeaveControl").gameObject.activeSelf)
                 {
-                    if (Physics.Raycast(new Vector3(towerFollow.transform.position.x, 0, towerFollow.transform.position.z), new Vector3(Mathf.Sin(playCamera.transform.eulerAngles.y), 0, Mathf.Cos(playCamera.transform.eulerAngles.y)), layerMask))
+                    int layerMask = (1 << 10);
+                    RaycastHit hit;
+                    if (Physics.Raycast(new Vector3(towerFollow.transform.position.x, 1, towerFollow.transform.position.z), new Vector3(Mathf.Sin(Mathf.PI * playCamera.transform.eulerAngles.y / 180), 0, Mathf.Cos(Mathf.PI * playCamera.transform.eulerAngles.y / 180)), out hit, 1000, layerMask))
                     {
-                        //Debug.Log("Hit + " + hit.collider.gameObject.name);
-                        Debug.Log("Hit");
+                        if (pastLine != null)
+                        {
+                            Destroy(pastLine);
+                        }
+                        GameObject myLine = new GameObject();
+                        myLine.AddComponent<LineRenderer>();
+                        myLine.GetComponent<LineRenderer>().material = new Material(Shader.Find("Sprites/Default"));
+                        myLine.GetComponent<LineRenderer>().startWidth = .2f;
+                        myLine.GetComponent<LineRenderer>().startColor = Color.red;
+                        myLine.GetComponent<LineRenderer>().endColor = Color.red;
+                        myLine.GetComponent<LineRenderer>().SetPosition(0, towerFollow.transform.position);
+                        myLine.GetComponent<LineRenderer>().SetPosition(1, hit.collider.transform.position);
+                        pastLine = myLine;
+
+                        if (Input.GetMouseButton(0))
+                        {
+                            foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+                            {
+                                if (shooter.GetComponent<TowerScript>().canAttack && shooter.GetComponent<TowerScript>().Timer <= 0)
+                                {
+                                    shooter.GetComponent<TowerScript>().Attack(hit.collider.gameObject.GetComponent<EnemyScript>());
+                                }
+                            }
+                        }
                     }
                     else
                     {
-                        Debug.Log("Nope");
-                    }
-                    foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
-                    {
-                        if (shooter.GetComponent<TowerScript>().canAttack && shooter.GetComponent<TowerScript>().Timer <= 0)
+                        if (pastLine != null)
                         {
-                            shooter.GetComponent<TowerScript>().Attack(EnemyManager.allEnemies[0].GetComponent<EnemyScript>());
+                            Destroy(pastLine);
                         }
+                        Vector3 endPos = new Vector3(towerFollow.transform.position.x, 1, towerFollow.transform.position.z) + (300 * new Vector3(Mathf.Sin(Mathf.PI * playCamera.transform.eulerAngles.y / 180), 0, Mathf.Cos(Mathf.PI * playCamera.transform.eulerAngles.y / 180)));
+                        GameObject myLine = new GameObject();
+                        myLine.AddComponent<LineRenderer>();
+                        myLine.GetComponent<LineRenderer>().material = new Material(Shader.Find("Sprites/Default"));
+                        myLine.GetComponent<LineRenderer>().startWidth = .2f;
+                        myLine.GetComponent<LineRenderer>().startColor = Color.blue;
+                        myLine.GetComponent<LineRenderer>().endColor = Color.blue;
+                        myLine.GetComponent<LineRenderer>().SetPosition(0, towerFollow.transform.position);
+                        myLine.GetComponent<LineRenderer>().SetPosition(1, endPos);
+                        pastLine = myLine;
+                        /*if (Input.GetMouseButton(0))
+                        {
+                            foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+                            {
+                                if (shooter.GetComponent<TowerScript>().canAttack && shooter.GetComponent<TowerScript>().Timer <= 0)
+                                {
+                                    shooter.GetComponent<TowerScript>().Attack(endPos);
+                                }
+                            }
+                        }*/
                     }
                 }
             }
@@ -269,7 +302,13 @@ public class GameManager : MonoBehaviour
                         Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
                         if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count > 1)
                         {
-                            followAngles = Quaternion.Euler(20, 0, 0);
+                            followAngles = Quaternion.Euler((20f/12)* TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height(), 0, 0);
+                            if((20f / 12) * TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() > 40)
+                            {
+                                followAngles = Quaternion.Euler(40, 0, 0);
+                            }
+                            //Debug.Log(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height());
+                            //followAngles = Quaternion.Euler(20, 0, 0);
                             towerFollow = hit.transform.parent.gameObject;
                             UI.transform.FindChild("TakeControl").gameObject.SetActive(true);
                         }
@@ -299,6 +338,11 @@ public class GameManager : MonoBehaviour
         }
         if (currentGame == GameState.BuildPhase)
         {
+            if (pastLine != null)
+            {
+                Destroy(pastLine);
+                pastLine = null;
+            }
             MoveFakeTower();
 
             playCamera.transform.position = Vector3.Lerp(playCamera.transform.position, updateBuildCameraPos, .04f);
@@ -382,6 +426,7 @@ public class GameManager : MonoBehaviour
             if (Input.GetMouseButtonUp(1) && towerMouseOver != null) //use towerMouseOver
             {
                 Vector2 gridPos = new Vector2(((towerMouseOver.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerMouseOver.transform.position.z - 5) / 10));
+                PlayerManager.ChangeMoney(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents[TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count - 1].GetComponent<TowerScript>().cost);
                 if (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count == 1)
                 {
                     TileManager.mapData[(int)gridPos.x, (int)gridPos.y] = false;
