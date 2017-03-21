@@ -366,6 +366,7 @@ public class TileManager : MonoBehaviour
                 mapData[tempX, tempY] = true;
 
                 enemySpawn.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 0.001f, (tempY - y / 2) * -10 - 5);
+                GameManager.Instance.EnemyManager.enemySpawnPoint = new Vector2((tempX - x / 2) * 10 + 5, (tempY - y / 2) * -10 - 5);
 
                 spawnLocation = new Vector2(tempX, tempY);
             }
@@ -398,5 +399,23 @@ public class Tile
     {
         capacity = cap;
         contents = new List<GameObject>();
+    }
+
+    public float Height()
+    {
+        float height = 0;
+        for(int i = 0; i < contents.Count; i++)
+        {
+            height += contents[i].transform.localScale.y;
+        }
+        return height;
+    }
+    public GameObject TopTower()
+    {
+        if(contents.Count > 0)
+        {
+            return contents[contents.Count - 1];
+        }
+        return null;
     }
 }

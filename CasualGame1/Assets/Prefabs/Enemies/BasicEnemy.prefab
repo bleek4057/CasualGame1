@@ -19,7 +19,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4939621817453846}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Camera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -36,7 +36,7 @@ GameObject:
   - component: {fileID: 4994022185715148}
   - component: {fileID: 33335814975277368}
   - component: {fileID: 23274790668260906}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Eye
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -53,7 +53,7 @@ GameObject:
   - component: {fileID: 4460542197771164}
   - component: {fileID: 33073447574889798}
   - component: {fileID: 23814843918101880}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Leg_R_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -70,7 +70,7 @@ GameObject:
   - component: {fileID: 4786536707398572}
   - component: {fileID: 33058988440569804}
   - component: {fileID: 23047355393034526}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Leg_R_F
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -87,7 +87,7 @@ GameObject:
   - component: {fileID: 4929791141953488}
   - component: {fileID: 212871353039664132}
   - component: {fileID: 114324617533821458}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ GameObject:
   - component: {fileID: 4739652692015114}
   - component: {fileID: 33959656940669558}
   - component: {fileID: 23794533037770418}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Body
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -120,7 +120,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4641461375990410}
   - component: {fileID: 95608821430535822}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: capaciterMonster_FBX
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -140,7 +140,7 @@ GameObject:
   - component: {fileID: 23838313689055266}
   - component: {fileID: 114148875920732280}
   - component: {fileID: 54173904153395692}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: BasicEnemy
   m_TagString: Enemy
   m_Icon: {fileID: 0}
@@ -155,7 +155,7 @@ GameObject:
   serializedVersion: 5
   m_Component:
   - component: {fileID: 4646359635118120}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Lamp
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -172,7 +172,7 @@ GameObject:
   - component: {fileID: 4444532918221256}
   - component: {fileID: 33288250169231638}
   - component: {fileID: 23711978056426898}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Leg_L_F
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -189,7 +189,7 @@ GameObject:
   - component: {fileID: 4925876845001274}
   - component: {fileID: 33498452306052586}
   - component: {fileID: 23045128197927368}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Leg_L_B
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -205,7 +205,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4822506247285192}
   - component: {fileID: 212406183176578320}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Health
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -222,7 +222,7 @@ GameObject:
   - component: {fileID: 4535311032509130}
   - component: {fileID: 33022661711254424}
   - component: {fileID: 23570133520335396}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Cap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
