@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     public Canvas UI;
     public Canvas MainMenu;
+    public Canvas LevelMenu;
     public Canvas Credits;
     public Canvas PauseMenu;
 
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
     public enum GameState
     {
         MainMenu,
+        LevelMenu,
         BuildPhase,
         PlayPhase,
         WinPhase,
@@ -77,12 +79,19 @@ public class GameManager : MonoBehaviour
         playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
 
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
-        playerBase.transform.GetChild(1).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
         PlayerManager.GameManager = this;
         EnemyManager.GameManager = this;
 
         Instance = this;
+
+        ToMainMenu();
+    }
+
+    public void QuitGame()
+    {
+        Application.Quit();
     }
 
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
@@ -331,10 +340,19 @@ public class GameManager : MonoBehaviour
             }
             prevMousePosition = Input.mousePosition;
         }
-        else
+        else if(towerFollow != null)
         {
+            Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+            foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+            {
+                if (!shooter.GetComponent<TowerScript>().isBase)
+                {
+                    shooter.GetComponent<TowerScript>().controlled = false;
+                }
+            }
+            UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+            UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
             towerFollow = null;
-            playCamera.transform.parent = null;
         }
         if (currentGame == GameState.BuildPhase)
         {
@@ -392,6 +410,7 @@ public class GameManager : MonoBehaviour
                         else
                         {
                             GameObject tower = new GameObject("Tower");
+                            tower.tag = "Tower Parent";
                             tower.transform.position = new Vector3(target.x, 5, target.y);
                             GameObject newTower;
                             if (!towerPrefab.GetComponent<TowerScript>().isBase)
@@ -433,6 +452,10 @@ public class GameManager : MonoBehaviour
                     TileManager.CreatePath(true);
                 }
                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.RemoveAt(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count - 1);
+                if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count == 0)
+                {
+                    Destroy(towerMouseOver.transform.parent.gameObject, .1f);
+                }
                 Destroy(towerMouseOver);
             }
             if (Input.GetMouseButton(2))
@@ -486,10 +509,32 @@ public class GameManager : MonoBehaviour
 
         UI.gameObject.SetActive(false);
         MainMenu.gameObject.SetActive(true);
+        LevelMenu.gameObject.SetActive(false);
         Credits.gameObject.SetActive(false);
 
         playCamera.transform.position = menuCameraPos;
         playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+    }
+
+    public void ToLevelMenu()
+    {
+        currentGame = GameState.LevelMenu;
+
+        UI.gameObject.SetActive(false);
+        MainMenu.gameObject.SetActive(false);
+        LevelMenu.gameObject.SetActive(true);
+        Credits.gameObject.SetActive(false);
+
+        playCamera.transform.position = menuCameraPos;
+        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+
+    }
+
+    public void Level(int level)
+    {
+        levelNumber = level;
+
+        StartGame();
     }
 
     public void StartGame()
@@ -503,13 +548,14 @@ public class GameManager : MonoBehaviour
 
         UI.gameObject.SetActive(true);
         MainMenu.gameObject.SetActive(false);
+        LevelMenu.gameObject.SetActive(false);
     }
 
     //loads in all data from files for the current level
     private void LoadLevelData()
     {
-        LoadMapTowers("level" + levelNumber);
         TileManager.LoadLevelData("level" + levelNumber);
+        LoadMapTowers("level" + levelNumber);
         EnemyManager.LoadEnemyData("level" + levelNumber);
     }
 
@@ -538,8 +584,8 @@ public class GameManager : MonoBehaviour
         
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
 
-        playerBase.transform.GetChild(0).gameObject.SetActive(false);
-        playerBase.transform.GetChild(1).gameObject.SetActive(true);
+        //playerBase.transform.GetChild(0).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(true);
 
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
@@ -565,8 +611,8 @@ public class GameManager : MonoBehaviour
 
         EnemyManager.NextWave();
 
-        playerBase.transform.GetChild(0).gameObject.SetActive(true);
-        playerBase.transform.GetChild(1).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(0).gameObject.SetActive(true);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
         PlayerManager.ChangeMoney(20);
 
@@ -582,7 +628,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
-        UI.transform.FindChild("Quit2").gameObject.SetActive(true);
+        UI.transform.FindChild("Level2").gameObject.SetActive(true);
         UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
@@ -599,7 +645,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
-        UI.transform.FindChild("Quit2").gameObject.SetActive(true);
+        UI.transform.FindChild("Level2").gameObject.SetActive(true);
         UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
@@ -621,7 +667,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Restart").gameObject.SetActive(false);
         UI.transform.FindChild("Win").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(false);
-        UI.transform.FindChild("Quit2").gameObject.SetActive(false);
+        UI.transform.FindChild("Level2").gameObject.SetActive(false);
         UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.DestroyAll();
@@ -631,12 +677,16 @@ public class GameManager : MonoBehaviour
         {
             Destroy(tower);
         }
+        foreach (GameObject tower in GameObject.FindGameObjectsWithTag("Tower Parent"))
+        {
+            Destroy(tower);
+        }
 
         EnemyManager.RestartAll();
         PlayerManager.SetMoney(75);
 
-        playerBase.transform.GetChild(0).gameObject.SetActive(true);
-        playerBase.transform.GetChild(1).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(0).gameObject.SetActive(true);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
         playerBase.GetComponent<BaseScript>().health = 4;
 
@@ -672,13 +722,13 @@ public class GameManager : MonoBehaviour
             string[] lineData = line.Split(' ');
 
 
-            if (lineData[0] == "S")
+            /*if (lineData[0] == "S")
             {
                 tempX = Int32.Parse(lineData[1]);
                 tempY = Int32.Parse(lineData[2]);
 
                 EnemyManager.enemySpawnPoint = new Vector2();
-            }
+            }*/
 
 
             //create a wall signal
@@ -697,6 +747,7 @@ public class GameManager : MonoBehaviour
                 if (TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count == 0)
                 {
                     GameObject tower = new GameObject("Tower");
+                    tower.tag = "Tower Parent";
                     tower.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5);
                     GameObject newTower = Instantiate(DropDownMenu.towerPrefabs[0], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity, tower.transform);
                     TileManager.tileTowers[(int)tempX, (int)tempY].contents.Add(newTower);
@@ -720,10 +771,11 @@ public class GameManager : MonoBehaviour
 
                 //create the tower
                 //GameObject newTower = Instantiate(DropDownMenu.towerPrefabs[1], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
-
+                Debug.Log(TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count);
                 if (TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count == 0)
                 {
                     GameObject tower = new GameObject("Tower");
+                    tower.tag = "Tower Parent";
                     tower.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5);
                     GameObject newBaseTower = Instantiate(DropDownMenu.towerPrefabs[0], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity, tower.transform);
                     TileManager.tileTowers[(int)tempX, (int)tempY].contents.Add(newBaseTower);
@@ -749,17 +801,22 @@ public class GameManager : MonoBehaviour
             }
         }
         sr.Close();
+        Debug.Log(TileManager.mapData[1, 1]);
     }
 
     public void ToggleHelp()
     {
         if (currentGame == GameState.BuildPhase)
         {
-            UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+            //UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+            UI.transform.FindChild("LeftClickBuild").gameObject.SetActive(!UI.transform.FindChild("LeftClickBuild").gameObject.activeSelf);
+            UI.transform.FindChild("RightClickBuild").gameObject.SetActive(!UI.transform.FindChild("RightClickBuild").gameObject.activeSelf);
         }
         else if (currentGame == GameState.PlayPhase)
         {
-            UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+            //UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(1).gameObject.activeSelf);
+            UI.transform.FindChild("LeftClickPlay").gameObject.SetActive(!UI.transform.FindChild("LeftClickPlay").gameObject.activeSelf);
+            UI.transform.FindChild("RightClickPlay").gameObject.SetActive(!UI.transform.FindChild("RightClickPlay").gameObject.activeSelf);
         }
     }
 

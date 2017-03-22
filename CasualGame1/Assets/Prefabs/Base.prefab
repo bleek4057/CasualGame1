@@ -879,7 +879,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1798544436797402
 GameObject:
   m_ObjectHideFlags: 1
@@ -928,7 +928,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1866914791785886
 GameObject:
   m_ObjectHideFlags: 1
@@ -1021,7 +1021,7 @@ Transform:
   m_LocalScale: {x: 50.63773, y: 50.63773, z: 109.04244}
   m_Children: []
   m_Father: {fileID: 4932539693164238}
-  m_RootOrder: 2
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4061600960056316
 Transform:
@@ -1112,7 +1112,7 @@ Transform:
   m_LocalScale: {x: 50.63773, y: 50.63773, z: 109.04244}
   m_Children: []
   m_Father: {fileID: 4932539693164238}
-  m_RootOrder: 3
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4134041911613986
 Transform:
@@ -1320,7 +1320,7 @@ Transform:
   m_LocalScale: {x: 50.63773, y: 50.63773, z: 109.04244}
   m_Children: []
   m_Father: {fileID: 4932539693164238}
-  m_RootOrder: 5
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4374955744293574
 Transform:
@@ -1502,7 +1502,7 @@ Transform:
   m_LocalScale: {x: 100, y: 100, z: 100}
   m_Children: []
   m_Father: {fileID: 4932539693164238}
-  m_RootOrder: 1
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4640906231544626
 Transform:
@@ -1555,7 +1555,7 @@ Transform:
   m_LocalScale: {x: 50.63773, y: 50.63773, z: 109.04244}
   m_Children: []
   m_Father: {fileID: 4932539693164238}
-  m_RootOrder: 4
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4674534744170276
 Transform:
@@ -1598,7 +1598,7 @@ Transform:
   m_LocalScale: {x: 3.7711446, y: 3.7711446, z: 144.14265}
   m_Children: []
   m_Father: {fileID: 4932539693164238}
-  m_RootOrder: 0
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!4 &4689665471345278
 Transform:
@@ -1757,12 +1757,12 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 2.2, y: 4, z: 2.2}
   m_Children:
-  - {fileID: 4680794090592102}
-  - {fileID: 4622318060622006}
   - {fileID: 4051367776622614}
+  - {fileID: 4349853048593418}
   - {fileID: 4126376679655650}
   - {fileID: 4672115258321266}
-  - {fileID: 4349853048593418}
+  - {fileID: 4680794090592102}
+  - {fileID: 4622318060622006}
   - {fileID: 4640906231544626}
   - {fileID: 4119366177247846}
   - {fileID: 4298687509880290}
@@ -3572,7 +3572,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 4
-  healthDisplay: {fileID: 0}
 --- !u!212 &212000167621421932
 SpriteRenderer:
   m_ObjectHideFlags: 1
