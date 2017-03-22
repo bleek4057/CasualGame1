@@ -724,13 +724,13 @@ public class GameManager : MonoBehaviour
             string[] lineData = line.Split(' ');
 
 
-            if (lineData[0] == "S")
+            /*if (lineData[0] == "S")
             {
                 tempX = Int32.Parse(lineData[1]);
                 tempY = Int32.Parse(lineData[2]);
 
                 EnemyManager.enemySpawnPoint = new Vector2();
-            }
+            }*/
 
 
             //create a wall signal
@@ -810,11 +810,15 @@ public class GameManager : MonoBehaviour
     {
         if (currentGame == GameState.BuildPhase)
         {
-            UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+            //UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+            UI.transform.FindChild("LeftClickBuild").gameObject.SetActive(!UI.transform.FindChild("LeftClickBuild").gameObject.activeSelf);
+            UI.transform.FindChild("RightClickBuild").gameObject.SetActive(!UI.transform.FindChild("RightClickBuild").gameObject.activeSelf);
         }
         else if (currentGame == GameState.PlayPhase)
         {
-            UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
+            //UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(1).gameObject.activeSelf);
+            UI.transform.FindChild("LeftClickPlay").gameObject.SetActive(!UI.transform.FindChild("LeftClickPlay").gameObject.activeSelf);
+            UI.transform.FindChild("RightClickPlay").gameObject.SetActive(!UI.transform.FindChild("RightClickPlay").gameObject.activeSelf);
         }
     }
 
