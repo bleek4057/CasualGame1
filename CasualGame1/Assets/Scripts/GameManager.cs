@@ -32,6 +32,7 @@ public class GameManager : MonoBehaviour
 
     public Canvas UI;
     public Canvas MainMenu;
+    public Canvas LevelMenu;
     public Canvas Credits;
     public Canvas PauseMenu;
 
@@ -56,6 +57,7 @@ public class GameManager : MonoBehaviour
     public enum GameState
     {
         MainMenu,
+        LevelMenu,
         BuildPhase,
         PlayPhase,
         WinPhase,
@@ -83,6 +85,8 @@ public class GameManager : MonoBehaviour
         EnemyManager.GameManager = this;
 
         Instance = this;
+
+        ToMainMenu();
     }
 
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
@@ -486,10 +490,39 @@ public class GameManager : MonoBehaviour
 
         UI.gameObject.SetActive(false);
         MainMenu.gameObject.SetActive(true);
+        LevelMenu.gameObject.SetActive(false);
         Credits.gameObject.SetActive(false);
 
         playCamera.transform.position = menuCameraPos;
         playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+    }
+
+    public void ToLevelMenu()
+    {
+        currentGame = GameState.LevelMenu;
+
+        UI.gameObject.SetActive(false);
+        MainMenu.gameObject.SetActive(false);
+        LevelMenu.gameObject.SetActive(true);
+        Credits.gameObject.SetActive(false);
+
+        playCamera.transform.position = menuCameraPos;
+        playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
+
+    }
+
+    public void Level1()
+    {
+        levelNumber = 1;
+
+        StartGame();
+    }
+
+    public void Level2()
+    {
+        levelNumber = 2;
+
+        StartGame();
     }
 
     public void StartGame()
@@ -503,6 +536,7 @@ public class GameManager : MonoBehaviour
 
         UI.gameObject.SetActive(true);
         MainMenu.gameObject.SetActive(false);
+        LevelMenu.gameObject.SetActive(false);
     }
 
     //loads in all data from files for the current level
