@@ -335,10 +335,19 @@ public class GameManager : MonoBehaviour
             }
             prevMousePosition = Input.mousePosition;
         }
-        else
+        else if(towerFollow != null)
         {
+            Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
+            foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+            {
+                if (!shooter.GetComponent<TowerScript>().isBase)
+                {
+                    shooter.GetComponent<TowerScript>().controlled = false;
+                }
+            }
+            UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
+            UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
             towerFollow = null;
-            playCamera.transform.parent = null;
         }
         if (currentGame == GameState.BuildPhase)
         {
@@ -396,6 +405,7 @@ public class GameManager : MonoBehaviour
                         else
                         {
                             GameObject tower = new GameObject("Tower");
+                            tower.tag = "Tower Parent";
                             tower.transform.position = new Vector3(target.x, 5, target.y);
                             GameObject newTower;
                             if (!towerPrefab.GetComponent<TowerScript>().isBase)
@@ -437,6 +447,10 @@ public class GameManager : MonoBehaviour
                     TileManager.CreatePath(true);
                 }
                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.RemoveAt(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count - 1);
+                if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count == 0)
+                {
+                    Destroy(towerMouseOver.transform.parent, .1f);
+                }
                 Destroy(towerMouseOver);
             }
             if (Input.GetMouseButton(2))
@@ -542,8 +556,8 @@ public class GameManager : MonoBehaviour
     //loads in all data from files for the current level
     private void LoadLevelData()
     {
-        LoadMapTowers("level" + levelNumber);
         TileManager.LoadLevelData("level" + levelNumber);
+        LoadMapTowers("level" + levelNumber);
         EnemyManager.LoadEnemyData("level" + levelNumber);
     }
 
@@ -665,6 +679,10 @@ public class GameManager : MonoBehaviour
         {
             Destroy(tower);
         }
+        foreach (GameObject tower in GameObject.FindGameObjectsWithTag("Tower Parent"))
+        {
+            Destroy(tower);
+        }
 
         EnemyManager.RestartAll();
         PlayerManager.SetMoney(75);
@@ -731,6 +749,7 @@ public class GameManager : MonoBehaviour
                 if (TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count == 0)
                 {
                     GameObject tower = new GameObject("Tower");
+                    tower.tag = "Tower Parent";
                     tower.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5);
                     GameObject newTower = Instantiate(DropDownMenu.towerPrefabs[0], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity, tower.transform);
                     TileManager.tileTowers[(int)tempX, (int)tempY].contents.Add(newTower);
@@ -754,10 +773,11 @@ public class GameManager : MonoBehaviour
 
                 //create the tower
                 //GameObject newTower = Instantiate(DropDownMenu.towerPrefabs[1], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
-
+                Debug.Log(TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count);
                 if (TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count == 0)
                 {
                     GameObject tower = new GameObject("Tower");
+                    tower.tag = "Tower Parent";
                     tower.transform.position = new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5);
                     GameObject newBaseTower = Instantiate(DropDownMenu.towerPrefabs[0], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity, tower.transform);
                     TileManager.tileTowers[(int)tempX, (int)tempY].contents.Add(newBaseTower);
@@ -783,6 +803,7 @@ public class GameManager : MonoBehaviour
             }
         }
         sr.Close();
+        Debug.Log(TileManager.mapData[1, 1]);
     }
 
     public void ToggleHelp()

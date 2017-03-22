@@ -161,7 +161,6 @@ public class TileManager : MonoBehaviour
 
         //creates the path each enemy will use
         CreatePath(true);
-
     }
 
     public bool CreatePath(bool assign)
