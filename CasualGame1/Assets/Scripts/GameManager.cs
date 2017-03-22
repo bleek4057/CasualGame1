@@ -79,7 +79,7 @@ public class GameManager : MonoBehaviour
         playCamera.transform.eulerAngles = new Vector3(90, 0, 0);
 
         UI.transform.FindChild("Start Wave").gameObject.SetActive(true);
-        playerBase.transform.GetChild(1).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
         PlayerManager.GameManager = this;
         EnemyManager.GameManager = this;
@@ -449,7 +449,7 @@ public class GameManager : MonoBehaviour
                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.RemoveAt(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count - 1);
                 if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count == 0)
                 {
-                    Destroy(towerMouseOver.transform.parent, .1f);
+                    Destroy(towerMouseOver.transform.parent.gameObject, .1f);
                 }
                 Destroy(towerMouseOver);
             }
@@ -586,8 +586,8 @@ public class GameManager : MonoBehaviour
         
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
 
-        playerBase.transform.GetChild(0).gameObject.SetActive(false);
-        playerBase.transform.GetChild(1).gameObject.SetActive(true);
+        //playerBase.transform.GetChild(0).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(true);
 
         UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
         UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
@@ -613,8 +613,8 @@ public class GameManager : MonoBehaviour
 
         EnemyManager.NextWave();
 
-        playerBase.transform.GetChild(0).gameObject.SetActive(true);
-        playerBase.transform.GetChild(1).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(0).gameObject.SetActive(true);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
         PlayerManager.ChangeMoney(20);
 
@@ -687,8 +687,8 @@ public class GameManager : MonoBehaviour
         EnemyManager.RestartAll();
         PlayerManager.SetMoney(75);
 
-        playerBase.transform.GetChild(0).gameObject.SetActive(true);
-        playerBase.transform.GetChild(1).gameObject.SetActive(false);
+        //playerBase.transform.GetChild(0).gameObject.SetActive(true);
+        //playerBase.transform.GetChild(1).gameObject.SetActive(false);
 
         playerBase.GetComponent<BaseScript>().health = 4;
 
