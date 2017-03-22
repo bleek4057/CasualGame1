@@ -113,6 +113,7 @@ GameObject:
   - component: {fileID: 120362279793485242}
   - component: {fileID: 114122709968605404}
   - component: {fileID: 136882023938557366}
+  - component: {fileID: 114011253082250590}
   m_Layer: 0
   m_Name: TurretTower
   m_TagString: Tower
@@ -419,6 +420,29 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
+--- !u!114 &114011253082250590
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1791498391173414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13773f9b96d3bb447bcf62a4593ceb3e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 50
+  enemies: []
+  fakeVersion: {fileID: 1935278899293338, guid: 71f258c10e79a6b408359e734f031cf0,
+    type: 2}
+  _timer: 0
+  _fireRate: 0.333
+  range: 2
+  canAttack: 1
+  toBeColored:
+  - {fileID: 1589094388730610}
+  damagePerHit: 10
+  controlled: 0
 --- !u!114 &114122709968605404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -447,7 +471,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791498391173414}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de333a0e927f9664bad165cb3dc2f73d, type: 3}
   m_Name: 
@@ -626,7 +650,7 @@ ParticleSystem:
   m_GameObject: {fileID: 1791498391173414}
   serializedVersion: 5
   lengthInSec: 0.5
-  simulationSpeed: 1
+  speed: 1
   looping: 0
   prewarm: 0
   playOnAwake: 0

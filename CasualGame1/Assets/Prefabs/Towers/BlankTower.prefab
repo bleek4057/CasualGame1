@@ -39,6 +39,7 @@ GameObject:
   - component: {fileID: 23552789971732586}
   - component: {fileID: 114099498331823038}
   - component: {fileID: 54760504006814248}
+  - component: {fileID: 114705338616006338}
   m_Layer: 0
   m_Name: BlankTower
   m_TagString: Tower
@@ -271,7 +272,7 @@ MonoBehaviour:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1387691786383738}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: de333a0e927f9664bad165cb3dc2f73d, type: 3}
   m_Name: 
@@ -287,3 +288,26 @@ MonoBehaviour:
   toBeColored:
   - {fileID: 1662657981976986}
   damagePerHit: 0
+  controlled: 0
+--- !u!114 &114705338616006338
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1387691786383738}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4688fc1b662a205488ebb4e5f18b75e4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 5
+  enemies: []
+  fakeVersion: {fileID: 1578354068256016, guid: b601d8ff84922c046ac9ee9d51d7c3a5,
+    type: 2}
+  _timer: 0
+  _fireRate: 0
+  range: 0
+  canAttack: 0
+  toBeColored: []
+  damagePerHit: 0
+  controlled: 0
