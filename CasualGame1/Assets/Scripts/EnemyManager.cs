@@ -67,7 +67,9 @@ public class EnemyManager : MonoBehaviour
         {
             if (enemiesSpawned < enemiesToSpawn)
             {
-                //Debug.Log("Enemis in current section: " + enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection]);
+                //Debug.Log("Enemies in current section: " + enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection]);
+
+                Debug.Log("Enemies to spawn: " + enemiesToSpawn + ", Enemies spawned: " + enemiesSpawned);
 
                 //if we have spawned enough of the type of enemies in this section of a wave
                 if(enemiesSpawned == enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection])
@@ -157,6 +159,7 @@ public class EnemyManager : MonoBehaviour
         spawnInterval = enemySpawnTime[0];
         currentEnemySection = 0;
         RestartInterval();
+        ResetEnemyData();
     }
 
     public void DestroyEnemy(GameObject target)
@@ -242,6 +245,13 @@ public class EnemyManager : MonoBehaviour
             }
         }
 
+        enemiesToSpawn = 0;
+
+        for (int i = 0; i < enemyNumberToSpawn[0].Count; i++)
+        {
+            Debug.Log(enemyNumberToSpawn[0][i]);
+            enemiesToSpawn += enemyNumberToSpawn[0][i];
+        }
 
 
         //Debug.Log("spawn time count " + enemySpawnTime.Count);
@@ -250,5 +260,19 @@ public class EnemyManager : MonoBehaviour
         //{
         //    Debug.Log(enemySpawnTime[i]);
         //}
+    }
+
+    private void ResetEnemyData()
+    {
+
+        enemyTypesToSpawn = new List<List<GameObject>>();
+        enemyNumberToSpawn = new List<List<int>>();
+        enemySpawnTime = new List<float>();
+        for (int i = 0; i < 10; i++)
+        {
+            enemyNumberToSpawn.Add(new List<int>());
+            enemyTypesToSpawn.Add(new List<GameObject>());
+            //enemyNumberToSpawn.Add();
+        }
     }
 }

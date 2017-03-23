@@ -89,6 +89,11 @@ public class GameManager : MonoBehaviour
         ToMainMenu();
     }
 
+    public void QuitGame()
+    {
+        Application.Quit();
+    }
+
     //moves the transparent tower based on where the mouse is, to show the player where the tower would be placed
     void MoveFakeTower()
     {
@@ -533,16 +538,9 @@ public class GameManager : MonoBehaviour
 
     }
 
-    public void Level1()
+    public void Level(int level)
     {
-        levelNumber = 1;
-
-        StartGame();
-    }
-
-    public void Level2()
-    {
-        levelNumber = 2;
+        levelNumber = level;
 
         StartGame();
     }
@@ -638,7 +636,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(true);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
-        UI.transform.FindChild("Quit2").gameObject.SetActive(true);
+        UI.transform.FindChild("Level2").gameObject.SetActive(true);
         UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
@@ -655,7 +653,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
         UI.transform.FindChild("Restart").gameObject.SetActive(true);
         UI.transform.FindChild("Win").gameObject.SetActive(true);
-        UI.transform.FindChild("Quit2").gameObject.SetActive(true);
+        UI.transform.FindChild("Level2").gameObject.SetActive(true);
         UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
@@ -677,7 +675,7 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("Restart").gameObject.SetActive(false);
         UI.transform.FindChild("Win").gameObject.SetActive(false);
         UI.transform.FindChild("Lose").gameObject.SetActive(false);
-        UI.transform.FindChild("Quit2").gameObject.SetActive(false);
+        UI.transform.FindChild("Level2").gameObject.SetActive(false);
         UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.DestroyAll();
@@ -693,7 +691,7 @@ public class GameManager : MonoBehaviour
         }
 
         EnemyManager.RestartAll();
-        PlayerManager.SetMoney(75);
+        //PlayerManager.SetMoney(75);
 
         //playerBase.transform.GetChild(0).gameObject.SetActive(true);
         //playerBase.transform.GetChild(1).gameObject.SetActive(false);
@@ -740,6 +738,10 @@ public class GameManager : MonoBehaviour
                 EnemyManager.enemySpawnPoint = new Vector2();
             }*/
 
+            if (lineData[0] == "P")
+            {
+                PlayerManager.SetMoney(Int32.Parse(lineData[1]));
+            }
 
             //create a wall signal
             if (lineData[0] == "W")
