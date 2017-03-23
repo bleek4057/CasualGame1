@@ -1,0 +1,46 @@
+FE 3 0 4
+BE 2 0 4
+
+SE 1 1 4
+BE 4 1
+
+SE 1 2 3.5
+FE 5 2
+SE 1 2
+FE 3 2
+
+SE 4 3 3.5
+
+BE 3 4 3
+FE 2 4
+BE 4 4
+FE 3 4
+SE 2 4
+
+SE 3 5 3
+BE 6 5
+SE 2 5
+BE 5 5
+
+SE 3 6 2.5
+FE 7 6
+SE 2 6
+FE 5 6
+SE 1 6
+FE 3 6
+
+SE 10 7 2.5
+
+FE 8 8 2
+BE 6 8
+FE 8 8
+BE 6 8
+
+FE 7 9 1.5
+SE 1 9
+BE 6 9
+FE 7 9
+SE 1 9
+BE 6 9
+FE 7 9
+SE 1 9
