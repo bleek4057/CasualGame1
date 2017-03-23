@@ -245,6 +245,14 @@ public class EnemyManager : MonoBehaviour
             }
         }
 
+        enemiesToSpawn = 0;
+
+        for (int i = 0; i < enemyNumberToSpawn[0].Count; i++)
+        {
+            Debug.Log(enemyNumberToSpawn[0][i]);
+            enemiesToSpawn += enemyNumberToSpawn[0][i];
+        }
+
 
         //Debug.Log("spawn time count " + enemySpawnTime.Count);
         //
