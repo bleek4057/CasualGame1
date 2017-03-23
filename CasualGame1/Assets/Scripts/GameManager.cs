@@ -683,7 +683,7 @@ public class GameManager : MonoBehaviour
         }
 
         EnemyManager.RestartAll();
-        PlayerManager.SetMoney(75);
+        //PlayerManager.SetMoney(75);
 
         //playerBase.transform.GetChild(0).gameObject.SetActive(true);
         //playerBase.transform.GetChild(1).gameObject.SetActive(false);
@@ -730,6 +730,10 @@ public class GameManager : MonoBehaviour
                 EnemyManager.enemySpawnPoint = new Vector2();
             }*/
 
+            if (lineData[0] == "P")
+            {
+                PlayerManager.SetMoney(Int32.Parse(lineData[1]));
+            }
 
             //create a wall signal
             if (lineData[0] == "W")

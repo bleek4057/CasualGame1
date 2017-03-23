@@ -69,7 +69,7 @@ public class EnemyManager : MonoBehaviour
             {
                 //Debug.Log("Enemies in current section: " + enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection]);
 
-                Debug.Log("Enemies to spawn: " + enemiesToSpawn);
+                Debug.Log("Enemies to spawn: " + enemiesToSpawn + ", Enemies spawned: " + enemiesSpawned);
 
                 //if we have spawned enough of the type of enemies in this section of a wave
                 if(enemiesSpawned == enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection])
