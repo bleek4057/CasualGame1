@@ -18,7 +18,7 @@ public class SingleFireTower : BaseTower
             lightning.StartObject = transform.GetChild(0).GetChild(0).gameObject;
 
         transform.FindChild("Collider").GetComponent<CapsuleCollider>().radius = range;
-        transform.FindChild("ShootingRange").transform.localScale = new Vector3(10 * range, 10 * range, 1);
+        transform.FindChild("ShootingRange").transform.localScale = new Vector3(2 * range, 2 * range, 1);
     }
 
     // Update is called once per frame
@@ -27,7 +27,7 @@ public class SingleFireTower : BaseTower
         base.Update();
         if (canAttack && GameManager.Instance.currentGame == GameManager.GameState.PlayPhase)
         {
-            if (enemies.Count > 0)
+            if (enemies.Count > 0 && !controlled)
             {
                 transform.LookAt(enemies[0].transform.position);
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
@@ -41,7 +41,7 @@ public class SingleFireTower : BaseTower
         }
     }
 
-    protected override void Attack()
+    public override void Attack()
     {
         var enemy = enemies[0];
 
@@ -54,7 +54,7 @@ public class SingleFireTower : BaseTower
         _timer = 1f * Mathf.Pow(2.0f, _fireRate);
     }
 
-    public void Attack(EnemyScript enemy)
+    public override void Attack(EnemyScript enemy)
     {
         //ps.Play();
         lightning.EndPosition = new Vector3(0, 0, 0);
@@ -65,7 +65,7 @@ public class SingleFireTower : BaseTower
         _timer = 1f * Mathf.Pow(2.0f, _fireRate);
     }
 
-    public void Attack(Vector3 target)
+    public override void Attack(Vector3 target)
     {
         lightning.EndPosition = target;
         lightning.EndObject = null;

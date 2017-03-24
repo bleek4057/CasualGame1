@@ -310,4 +310,6 @@ MonoBehaviour:
   canAttack: 0
   toBeColored: []
   damagePerHit: 0
+  canBeControlled: 0
   controlled: 0
+  isBase: 1

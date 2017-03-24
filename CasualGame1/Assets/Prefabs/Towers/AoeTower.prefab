@@ -464,7 +464,9 @@ MonoBehaviour:
   toBeColored:
   - {fileID: 1589094388730610}
   damagePerHit: 6
+  canBeControlled: 0
   controlled: 0
+  isBase: 0
 --- !u!114 &114278685266969450
 MonoBehaviour:
   m_ObjectHideFlags: 1

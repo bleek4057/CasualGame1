@@ -110,7 +110,7 @@ public class GameManager : MonoBehaviour
 
                 //Debug.Log((int)Mathf.Floor(hit.point.x / 10) + (TileManager.x / 2) + " - " + (int)(((TileManager.y / 2) - 1) - Mathf.Floor(hit.point.z / 10)));
 
-                if (towerPrefab.GetComponent<BaseTower>() is SingleFireTower || towerPrefab.GetComponent<BaseTower>() is AoeTower)
+                if (!towerPrefab.GetComponent<BaseTower>().isBase)
                 {
                     baseTowerFake.transform.position = new Vector3(target.x, 5, target.y);
                     baseTowerFake.SetActive(true);
@@ -154,10 +154,7 @@ public class GameManager : MonoBehaviour
                 baseTowerFake.SetActive(false);
                 Vector2 target = new Vector2(hit.transform.position.x, hit.transform.position.z);
                 Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
-                if (((towerPrefab.GetComponent<BaseTower>() is SingleFireTower || towerPrefab.GetComponent<BaseTower>() is AoeTower) 
-                    || (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<BaseTower>() is SingleFireTower ||
-                        TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<BaseTower>() is AoeTower)) 
-                    && TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity)
+                if ((!towerPrefab.GetComponent<BaseTower>().isBase || TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<BaseTower>().isBase) && TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity)
                 {
                     fakeTower.transform.position = new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (fakeTower.transform.localScale.y / 2), target.y);
                     fakeTower.SetActive(true);
@@ -233,7 +230,7 @@ public class GameManager : MonoBehaviour
                     }
                 foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
                 {
-                    if (shooter.GetComponent<BaseTower>() is SingleFireTower && shooter.GetComponent<BaseTower>().controlled)
+                    if (!shooter.GetComponent<BaseTower>().isBase && shooter.GetComponent<BaseTower>().controlled)
                     {
                         shooter.transform.eulerAngles = new Vector3(0, playCamera.transform.eulerAngles.y, 0);
                     }
@@ -264,11 +261,9 @@ public class GameManager : MonoBehaviour
                         {
                             foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
                             {
-                                SingleFireTower tower = shooter.GetComponent<BaseTower>() as SingleFireTower;
-                                if (tower == null) return;
-                                else if (tower.canAttack && shooter.GetComponent<BaseTower>().Timer <= 0)
+                                if (shooter.GetComponent<BaseTower>().canAttack && shooter.GetComponent<BaseTower>().Timer <= 0)
                                 {
-                                    tower.Attack(hit.collider.gameObject.GetComponent<EnemyScript>());
+                                    shooter.GetComponent<BaseTower>().Attack(hit.collider.gameObject.GetComponent<EnemyScript>());
                                 }
                             }
                         }
@@ -324,7 +319,18 @@ public class GameManager : MonoBehaviour
                             //Debug.Log(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height());
                             //followAngles = Quaternion.Euler(20, 0, 0);
                             towerFollow = hit.transform.parent.gameObject;
-                            UI.transform.FindChild("TakeControl").gameObject.SetActive(true);
+                            bool canControlTower = false;
+                            foreach(GameObject towers in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
+                            {
+                                if(towers.GetComponent<BaseTower>().canBeControlled)
+                                {
+                                    canControlTower = true;
+                                }
+                            }
+                            if (canControlTower)
+                            {
+                                UI.transform.FindChild("TakeControl").gameObject.SetActive(true);
+                            }
                         }
                     }
                 }
@@ -333,7 +339,7 @@ public class GameManager : MonoBehaviour
                     Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
                     foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
                     {
-                        if (shooter.GetComponent<BaseTower>() is SingleFireTower)
+                        if (!shooter.GetComponent<BaseTower>().isBase)
                         {
                             shooter.GetComponent<BaseTower>().controlled = false;
                         }
@@ -350,7 +356,7 @@ public class GameManager : MonoBehaviour
             Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
             foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
             {
-                if (shooter.GetComponent<BaseTower>() is SingleFireTower)
+                if (!shooter.GetComponent<BaseTower>().isBase)
                 {
                     shooter.GetComponent<BaseTower>().controlled = false;
                 }
@@ -418,10 +424,10 @@ public class GameManager : MonoBehaviour
                             tower.tag = "Tower Parent";
                             tower.transform.position = new Vector3(target.x, 5, target.y);
                             GameObject newTower;
-                            if (towerPrefab.GetComponent<BaseTower>() is SingleFireTower || towerPrefab.GetComponent<BaseTower>() is AoeTower)
+                            if (!towerPrefab.GetComponent<BaseTower>().isBase)
                             {
                                 GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
-                                PlayerManager.ChangeMoney(-baseTowerPrefab.GetComponent<TowerScript>().cost);
+                                PlayerManager.ChangeMoney(-baseTowerPrefab.GetComponent<BaseTower>().cost);
                                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newBaseTower);
                                 newTower = Instantiate(towerPrefab, new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (towerPrefab.transform.localScale.y / 2), target.y), Quaternion.identity, tower.transform);
                             }
@@ -439,10 +445,7 @@ public class GameManager : MonoBehaviour
                     {
                         Vector2 target = new Vector2(hit.transform.position.x, hit.transform.position.z);
                         Vector2 gridPos = new Vector2(((hit.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((hit.transform.position.z - 5) / 10));
-                        if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity
-                            && ((towerPrefab.GetComponent<BaseTower>() is SingleFireTower || towerPrefab.GetComponent<BaseTower>() is AoeTower) 
-                                || (TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<BaseTower>() is SingleFireTower 
-                                || TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<BaseTower>() is AoeTower)))
+                        if(TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Count <= TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].capacity && (!towerPrefab.GetComponent<BaseTower>().isBase || TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].TopTower().GetComponent<BaseTower>().isBase))
                         {
                             GameObject newTower = Instantiate(towerPrefab, new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (towerPrefab.transform.localScale.y / 2), target.y), Quaternion.identity, hit.transform.parent);
                             PlayerManager.ChangeMoney(-towerPrefab.GetComponent<BaseTower>().cost);
@@ -493,7 +496,7 @@ public class GameManager : MonoBehaviour
             Vector2 gridPos = new Vector2(((towerFollow.transform.position.x - 5) / 10) + (TileManager.x / 2), (TileManager.y / 2 - 1) - ((towerFollow.transform.position.z - 5) / 10));
             foreach (GameObject shooter in TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents)
             {
-                if (shooter.GetComponent<BaseTower>() is SingleFireTower)
+                if (shooter.GetComponent <BaseTower>().canBeControlled)
                 {
                     shooter.GetComponent<BaseTower>().controlled = control;
                 }

@@ -26,7 +26,9 @@ public class BaseTower : MonoBehaviour
 
     public int damagePerHit;
 
+    public bool canBeControlled = true;
     public bool controlled = false;
+    public bool isBase = false;
 
     // Use this for initialization
     protected virtual void Start()
@@ -105,5 +107,7 @@ public class BaseTower : MonoBehaviour
         }
     }
 
-    protected virtual void Attack() { }
+    public virtual void Attack() { }
+    public virtual void Attack(EnemyScript enemy) { }
+    public virtual void Attack(Vector3 position) { }
 }
