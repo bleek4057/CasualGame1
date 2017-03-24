@@ -50,7 +50,7 @@ public class TowerScript : MonoBehaviour
         if (!isBase)
         {
             transform.FindChild("Collider").GetComponent<CapsuleCollider>().radius = range;
-            transform.FindChild("ShootingRange").transform.localScale = new Vector3(10 * range, 10 * range, 1);
+            transform.FindChild("ShootingRange").transform.localScale = new Vector3(2 * range, 2 * range, 1);
         }
     }
 	
@@ -67,7 +67,10 @@ public class TowerScript : MonoBehaviour
                 {
                     enemies.RemoveAt(0);
                 }
-                transform.LookAt(enemies[0].transform.position);
+                else
+                {
+                    transform.LookAt(enemies[0].transform.position);
+                }
                 transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
 
                 if (_timer <= 0)

@@ -416,6 +416,7 @@ public class GameManager : MonoBehaviour
                             if (!towerPrefab.GetComponent<TowerScript>().isBase)
                             {
                                 GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
+                                PlayerManager.ChangeMoney(-baseTowerPrefab.GetComponent<TowerScript>().cost);
                                 TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newBaseTower);
                                 newTower = Instantiate(towerPrefab, new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (towerPrefab.transform.localScale.y / 2), target.y), Quaternion.identity, tower.transform);
                             }
@@ -584,11 +585,9 @@ public class GameManager : MonoBehaviour
         
         UI.transform.FindChild("Start Wave").gameObject.SetActive(false);
 
-        //playerBase.transform.GetChild(0).gameObject.SetActive(false);
-        //playerBase.transform.GetChild(1).gameObject.SetActive(true);
-
-        UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
-        UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
+        UI.transform.FindChild("LeftClickBuild").gameObject.SetActive(false);
+        UI.transform.FindChild("RightClickBuild").gameObject.SetActive(false);
+        UI.transform.FindChild("MiddleClickBuild").gameObject.SetActive(false);
     }
 
     public void WinWave()
@@ -611,13 +610,11 @@ public class GameManager : MonoBehaviour
 
         EnemyManager.NextWave();
 
-        //playerBase.transform.GetChild(0).gameObject.SetActive(true);
-        //playerBase.transform.GetChild(1).gameObject.SetActive(false);
-
         PlayerManager.ChangeMoney(20);
 
-        UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
-        UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
+        UI.transform.FindChild("LeftClickPlay").gameObject.SetActive(false);
+        UI.transform.FindChild("RightClickPlay").gameObject.SetActive(false);
+        UI.transform.FindChild("MiddleClickPlay").gameObject.SetActive(false);
     }
 
     public void LoseWave()
@@ -633,8 +630,9 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
         
-        UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(false);
-        UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(false);
+        UI.transform.FindChild("LeftClickPlay").gameObject.SetActive(false);
+        UI.transform.FindChild("RightClickPlay").gameObject.SetActive(false);
+        UI.transform.FindChild("MiddleClickPlay").gameObject.SetActive(false);
     }
 
     public void WinGame()
@@ -649,6 +647,10 @@ public class GameManager : MonoBehaviour
         UI.transform.FindChild("TakeControl").gameObject.SetActive(false);
         UI.transform.FindChild("LeaveControl").gameObject.SetActive(false);
         EnemyManager.FreezeAll();
+        
+        UI.transform.FindChild("LeftClickPlay").gameObject.SetActive(false);
+        UI.transform.FindChild("RightClickPlay").gameObject.SetActive(false);
+        UI.transform.FindChild("MiddleClickPlay").gameObject.SetActive(false);
     }
 
     public void Restart()
@@ -775,7 +777,7 @@ public class GameManager : MonoBehaviour
 
                 //create the tower
                 //GameObject newTower = Instantiate(DropDownMenu.towerPrefabs[1], new Vector3((tempX - x / 2) * 10 + 5, 5, (tempY - y / 2) * -10 - 5), Quaternion.identity);
-                Debug.Log(TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count);
+                //Debug.Log(TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count);
                 if (TileManager.tileTowers[(int)tempX, (int)tempY].contents.Count == 0)
                 {
                     GameObject tower = new GameObject("Tower");
@@ -805,7 +807,7 @@ public class GameManager : MonoBehaviour
             }
         }
         sr.Close();
-        Debug.Log(TileManager.mapData[1, 1]);
+//Debug.Log(TileManager.mapData[1, 1]);
     }
 
     public void ToggleHelp()
@@ -815,12 +817,14 @@ public class GameManager : MonoBehaviour
             //UI.transform.FindChild("Help").GetChild(0).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(0).gameObject.activeSelf);
             UI.transform.FindChild("LeftClickBuild").gameObject.SetActive(!UI.transform.FindChild("LeftClickBuild").gameObject.activeSelf);
             UI.transform.FindChild("RightClickBuild").gameObject.SetActive(!UI.transform.FindChild("RightClickBuild").gameObject.activeSelf);
+            UI.transform.FindChild("MiddleClickBuild").gameObject.SetActive(!UI.transform.FindChild("MiddleClickBuild").gameObject.activeSelf);
         }
         else if (currentGame == GameState.PlayPhase)
         {
             //UI.transform.FindChild("Help").GetChild(1).gameObject.SetActive(!UI.transform.FindChild("Help").GetChild(1).gameObject.activeSelf);
             UI.transform.FindChild("LeftClickPlay").gameObject.SetActive(!UI.transform.FindChild("LeftClickPlay").gameObject.activeSelf);
             UI.transform.FindChild("RightClickPlay").gameObject.SetActive(!UI.transform.FindChild("RightClickPlay").gameObject.activeSelf);
+            UI.transform.FindChild("MiddleClickPlay").gameObject.SetActive(!UI.transform.FindChild("MiddleClickPlay").gameObject.activeSelf);
         }
     }
 

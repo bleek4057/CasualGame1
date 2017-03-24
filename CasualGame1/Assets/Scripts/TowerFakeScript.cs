@@ -16,7 +16,7 @@ public class TowerFakeScript : MonoBehaviour
     {
         if (range > 0)
         {
-            transform.FindChild("ShootingRange").transform.localScale = new Vector3(10 * range, 10 * range, 1);
+            transform.FindChild("ShootingRange").transform.localScale = new Vector3(2 * range, 2 * range, 1);
         }
     }
 

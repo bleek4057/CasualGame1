@@ -69,7 +69,7 @@ public class EnemyManager : MonoBehaviour
             {
                 //Debug.Log("Enemies in current section: " + enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection]);
 
-                Debug.Log("Enemies to spawn: " + enemiesToSpawn + ", Enemies spawned: " + enemiesSpawned);
+                //Debug.Log("Enemies to spawn: " + enemiesToSpawn + ", Enemies spawned: " + enemiesSpawned);
 
                 //if we have spawned enough of the type of enemies in this section of a wave
                 if(enemiesSpawned == enemyNumberToSpawn[GameManager.waveNumber - 1][currentEnemySection])
@@ -142,15 +142,15 @@ public class EnemyManager : MonoBehaviour
 
         enemiesToSpawn = 0;
 
-        Debug.Log("wave " + (GameManager.waveNumber - 1));
+        //Debug.Log("wave " + (GameManager.waveNumber - 1));
 
         for (int i = 0; i < enemyNumberToSpawn[GameManager.waveNumber - 1].Count; i++)
         {
-            Debug.Log(enemyNumberToSpawn[GameManager.waveNumber - 1][i]);
+            //Debug.Log(enemyNumberToSpawn[GameManager.waveNumber - 1][i]);
             enemiesToSpawn += enemyNumberToSpawn[GameManager.waveNumber - 1][i];
         }
 
-        Debug.Log("enemies to spawn: " + enemiesToSpawn);
+        //Debug.Log("enemies to spawn: " + enemiesToSpawn);
     }
     public void RestartAll()
     {
@@ -249,7 +249,7 @@ public class EnemyManager : MonoBehaviour
 
         for (int i = 0; i < enemyNumberToSpawn[0].Count; i++)
         {
-            Debug.Log(enemyNumberToSpawn[0][i]);
+            //Debug.Log(enemyNumberToSpawn[0][i]);
             enemiesToSpawn += enemyNumberToSpawn[0][i];
         }
 
