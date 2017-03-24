@@ -1,46 +1,47 @@
-FE 3 0 4
-BE 2 0 4
+BE 10 0 4
+SE 2 0
 
-SE 1 1 4
-BE 4 1
+BE 8 1 3.5
+FE 3 1
+BE 2 1
 
-SE 1 2 3.5
+SE 3 2 3
 FE 5 2
+BE 2 2
+FE 2 2
 SE 1 2
-FE 3 2
 
-SE 4 3 3.5
+SE 1 3 2.5
+FE 12 3
+SE 3 3
 
-BE 3 4 3
-FE 2 4
-BE 4 4
+BE 6 4 2.5 
+FE 1 4
+BE 6 4
 FE 3 4
-SE 2 4
+SE 3 4
 
-SE 3 5 3
-BE 6 5
-SE 2 5
-BE 5 5
+BE 17 5 2
 
-SE 3 6 2.5
-FE 7 6
-SE 2 6
-FE 5 6
-SE 1 6
-FE 3 6
+FE 21 6 1
 
-SE 10 7 2.5
+SE 13 7 1.5
 
-FE 8 8 2
+FE 9 8 1.5
+BE 4 8
+SE 2 8
 BE 6 8
-FE 8 8
-BE 6 8
+FE 7 8
 
-FE 7 9 1.5
+SE 1 9 1
+FE 2 9
+SE 2 9
+FE 3 9
 SE 1 9
-BE 6 9
-FE 7 9
+FE 4 9 
 SE 1 9
-BE 6 9
-FE 7 9
-SE 1 9
+FE 6 9 
+SE 2 9
+FE 7 9 
+BE 14 9
+UE 1 9

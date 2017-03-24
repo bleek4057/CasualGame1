@@ -103,7 +103,7 @@ public class EnemyManager : MonoBehaviour
 
         GameObject newEnemy = Instantiate(enemyTypesToSpawn[GameManager.waveNumber - 1][waveSection], new Vector3(enemySpawnPoint.x, 4.5f, enemySpawnPoint.y), Quaternion.identity);
         newEnemy.GetComponent<EnemyScript>().CopyList(GameManager.TileManager.GetComponent<TileManager>().enemyPath);
-        newEnemy.GetComponent<EnemyScript>().maxHealth += 5 * (GameManager.waveNumber - 1);
+        newEnemy.GetComponent<EnemyScript>().maxHealth += newEnemy.GetComponent<EnemyScript>().maxHealth * ((GameManager.waveNumber - 1)/10);
         newEnemy.GetComponent<EnemyScript>().playerBase = GameManager.playerBase;
         allEnemies.Add(newEnemy);
 
@@ -236,6 +236,18 @@ public class EnemyManager : MonoBehaviour
                 wave = Int32.Parse(lineData[2]);
                 //Debug.Log("Wave # " + wave);
                 enemyTypesToSpawn[wave].Add(enemyPrefabs[2]);
+                enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
+                if (enemySpawnTime.Count <= wave)
+                {
+                    //Debug.Log("wave" + wave);
+                    enemySpawnTime.Add(float.Parse(lineData[3]));
+                }
+            }
+            if (lineData[0] == "UE")
+            {
+                wave = Int32.Parse(lineData[2]);
+                //Debug.Log("Wave # " + wave);
+                enemyTypesToSpawn[wave].Add(enemyPrefabs[3]);
                 enemyNumberToSpawn[wave].Add(Int32.Parse(lineData[1]));
                 if (enemySpawnTime.Count <= wave)
                 {

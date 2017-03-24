@@ -132,10 +132,11 @@ public class GameManager : MonoBehaviour
                     TileManager.gameObject.transform.GetChild(1).gameObject.SetActive(false);
                 }
 
-                if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
+                if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost) || !towerPrefab.GetComponent<BaseTower>().isBase && !PlayerManager.CanAffordTower(baseTowerPrefab.GetComponent<BaseTower>().cost + towerPrefab.GetComponent<BaseTower>().cost))
                 {
                     fakeTower.GetComponent<TowerFakeScript>().SetColor(false);
                     baseTowerFake.GetComponent<TowerFakeScript>().SetColor(false);
+                    UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(true);
                 }
                 else if (!TileManager.CreatePath(false))
                 {
@@ -166,6 +167,7 @@ public class GameManager : MonoBehaviour
                 if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
                 {
                     fakeTower.GetComponent<TowerFakeScript>().SetColor(false);
+                    UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(true);
                 }
                 else
                 {
@@ -426,17 +428,22 @@ public class GameManager : MonoBehaviour
                             GameObject newTower;
                             if (!towerPrefab.GetComponent<BaseTower>().isBase)
                             {
-                                GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
-                                PlayerManager.ChangeMoney(-baseTowerPrefab.GetComponent<BaseTower>().cost);
-                                TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newBaseTower);
-                                newTower = Instantiate(towerPrefab, new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (towerPrefab.transform.localScale.y / 2), target.y), Quaternion.identity, tower.transform);
+                                if (PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost + baseTowerPrefab.GetComponent<BaseTower>().cost))
+                                {
+                                    GameObject newBaseTower = Instantiate(baseTowerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
+                                    PlayerManager.ChangeMoney(-baseTowerPrefab.GetComponent<BaseTower>().cost);
+                                    TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newBaseTower);
+                                    newTower = Instantiate(towerPrefab, new Vector3(target.x, TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].Height() + (towerPrefab.transform.localScale.y / 2), target.y), Quaternion.identity, tower.transform);
+                                    PlayerManager.ChangeMoney(-towerPrefab.GetComponent<BaseTower>().cost);
+                                    TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
+                                }
                             }
                             else
                             {
                                 newTower = Instantiate(towerPrefab, new Vector3(target.x, 5, target.y), Quaternion.identity, tower.transform);
+                                PlayerManager.ChangeMoney(-towerPrefab.GetComponent<BaseTower>().cost);
+                                TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
                             }
-                            PlayerManager.ChangeMoney(-towerPrefab.GetComponent<BaseTower>().cost);
-                            TileManager.tileTowers[(int)gridPos.x, (int)gridPos.y].contents.Add(newTower);
                         }
 
                         //UI.transform.GetChild(0).GetChild(1).GetComponent<Text>().text = "Money " + PlayerManager.money;
@@ -482,10 +489,10 @@ public class GameManager : MonoBehaviour
                 playCamera.fieldOfView = 20;
             }
             prevMousePosition = Input.mousePosition;
-            if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
+            /*if (!PlayerManager.CanAffordTower(towerPrefab.GetComponent<BaseTower>().cost))
             {
                 UI.transform.FindChild("NotEnoughMoney").gameObject.SetActive(true);
-            }
+            }*/
         }
     }
 
