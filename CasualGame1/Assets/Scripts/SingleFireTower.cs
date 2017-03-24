@@ -30,7 +30,7 @@ public class SingleFireTower : BaseTower
             if (enemies.Count > 0)
             {
                 transform.LookAt(enemies[0].transform.position);
-                transform.eulerAngles = new Vector3(-90, transform.eulerAngles.y, 0);
+                transform.eulerAngles = new Vector3(0, transform.eulerAngles.y, 0);
             }
         }
         transform.FindChild("ShootingRange").gameObject.SetActive(false);
