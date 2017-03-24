@@ -11,6 +11,8 @@ public class AoeTower : BaseTower
     {
         base.Start();
         ps = gameObject.GetComponent<ParticleSystem>();
+        transform.FindChild("Collider").GetComponent<CapsuleCollider>().radius = range;
+        transform.FindChild("ShootingRange").transform.localScale = new Vector3(2 * range, 2 * range, 1);
     }
 
     // Update is called once per frame

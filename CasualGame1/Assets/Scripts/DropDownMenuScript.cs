@@ -22,9 +22,10 @@ public class DropDownMenuScript : MonoBehaviour
 
     public void ToggleDropdown()
     {
-        transform.GetChild(1).gameObject.SetActive(!transform.GetChild(1).gameObject.activeInHierarchy);
         transform.GetChild(2).gameObject.SetActive(!transform.GetChild(2).gameObject.activeInHierarchy);
         transform.GetChild(3).gameObject.SetActive(!transform.GetChild(3).gameObject.activeInHierarchy);
+        transform.GetChild(4).gameObject.SetActive(!transform.GetChild(4).gameObject.activeInHierarchy);
+        transform.GetChild(5).gameObject.SetActive(!transform.GetChild(5).gameObject.activeInHierarchy);
     }
     public void SetActiveTower(int id)
     {
@@ -34,7 +35,7 @@ public class DropDownMenuScript : MonoBehaviour
         GameManager.fakeTower = Instantiate(towerPrefabs[id].GetComponent<BaseTower>().fakeVersion);
         GameManager.fakeTower.GetComponent<TowerFakeScript>().SetDefaultColors();
         GameManager.fakeTower.GetComponent<TowerFakeScript>().range = towerPrefabs[id].GetComponent<BaseTower>().range;
-        gameObject.transform.GetChild(0).GetComponent<Text>().text = transform.GetChild(id + 1).gameObject.GetComponentInChildren<Text>().text;
-        gameObject.transform.GetChild(4).GetComponent<Text>().text = "Cost:" + towerPrefabs[id].GetComponent<BaseTower>().cost;
+        gameObject.transform.GetChild(0).GetComponent<Text>().text = transform.GetChild(id + 2).gameObject.GetComponentInChildren<Text>().text;
+        gameObject.transform.GetChild(1).GetComponent<Text>().text = "Cost:" + towerPrefabs[id].GetComponent<BaseTower>().cost;
     }
 }

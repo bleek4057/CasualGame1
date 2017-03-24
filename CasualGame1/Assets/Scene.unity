@@ -2164,6 +2164,11 @@ Prefab:
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 694640898}
+    - target: {fileID: 114547546067123562, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,
+        type: 2}
+      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
+      value: 
+      objectReference: {fileID: 615264528}
     - target: {fileID: 1579587752195520, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8, type: 2}
       propertyPath: m_Name
       value: UI
@@ -2171,11 +2176,6 @@ Prefab:
     - target: {fileID: 114075152806331950, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,
         type: 2}
       propertyPath: GameManager
-      value: 
-      objectReference: {fileID: 615264528}
-    - target: {fileID: 114547546067123562, guid: ce29d6ebd3bf42a43af5bcb2cc8b78b8,
-        type: 2}
-      propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
       objectReference: {fileID: 615264528}
     m_RemovedComponents: []
