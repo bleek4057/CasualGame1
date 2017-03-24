@@ -9,7 +9,7 @@ public class TowerFakeScript : MonoBehaviour
     public List<GameObject> toBeColored;
     public List<Color> defaultColor;
 
-    public int range = 0;
+    public float range = 0;
 
     // Use this for initialization
     void Start()

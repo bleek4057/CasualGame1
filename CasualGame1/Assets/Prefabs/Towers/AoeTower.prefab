@@ -42,7 +42,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!1 &1429014965937000
 GameObject:
   m_ObjectHideFlags: 0
@@ -113,9 +113,9 @@ GameObject:
   - component: {fileID: 120362279793485242}
   - component: {fileID: 114122709968605404}
   - component: {fileID: 136882023938557366}
-  - component: {fileID: 114011253082250590}
+  - component: {fileID: 114128540475809872}
   m_Layer: 0
-  m_Name: TurretTower
+  m_Name: AoeTower
   m_TagString: Tower
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -157,7 +157,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1589094388730610}
-  m_LocalRotation: {x: -0.7071069, y: -0, z: -0, w: 0.70710677}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 29, y: 29, z: 35}
   m_Children:
@@ -198,7 +198,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 1791498391173414}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.673102, y: 1.2822304, z: 38.625977}
+  m_LocalPosition: {x: -19.708931, y: 1.2822305, z: -6.132693}
   m_LocalScale: {x: 10, y: 2, z: 10}
   m_Children:
   - {fileID: 4035720289574922}
@@ -244,7 +244,7 @@ Transform:
   m_GameObject: {fileID: 1358062017287966}
   m_LocalRotation: {x: 0.7071068, y: -0, z: -0, w: 0.7071068}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 4, y: 4, z: 100.00006}
+  m_LocalScale: {x: 20, y: 20.000011, z: 100.00006}
   m_Children: []
   m_Father: {fileID: 4152171357546464}
   m_RootOrder: 3
@@ -306,7 +306,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_Materials:
-  - {fileID: 2100000, guid: 3996f79f28eaad549a8f1edd8be9bc2b, type: 2}
+  - {fileID: 2100000, guid: 10e92d2d2135a90409781c9e41f52668, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -420,29 +420,6 @@ Animator:
   m_WarningMessage: 
   m_HasTransformHierarchy: 1
   m_AllowConstantClipSamplingOptimization: 1
---- !u!114 &114011253082250590
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 1791498391173414}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 13773f9b96d3bb447bcf62a4593ceb3e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  cost: 50
-  enemies: []
-  fakeVersion: {fileID: 1935278899293338, guid: 71f258c10e79a6b408359e734f031cf0,
-    type: 2}
-  _timer: 0
-  _fireRate: 0.333
-  range: 2
-  canAttack: 1
-  toBeColored:
-  - {fileID: 1589094388730610}
-  damagePerHit: 10
-  controlled: 0
 --- !u!114 &114122709968605404
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -465,6 +442,29 @@ MonoBehaviour:
   Rows: 1
   Columns: 1
   AnimationMode: 3
+--- !u!114 &114128540475809872
+MonoBehaviour:
+  m_ObjectHideFlags: 1
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 100100000}
+  m_GameObject: {fileID: 1791498391173414}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4627447a72d6c1c41a31531f8d717df4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  cost: 60
+  enemies: []
+  fakeVersion: {fileID: 1935278899293338, guid: ef86955bfd7058c4f8e829a360fc7664,
+    type: 2}
+  _timer: 0
+  _fireRate: 0.333
+  range: 2
+  canAttack: 1
+  toBeColored:
+  - {fileID: 1589094388730610}
+  damagePerHit: 6
+  controlled: 0
 --- !u!114 &114278685266969450
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -697,7 +697,7 @@ ParticleSystem:
   moveWithTransform: 0
   moveWithCustomTransform: {fileID: 0}
   scalingMode: 2
-  randomSeed: 1380077464
+  randomSeed: -973808387
   InitialModule:
     serializedVersion: 3
     enabled: 1
@@ -1153,7 +1153,7 @@ ParticleSystem:
     serializedVersion: 3
     enabled: 1
     type: 1
-    radius: 1.5
+    radius: 2
     angle: 25
     length: 5
     boxX: 1
@@ -1176,7 +1176,7 @@ ParticleSystem:
     enabled: 1
     serializedVersion: 3
     rateOverTime:
-      scalar: 40
+      scalar: 50
       maxCurve:
         serializedVersion: 2
         m_Curve:
@@ -3360,7 +3360,7 @@ SpriteRenderer:
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: d9f9f54fc8758d748b13c8d10618f983, type: 3}
+  m_Sprite: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
   m_Color: {r: 1, g: 0.36764705, b: 0.36764705, a: 0.284}
   m_FlipX: 0
   m_FlipY: 0
